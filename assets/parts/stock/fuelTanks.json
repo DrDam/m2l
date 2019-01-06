@@ -1,0 +1,904 @@
+[
+    {
+        "id": "NCSAdapter",
+        "name": "NCS Adapter",
+        "tech": "aerodynamicSystems",
+        "cost": 320,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.1,
+            "full": 0.5
+        },
+        "stackable": {
+            "top": "0",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel"
+        ]
+    },
+    {
+        "id": "R11External",
+        "name": "R-11 'Baguette' External Tank",
+        "tech": "propulsionSystems",
+        "cost": 50,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.03375,
+            "full": 0.30375
+        },
+        "stackable": {
+            "top": false,
+            "bottom": false
+        },
+        "is_radial": true,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "R4External",
+        "name": "R-4 'Dumpling' External Tank",
+        "tech": "precisionPropulsion",
+        "cost": 50,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.01375,
+            "full": 0.12375
+        },
+        "stackable": {
+            "top": false,
+            "bottom": false
+        },
+        "is_radial": true,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "R12",
+        "name": "R-12 'Doughnut' External Tank",
+        "tech": "precisionPropulsion",
+        "cost": 147,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.0375,
+            "full": 0.3375
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "FL_R1",
+        "name": "FL-R1 RCS Fuel Tank",
+        "tech": "advFuelSystems",
+        "cost": 1800,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.4,
+            "full": 3.4
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "MonoPropellant"
+        ]
+    },
+    {
+        "id": "FL_R10",
+        "name": "FL-R10 RCS Fuel Tank",
+        "tech": "advFuelSystems",
+        "cost": 200,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.02,
+            "full": 0.1
+        },
+        "stackable": {
+            "top": "0",
+            "bottom": "0"
+        },
+        "is_radial": false,
+        "ressources": [
+            "MonoPropellant"
+        ]
+    },
+    {
+        "id": "FL_R25",
+        "name": "FL-R25 RCS Fuel Tank",
+        "tech": "advFuelSystems",
+        "cost": 330,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.08,
+            "full": 0.56
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "ressources": [
+            "MonoPropellant"
+        ]
+    },
+    {
+        "id": "StratusVRound",
+        "name": "Stratus-V Roundified Monopropellant Tank",
+        "tech": "advFlightControl",
+        "cost": 200,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.02,
+            "full": 0.1
+        },
+        "stackable": {
+            "top": false,
+            "bottom": false
+        },
+        "is_radial": true,
+        "ressources": [
+            "MonoPropellant"
+        ]
+    },
+    {
+        "id": "StratusVCylinder",
+        "name": "Stratus-V Cylindrified Monopropellant Tank",
+        "tech": "specializedControl",
+        "cost": 250,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.03,
+            "full": 0.23
+        },
+        "stackable": {
+            "top": false,
+            "bottom": false
+        },
+        "is_radial": true,
+        "ressources": [
+            "MonoPropellant"
+        ]
+    },
+    {
+        "id": "X200_16",
+        "name": "Rockomax X200-16 Fuel Tank",
+        "tech": "fuelSystems",
+        "cost": 1550,
+        "provider": "stock",
+        "mass": {
+            "empty": 1,
+            "full": 9
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "X200_32",
+        "name": "Rockomax X200-32 Fuel Tank",
+        "tech": "fuelSystems",
+        "cost": 3000,
+        "provider": "stock",
+        "mass": {
+            "empty": 2,
+            "full": 18
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "X200_64",
+        "name": "Rockomax Jumbo-64 Fuel Tank",
+        "tech": "advFuelSystems",
+        "cost": 5750,
+        "provider": "stock",
+        "mass": {
+            "empty": 4,
+            "full": 36
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "X200_8",
+        "name": "Rockomax X200-8 Fuel Tank",
+        "tech": "fuelSystems",
+        "cost": 800,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.5,
+            "full": 4.5
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "S3_14400",
+        "name": "Kerbodyne S3-14400 Tank",
+        "tech": "highPerformanceFuelSystems",
+        "cost": 13000,
+        "provider": "stock",
+        "mass": {
+            "empty": 9,
+            "full": 81
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "S3_7200",
+        "name": "Kerbodyne S3-7200 Tank",
+        "tech": "largeVolumeContainment",
+        "cost": 6500,
+        "provider": "stock",
+        "mass": {
+            "empty": 4.5,
+            "full": 40.5
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "S3_3600",
+        "name": "Kerbodyne S3-3600 Tank",
+        "tech": "largeVolumeContainment",
+        "cost": 3250,
+        "provider": "stock",
+        "mass": {
+            "empty": 2.25,
+            "full": 20.25
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Mk3_Mk2",
+        "name": "Mk3 to Mk2 Adapter",
+        "tech": "experimentalAerodynamics",
+        "cost": 2200,
+        "provider": "stock",
+        "mass": {
+            "empty": 1.43,
+            "full": 11.43
+        },
+        "stackable": {
+            "top": "mk2",
+            "bottom": "mk3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Mk3_Size2",
+        "name": "Mk3 to 2.5m Adapter",
+        "tech": "heavyAerodynamics",
+        "cost": 2500,
+        "provider": "stock",
+        "mass": {
+            "empty": 1.79,
+            "full": 14.29
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "mk3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Mk3_Size2Slant",
+        "name": "Mk3 to 2.5m Adapter Slanted",
+        "tech": "heavyAerodynamics",
+        "cost": 2500,
+        "provider": "stock",
+        "mass": {
+            "empty": 1.79,
+            "full": 14.29
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "mk3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Size2_Size1",
+        "name": "C7 Brand Adapter - 2.5m to 1.25m",
+        "tech": "advFuelSystems",
+        "cost": 800,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.57,
+            "full": 4.57
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Size2_Size1Slant",
+        "name": "C7 Brand Adapter Slanted - 2.5m to 1.25m",
+        "tech": "advFuelSystems",
+        "cost": 800,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.57,
+            "full": 4.57
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Mk3_Size3",
+        "name": "Mk3 to 3.75m Adapter",
+        "tech": "experimentalAerodynamics",
+        "cost": 2500,
+        "provider": "stock",
+        "mass": {
+            "empty": 1.79,
+            "full": 14.29
+        },
+        "stackable": {
+            "top": "mk3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "OscarB",
+        "name": "Oscar-B Fuel Tank",
+        "tech": "propulsionSystems",
+        "cost": 70,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.025,
+            "full": 0.225
+        },
+        "stackable": {
+            "top": "0",
+            "bottom": "0"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "FL_T100",
+        "name": "FL-T100 Fuel Tank",
+        "tech": "basicRocketry",
+        "cost": 150,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.0625,
+            "full": 0.5625
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "FL_T200",
+        "name": "FL-T200 Fuel Tank",
+        "tech": "generalRocketry",
+        "cost": 275,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.125,
+            "full": 1.125
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "FL_T400",
+        "name": "FL-T400 Fuel Tank",
+        "tech": "advRocketry",
+        "cost": 500,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.25,
+            "full": 2.25
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "FL_T800",
+        "name": "FL-T800 Fuel Tank",
+        "tech": "fuelSystems",
+        "cost": 800,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.5,
+            "full": 4.5
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "mk0",
+        "name": "Mk0 Liquid Fuel Fuselage",
+        "tech": "aviation",
+        "cost": 200,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.025,
+            "full": 0.275
+        },
+        "stackable": {
+            "top": "0",
+            "bottom": "0"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel"
+        ]
+    },
+    {
+        "id": "Size1_Mk2Long",
+        "name": "Mk2 to 1.25m Adapter Long",
+        "tech": "highAltitudeFlight",
+        "cost": 1050,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.57,
+            "full": 4.57
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "mk2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Size1_Mk2",
+        "name": "Mk2 to 1.25m Adapter",
+        "tech": "supersonicFlight",
+        "cost": 550,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.29,
+            "full": 2.29
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "mk2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Mk2LongLFO",
+        "name": "Mk2 Rocket Fuel Fuselage",
+        "tech": "highAltitudeFlight",
+        "cost": 1450,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.57,
+            "full": 4.57
+        },
+        "stackable": {
+            "top": "mk2",
+            "bottom": "mk2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Mk2LongLF",
+        "name": "Mk2 Liquid Fuel Fuselage",
+        "tech": "highAltitudeFlight",
+        "cost": 1450,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.57,
+            "full": 4.57
+        },
+        "stackable": {
+            "top": "mk2",
+            "bottom": "mk2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel"
+        ]
+    },
+    {
+        "id": "Mk2ShortLFO",
+        "name": "Mk2 Rocket Fuel Fuselage Short",
+        "tech": "supersonicFlight",
+        "cost": 750,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.29,
+            "full": 2.29
+        },
+        "stackable": {
+            "top": "mk2",
+            "bottom": "mk2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Mk2ShortLF",
+        "name": "Mk2 Liquid Fuel Fuselage Short",
+        "tech": "supersonicFlight",
+        "cost": 750,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.29,
+            "full": 2.29
+        },
+        "stackable": {
+            "top": "mk2",
+            "bottom": "mk2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel"
+        ]
+    },
+    {
+        "id": "Mk2ShortMono",
+        "name": "Mk2 Monopropellant Tank",
+        "tech": "highAltitudeFlight",
+        "cost": 750,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.29,
+            "full": 1.89
+        },
+        "stackable": {
+            "top": "mk2",
+            "bottom": "mk2"
+        },
+        "is_radial": false,
+        "ressources": [
+            "MonoPropellant"
+        ]
+    },
+    {
+        "id": "mk3LongLFO",
+        "name": "Mk3 Rocket Fuel Fuselage Long",
+        "tech": "experimentalAerodynamics",
+        "cost": 10000,
+        "provider": "stock",
+        "mass": {
+            "empty": 7.14,
+            "full": 57.14
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "mk3ShortLFO",
+        "name": "Mk3 Rocket Fuel Fuselage Short",
+        "tech": "experimentalAerodynamics",
+        "cost": 2500,
+        "provider": "stock",
+        "mass": {
+            "empty": 1.79,
+            "full": 14.29
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "mk3LFO",
+        "name": "Mk3 Rocket Fuel Fuselage",
+        "tech": "experimentalAerodynamics",
+        "cost": 5000,
+        "provider": "stock",
+        "mass": {
+            "empty": 3.57,
+            "full": 28.57
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Mk3LongLF",
+        "name": "Mk3 Liquid Fuel Fuselage Long",
+        "tech": "experimentalAerodynamics",
+        "cost": 17200,
+        "provider": "stock",
+        "mass": {
+            "empty": 7.14,
+            "full": 57.14
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel"
+        ]
+    },
+    {
+        "id": "Mk3LongLF",
+        "name": "Mk3 Liquid Fuel Fuselage Short",
+        "tech": "heavyAerodynamics",
+        "cost": 4300,
+        "provider": "stock",
+        "mass": {
+            "empty": 1.79,
+            "full": 14.29
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel"
+        ]
+    },
+    {
+        "id": "Mk3LF",
+        "name": "Mk3 Liquid Fuel Fuselage",
+        "tech": "heavyAerodynamics",
+        "cost": 8600,
+        "provider": "stock",
+        "mass": {
+            "empty": 3.57,
+            "full": 28.57
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel"
+        ]
+    },
+    {
+        "id": "Mk3MONO",
+        "name": "Mk3 Monopropellant Tank",
+        "tech": "experimentalAerodynamics",
+        "cost": 5040,
+        "provider": "stock",
+        "mass": {
+            "empty": 1.4,
+            "full": 9.8
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "ressources": [
+            "MonoPropellant"
+        ]
+    },
+    {
+        "id": "PB_X150",
+        "name": "PB-X150 Xenon Container",
+        "tech": "ionPropulsion",
+        "cost": 3680,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.024,
+            "full": 0.096
+        },
+        "stackable": {
+            "top": "0",
+            "bottom": "0"
+        },
+        "is_radial": false,
+        "ressources": [
+            "XenonGas"
+        ]
+    },
+    {
+        "id": "PB_X750",
+        "name": "PB-X750 Xenon Container",
+        "tech": "ionPropulsion",
+        "cost": 24300,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.19,
+            "full": 0.76
+        },
+        "stackable": {
+            "top": "0",
+            "bottom": "0"
+        },
+        "is_radial": false,
+        "ressources": [
+            "XenonGas"
+        ]
+    },
+    {
+        "id": "PB_X50R",
+        "name": "PB-X50R Xenon Container",
+        "tech": "ionPropulsion",
+        "cost": 2220,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.0135,
+            "full": 0.054
+        },
+        "stackable": {
+            "top": false,
+            "bottom": false
+        },
+        "is_radial": true,
+        "ressources": [
+            "XenonGas"
+        ]
+    },
+    {
+        "id": "MK1Fuselage",
+        "name": "Mk1 Liquid Fuel Fuselage",
+        "tech": "aviation",
+        "cost": 550,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.25,
+            "full": 2.25
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "ressources": [
+            "LiquidFuel"
+        ]
+    }
+]

@@ -1,0 +1,19 @@
+######################
+# Developpement Plan #
+######################
+
+Current Step : 
+v1 : Initial POC
+- Generate Nstage launcher configurations ( like SpaceX Falcon 9 )
+- with :
+-- selection of the engines of each stage (1 per upper stage, possible multi in first Stage)
+-- selection of fuel tanks
+- List all configuration in a comparative table
+- Add booster propostion in first stage
+
+further step :
+- Add launcher capacity calculate from orbit specifications ( Ap / Pe )
+- Add hypothesis of atmos-flying
+- Add DLC's Engine plate capacity
+- Add "guidance solution" and "desorbiting fuel" for last stage
+

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <title>Make Me a Launcher</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.1.3/mustache.min.js"></script>
+    <script type="text/javascript" src="lib/data.js"></script>
+    <script type="text/javascript" src="lib/lib.js"></script>
+    <script type="text/javascript" src="m2l.js"></script>
+    <script type="text/javascript" src="lib/makeStacks.js"></script>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="m2l.css">
+</head>
+
+<body>
+    <h1>Make Me a Launcher</h1>
+    <p>v0.0.101</p>
+    <a href="plan.txt" target="_blank">developpement plan</a>
+    <a href="changelog.txt" target="_blank">changelog</a> <br>
+    <button id="readme_button" title="Purpose" type="button">Purpose & current Limitation</button>
+    <div id="readme" style="display:none">
+        <label>This is a "rocket configuration generator"</label>
+        <ul>
+            <li>Model are "only atm" capacity ( ISP / Thrust)</li>
+            <li>The generator not using Jet Engine</li>
+            <li>Use only staged Engines ( not radials)</li>
+        </ul>
+
+    </div>
+
+    <hr>
+
+    <form id='param'>
+        <div class="form_wrapper">
+
+            <div class="group_wrapper">
+                <label>Utility Charge</label>
+                <ul>
+                    <li>
+                        <label>Payload Mass (t)</label><input id="Mu" name="Mu" type="text" value="10" />
+                    </li>
+                    <li>
+                        <label>Needed fairing Diametrer for payload</label>
+                        <select id="sizeCU" name="tailleCU">
+                            <!-- JS generated -->
+                        </select>
+                    </li>
+                </ul>
+                <label>Mission</label>
+                <ul>
+                    <li>
+                        <label>Launcher Capacity tageted (m/s)</label><input id="DvCible" name="DvCible" type="text"
+                            value="4500" />
+                    </li>
+                </ul>
+                <label> Launcher </label>
+                <ul>
+                    <li>
+                        <label>Launcher Type</label>
+                        <select id="type" name="type">
+                            <option value="mono" selected>Monobloc (Saturn V / Falcon9 / Vega)</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label>Maximal stage quantity</label><input type='text' id='nbStage' name='nbstage' value='2' />
+                    </li>
+                    <li>
+                        <label> TWR </label>
+                        <label>min</label><input id="Tmin" name="Tmin" type="text" value="1.2" />
+                        <label>max</label><input id="Tmax" name="Tmax" type="text" value="" />
+                    </li>
+                </ul>
+                <a id="advanced_button">Advanced (dangerous)</a>
+                <div id="advanced" style='display:none'>
+                    <label>Changing these settings may pose a risk to your computer.</label>
+                    <ul>
+                        <li>
+                            <label>Use Debug Mode</label><input type="checkbox" id="debug" name="debug" value="1" />
+                        </li>
+                        <li>
+                            <label>Worker number per multi-theard</label><input id="nbworker" name="nbworker" type="text"
+                                value="1" />
+                        </li>
+                        <li>
+                            <label>Dv steps (%) for multistage</label><input id="Step" name="Step" type="text" value="10" />
+                        </li>
+                        <li>
+                            <label>Max parts per Fuel Stack</label><input id="nbTanks" name="nbTanks" type="text" value="3" />
+                        </li>
+                        <li>
+                            <label>Max radial Engine per Stack</label><input id="nbRadial" name="nbRadial" type="text" value="4" />
+                        </li>
+                    </ul>
+                </div>
+                <hr>
+                <input type="button" disabled="disabled" class='action_button' value='Stop simulation' id='stop' name='stop' />
+                <input type="submit"  class='action_button' value='Draw me a launcher' id='start'
+                    name='start' />
+            </div>
+            <div class="group_wrapper">
+                <label>Part selection</label>
+                <ul>
+                    <li>
+                        <label>Select mode : </label>
+                        <label for="id_mode_simple"> simple </label><input type="radio" id="part_mode_simple" name="part_mode"
+                            value="part_collection_simple" checked="checked">
+                        <label for="id_mode_advanced"> advanced </label><input type="radio" id="part_mode_advanced"
+                            name="part_mode" value="part_collection_advanced">
+                    </li>
+                    <li id="part_collection_simple" class="part-collection">
+                        <label>Part Collection</label>
+                        <select id="parts" name="parts_collection">
+                            <!-- JS generated -->
+                        </select>
+                    </li>
+                    <li id="part_collection_advanced" class="part-collection">
+                        <label>Select parts</label>
+                        <div id="advanced_part_list">
+                            <!-- JS generated -->
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </form>
+    <div id="results">
+        <div id="count">
+            <span id="message"></span>
+        </div>
+        <table class="table-bordered table-striped table">
+            <thead>
+                <tr>
+                    <td>id</td>
+                    <td>Stages count</td>
+                    <td>Total Mass (t)</td>
+                    <td>Mass payload in %</td>
+                    <td>Launcher deltaV (m/s)</td>
+                    <td>Number of parts</td>
+                    <td>Total cost</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

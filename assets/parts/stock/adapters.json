@@ -1,0 +1,62 @@
+[
+    {
+        "id": "Size3to2Adapter",
+        "name": "Kerbodyne ADTP-2-3",
+        "tech": "largeVolumeContainment",
+        "cost": 2600,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.2,
+            "full": 0.2
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "3"
+        }
+    },
+    {
+        "id": "adapterSmallMiniShort",
+        "name": "FL-A5 Adapter",
+        "tech": "miniaturization",
+        "cost": 100,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.04,
+            "full": 0.04
+        },
+        "stackable": {
+            "top": "0",
+            "bottom": "1"
+        }
+    },
+    {
+        "id": "adapterSmallMiniTall",
+        "name": "FL-A10 Adapter",
+        "tech": "miniaturization",
+        "cost": 150,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.05,
+            "full": 0.05
+        },
+        "stackable": {
+            "top": "0",
+            "bottom": "1"
+        }
+    },
+    {
+        "id": "largeAdapter2",
+        "name": "Rockomax Brand Adapter 02",
+        "tech": "advConstruction",
+        "cost": 450,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.08,
+            "full": 0.08
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "2"
+        }
+    }
+]

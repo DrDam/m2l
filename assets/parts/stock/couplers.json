@@ -1,0 +1,98 @@
+[
+    {
+        "id": "adapterLargeSmallBi",
+        "name": "TVR-200L Stack Bi-Adapter",
+        "tech": "metaMaterials",
+        "cost": 400,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.1,
+            "full": 0.1
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "1",
+            "bottom_number": 2
+        }
+    },
+    {
+        "id": "adapterLargeSmallQuad",
+        "name": "TVR-400L Stack Quad-Adapter",
+        "tech": "metaMaterials",
+        "cost": 800,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.2,
+            "full": 0.2
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "1",
+            "bottom_number": 4
+        }
+    },
+    {
+        "id": "adapterLargeSmallTri",
+        "name": "TVR-300L Stack Tri-Adapter",
+        "tech": "metaMaterials",
+        "cost": 600,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.15,
+            "full": 0.15
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "1",
+            "bottom_number": 3
+        }
+    },
+    {
+        "id": "stackBiCoupler",
+        "name": "TVR-200 Stack Bi-Coupler",
+        "tech": "specializedConstruction",
+        "cost": 400,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.1,
+            "full": 0.1
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1",
+            "bottom_number": 2
+        }
+    },
+    {
+        "id": "stackQuadCoupler",
+        "name": "TVR-2160C Mk2 Stack Quad-Coupler",
+        "tech": "advMetalworks",
+        "cost": 2000,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.175,
+            "full": 0.175
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1",
+            "bottom_number": 4
+        }
+    },
+    {
+        "id": "stackTriCoupler",
+        "name": "TVR-1180C Mk1 Stack Tri-Coupler",
+        "tech": "advConstruction",
+        "cost": 680,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.15,
+            "full": 0.15
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1",
+            "bottom_number": 3
+        }
+    }
+]

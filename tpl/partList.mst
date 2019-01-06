@@ -1,0 +1,11 @@
+<div class="part-list-wrapper">
+    <label class="part-category" data-ref="{{category}}">{{ category }}</label>
+    <ul class="part-list-items" data-ref="{{category}}">
+        {{#parts}}
+            <li>
+                <input type="checkbox" id="part--{{category}}--{{id}}" name="partList" value="{{category}}--{{id}}" checked="checked"/>
+                <label for="part--{{category}}--{{id}}">{{name}} ({{provider}})</label>
+            </li>
+        {{/parts}}    
+    </ul>
+</div>

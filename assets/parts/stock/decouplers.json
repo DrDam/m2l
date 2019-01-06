@@ -1,0 +1,67 @@
+[
+    {
+        "id": "Decoupler_0",
+        "name": "TD-06 Decoupler",
+        "tech": "precisionEngineering",
+        "cost": 300,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.01,
+            "full": 0.01
+        },
+        "size": "0",
+        "is_radial": false
+    },
+    {
+        "id": "Decoupler_1",
+        "name": "TD-12 Decoupler",
+        "tech": "engineering101",
+        "cost": 400,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.04,
+            "full": 0.04
+        },
+        "size": "1",
+        "is_radial": false
+    },
+    {
+        "id": "Decoupler_2",
+        "name": "TD-25 Decoupler",
+        "tech": "generalConstruction",
+        "cost": 550,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.16,
+            "full": 0.16
+        },
+        "size": "2",
+        "is_radial": false
+    },
+    {
+        "id": "Decoupler_3",
+        "name": "TD-37 Decoupler",
+        "tech": "largeVolumeContainment",
+        "cost": 600,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.36,
+            "full": 0.36
+        },
+        "size": "3",
+        "is_radial": false
+    },
+    {
+        "id": "Radial",
+        "name": "TT-38K Radial Decoupler",
+        "tech": "largeVolumeContainment",
+        "cost": 600,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.25,
+            "full": 0.25
+        },
+        "size": false,
+        "is_radial": true
+    }
+]

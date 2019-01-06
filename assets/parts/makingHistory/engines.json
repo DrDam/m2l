@@ -1,0 +1,352 @@
+{
+    "LiquidEngineKE-1": {
+        "id": "LiquidEngineKE-1",
+        "name": "Kerbodyne KE-1 \"Mastodon\" Liquid Fuel Engine",
+        "tech": "veryHeavyRocketry",
+        "cost": 22000,
+        "mass": {
+            "empty": 5,
+            "full": 5
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "modes": {
+            "LiquidFuel": [
+                {
+                    "MaxThrust": 1350,
+                    "curve": [
+                        {
+                            "atmo": 0,
+                            "ISP": 290,
+                            "Thrust": 1350
+                        },
+                        {
+                            "atmo": 1,
+                            "ISP": 280,
+                            "Thrust": 1303.4483
+                        },
+                        {
+                            "atmo": 9,
+                            "ISP": 0.001,
+                            "Thrust": 0.0047
+                        }
+                    ],
+                    "conso": {
+                        "proportions": {
+                            "LiquidFuel": 0.9,
+                            "Oxidizer": 1.1
+                        },
+                        "total": {
+                            "mass": 0.4745,
+                            "unit": 94.9067
+                        }
+                    },
+                    "type": "LiquidFuel"
+                }
+            ]
+        }
+    },
+    "LiquidEngineLV-T91": {
+        "id": "LiquidEngineLV-T91",
+        "name": "LV-T91 \"Cheetah\" Liquid Fuel Engine",
+        "tech": "heavierRocketry",
+        "cost": 1000,
+        "mass": {
+            "empty": 1,
+            "full": 1
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "modes": {
+            "LiquidFuel": [
+                {
+                    "MaxThrust": 125,
+                    "curve": [
+                        {
+                            "atmo": 0,
+                            "ISP": 345,
+                            "Thrust": 125
+                        },
+                        {
+                            "atmo": 1,
+                            "ISP": 150,
+                            "Thrust": 54.3478
+                        },
+                        {
+                            "atmo": 9,
+                            "ISP": 0.001,
+                            "Thrust": 0.0004
+                        }
+                    ],
+                    "conso": {
+                        "proportions": {
+                            "LiquidFuel": 0.9,
+                            "Oxidizer": 1.1
+                        },
+                        "total": {
+                            "mass": 0.0369,
+                            "unit": 7.3867
+                        }
+                    },
+                    "type": "LiquidFuel"
+                }
+            ]
+        }
+    },
+    "LiquidEngineLV-TX87": {
+        "id": "LiquidEngineLV-TX87",
+        "name": "LV-TX87 \"Bobcat\" Liquid Fuel Engine",
+        "tech": "heavierRocketry",
+        "cost": 2000,
+        "mass": {
+            "empty": 2,
+            "full": 2
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "modes": {
+            "LiquidFuel": [
+                {
+                    "MaxThrust": 400,
+                    "curve": [
+                        {
+                            "atmo": 0,
+                            "ISP": 310,
+                            "Thrust": 400
+                        },
+                        {
+                            "atmo": 1,
+                            "ISP": 290,
+                            "Thrust": 374.1935
+                        },
+                        {
+                            "atmo": 9,
+                            "ISP": 0.001,
+                            "Thrust": 0.0013
+                        }
+                    ],
+                    "conso": {
+                        "proportions": {
+                            "LiquidFuel": 0.9,
+                            "Oxidizer": 1.1
+                        },
+                        "total": {
+                            "mass": 0.1315,
+                            "unit": 26.3063
+                        }
+                    },
+                    "type": "LiquidFuel"
+                }
+            ]
+        }
+    },
+    "LiquidEngineRE-I2": {
+        "id": "LiquidEngineRE-I2",
+        "name": "RE-I2 \"Skiff\" Liquid Fuel Engine",
+        "tech": "heavierRocketry",
+        "cost": 1500,
+        "mass": {
+            "empty": 1,
+            "full": 1
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "modes": {
+            "LiquidFuel": [
+                {
+                    "MaxThrust": 300,
+                    "curve": [
+                        {
+                            "atmo": 0,
+                            "ISP": 330,
+                            "Thrust": 300
+                        },
+                        {
+                            "atmo": 1,
+                            "ISP": 265,
+                            "Thrust": 240.9091
+                        },
+                        {
+                            "atmo": 9,
+                            "ISP": 0.001,
+                            "Thrust": 0.0009
+                        }
+                    ],
+                    "conso": {
+                        "proportions": {
+                            "LiquidFuel": 0.9,
+                            "Oxidizer": 1.1
+                        },
+                        "total": {
+                            "mass": 0.0927,
+                            "unit": 18.534
+                        }
+                    },
+                    "type": "LiquidFuel"
+                }
+            ]
+        }
+    },
+    "LiquidEngineRE-J10": {
+        "id": "LiquidEngineRE-J10",
+        "name": "RE-J10 \"Wolfhound\" Liquid Fuel Engine AJ10",
+        "tech": "heavyRocketry",
+        "cost": 1680,
+        "mass": {
+            "empty": 2.5,
+            "full": 2.5
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "modes": {
+            "LiquidFuel": [
+                {
+                    "MaxThrust": 375,
+                    "curve": [
+                        {
+                            "atmo": 0,
+                            "ISP": 412,
+                            "Thrust": 375
+                        },
+                        {
+                            "atmo": 1,
+                            "ISP": 70,
+                            "Thrust": 63.7136
+                        },
+                        {
+                            "atmo": 3,
+                            "ISP": 0.001,
+                            "Thrust": 0.0009
+                        }
+                    ],
+                    "conso": {
+                        "proportions": {
+                            "LiquidFuel": 0.9,
+                            "Oxidizer": 1.1
+                        },
+                        "total": {
+                            "mass": 0.0928,
+                            "unit": 18.5565
+                        }
+                    },
+                    "type": "LiquidFuel"
+                }
+            ]
+        }
+    },
+    "LiquidEngineRK-7": {
+        "id": "LiquidEngineRK-7",
+        "name": "RK-7 \"Kodiak\" Liquid Fueled Engine",
+        "tech": "heavierRocketry",
+        "cost": 1300,
+        "mass": {
+            "empty": 1.25,
+            "full": 1.25
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "modes": {
+            "LiquidFuel": [
+                {
+                    "MaxThrust": 240,
+                    "curve": [
+                        {
+                            "atmo": 0,
+                            "ISP": 305,
+                            "Thrust": 240
+                        },
+                        {
+                            "atmo": 1,
+                            "ISP": 265,
+                            "Thrust": 208.5246
+                        },
+                        {
+                            "atmo": 9,
+                            "ISP": 0.001,
+                            "Thrust": 0.0008
+                        }
+                    ],
+                    "conso": {
+                        "proportions": {
+                            "LiquidFuel": 0.9,
+                            "Oxidizer": 1.1
+                        },
+                        "total": {
+                            "mass": 0.0802,
+                            "unit": 16.0425
+                        }
+                    },
+                    "type": "LiquidFuel"
+                }
+            ]
+        }
+    },
+    "LiquidEngineRV-1": {
+        "id": "LiquidEngineRV-1",
+        "name": "RV-1 \"Cub\" Vernier Engine",
+        "tech": "heavierRocketry",
+        "cost": 1000,
+        "mass": {
+            "empty": 0.18,
+            "full": 0.18
+        },
+        "stackable": {
+            "top": false,
+            "bottom": false
+        },
+        "is_radial": true,
+        "modes": {
+            "LiquidFuel": [
+                {
+                    "MaxThrust": 40,
+                    "curve": [
+                        {
+                            "atmo": 0,
+                            "ISP": 320,
+                            "Thrust": 40
+                        },
+                        {
+                            "atmo": 1,
+                            "ISP": 270,
+                            "Thrust": 33.75
+                        },
+                        {
+                            "atmo": 7,
+                            "ISP": 0.001,
+                            "Thrust": 0.0001
+                        }
+                    ],
+                    "conso": {
+                        "proportions": {
+                            "LiquidFuel": 0.9,
+                            "Oxidizer": 1.1
+                        },
+                        "total": {
+                            "mass": 0.0127,
+                            "unit": 2.5484
+                        }
+                    },
+                    "type": "LiquidFuel"
+                }
+            ]
+        }
+    }
+}

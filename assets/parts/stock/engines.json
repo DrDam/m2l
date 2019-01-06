@@ -1,0 +1,929 @@
+[
+    {
+        "id": "MassiveBooster",
+        "name": "S1 SRB-KD25k \"Kickback\" Solid Fuel Booster",
+        "tech": "heavyRocketry",
+        "cost": 2700,
+        "provider": "stock",
+        "mass": {
+            "empty": 4.5,
+            "full": 24
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 220,
+                "Thrust": 670
+            },
+            {
+                "atmo": 1,
+                "ISP": 195,
+                "Thrust": 593.8636
+            },
+            {
+                "atmo": 7,
+                "ISP": 0.001,
+                "Thrust": 0.003
+            }
+        ],
+        "conso": [
+            "SolidFuel"
+        ]
+    },
+    {
+        "id": "omsEngine",
+        "name": "O-10 \"Puff\" MonoPropellant Fuel Engine",
+        "tech": "precisionPropulsion",
+        "cost": 150,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.09,
+            "full": 0.09
+        },
+        "stackable": {
+            "top": false,
+            "bottom": false
+        },
+        "is_radial": true,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 250,
+                "Thrust": 20
+            },
+            {
+                "atmo": 1,
+                "ISP": 120,
+                "Thrust": 9.6
+            },
+            {
+                "atmo": 4,
+                "ISP": 0.001,
+                "Thrust": 0.0001
+            }
+        ],
+        "conso": [
+            "MonoPropellant"
+        ]
+    },
+    {
+        "id": "Size2LFB",
+        "name": "LFB KR-1x2 \"Twin-Boar\" Liquid Fuel Engine",
+        "tech": "heavierRocketry",
+        "cost": 17000,
+        "provider": "stock",
+        "mass": {
+            "empty": 10.5,
+            "full": 42.5
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": false
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 300,
+                "Thrust": 2000
+            },
+            {
+                "atmo": 1,
+                "ISP": 280,
+                "Thrust": 1866.6667
+            },
+            {
+                "atmo": 9,
+                "ISP": 0.001,
+                "Thrust": 0.0067
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Size3AdvancedEngine",
+        "name": "Kerbodyne KR-2L+ \"Rhino\" Liquid Fuel Engine",
+        "tech": "veryHeavyRocketry",
+        "cost": 25000,
+        "provider": "stock",
+        "mass": {
+            "empty": 9,
+            "full": 9
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": "3"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 340,
+                "Thrust": 2000
+            },
+            {
+                "atmo": 1,
+                "ISP": 205,
+                "Thrust": 1205.8824
+            },
+            {
+                "atmo": 5,
+                "ISP": 0.001,
+                "Thrust": 0.0059
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "Size3EngineCluster",
+        "name": "S3 KS-25x4 \"Mammoth\" Liquid Fuel Engine",
+        "tech": "veryHeavyRocketry",
+        "cost": 39000,
+        "provider": "stock",
+        "mass": {
+            "empty": 15,
+            "full": 15
+        },
+        "stackable": {
+            "top": "3",
+            "bottom": false
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 315,
+                "Thrust": 4000
+            },
+            {
+                "atmo": 1,
+                "ISP": 295,
+                "Thrust": 3746.0317
+            },
+            {
+                "atmo": 12,
+                "ISP": 0.001,
+                "Thrust": 0.0127
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "ionEngine",
+        "name": "IX-6315 \"Dawn\" Electric Propulsion System",
+        "tech": "ionPropulsion",
+        "cost": 8000,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.25,
+            "full": 0.25
+        },
+        "stackable": {
+            "top": "0",
+            "bottom": "0"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 4200,
+                "Thrust": 2
+            },
+            {
+                "atmo": 1,
+                "ISP": 100,
+                "Thrust": 0.0476
+            },
+            {
+                "atmo": 1.2,
+                "ISP": 0.001,
+                "Thrust": 0
+            }
+        ],
+        "conso": [
+            "XenonGas"
+        ]
+    },
+    {
+        "id": "smallRadialEngine",
+        "name": "24-77 \"Twitch\" Liquid Fuel Engine",
+        "tech": "precisionPropulsion",
+        "cost": 400,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.09,
+            "full": 0.09
+        },
+        "stackable": {
+            "top": false,
+            "bottom": false
+        },
+        "is_radial": true,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 290,
+                "Thrust": 16
+            },
+            {
+                "atmo": 1,
+                "ISP": 250,
+                "Thrust": 13.7931
+            },
+            {
+                "atmo": 7,
+                "ISP": 0.001,
+                "Thrust": 0.0001
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "liquidEngineMini",
+        "name": "48-7S \"Spark\" Liquid Fuel Engine",
+        "tech": "propulsionSystems",
+        "cost": 240,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.1,
+            "full": 0.1
+        },
+        "stackable": {
+            "top": "0",
+            "bottom": "0"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 320,
+                "Thrust": 20
+            },
+            {
+                "atmo": 1,
+                "ISP": 270,
+                "Thrust": 16.875
+            },
+            {
+                "atmo": 7,
+                "ISP": 0.001,
+                "Thrust": 0.0001
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "toroidalAerospike",
+        "name": "T-1 Toroidal Aerospike \"Dart\" Liquid Fuel Engine",
+        "tech": "hypersonicFlight",
+        "cost": 3850,
+        "provider": "stock",
+        "mass": {
+            "empty": 1,
+            "full": 1
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 340,
+                "Thrust": 180
+            },
+            {
+                "atmo": 1,
+                "ISP": 290,
+                "Thrust": 153.5294
+            },
+            {
+                "atmo": 5,
+                "ISP": 230,
+                "Thrust": 121.7647
+            },
+            {
+                "atmo": 10,
+                "ISP": 170,
+                "Thrust": 90
+            },
+            {
+                "atmo": 20,
+                "ISP": 0.001,
+                "Thrust": 0.0005
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "microEngine",
+        "name": "LV-1 \"Ant\" Liquid Fuel Engine",
+        "tech": "propulsionSystems",
+        "cost": 110,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.02,
+            "full": 0.02
+        },
+        "stackable": {
+            "top": "0",
+            "bottom": "0"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 315,
+                "Thrust": 2
+            },
+            {
+                "atmo": 1,
+                "ISP": 80,
+                "Thrust": 0.5079
+            },
+            {
+                "atmo": 3,
+                "ISP": 0.001,
+                "Thrust": 0
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "radialEngineMini",
+        "name": "LV-1R \"Spider\" Liquid Fuel Engine",
+        "tech": "precisionPropulsion",
+        "cost": 120,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.02,
+            "full": 0.02
+        },
+        "stackable": {
+            "top": false,
+            "bottom": false
+        },
+        "is_radial": true,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 290,
+                "Thrust": 2
+            },
+            {
+                "atmo": 1,
+                "ISP": 260,
+                "Thrust": 1.7931
+            },
+            {
+                "atmo": 8,
+                "ISP": 0.001,
+                "Thrust": 0
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "liquidEngine3",
+        "name": "LV-909 \"Terrier\" Liquid Fuel Engine",
+        "tech": "advRocketry",
+        "cost": 390,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.5,
+            "full": 0.5
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 345,
+                "Thrust": 60
+            },
+            {
+                "atmo": 1,
+                "ISP": 85,
+                "Thrust": 14.7826
+            },
+            {
+                "atmo": 3,
+                "ISP": 0.001,
+                "Thrust": 0.0002
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "nuclearEngine",
+        "name": "LV-N \"Nerv\" Atomic Rocket Motor",
+        "tech": "nuclearPropulsion",
+        "cost": 10000,
+        "provider": "stock",
+        "mass": {
+            "empty": 3,
+            "full": 3
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 800,
+                "Thrust": 60
+            },
+            {
+                "atmo": 1,
+                "ISP": 185,
+                "Thrust": 13.875
+            },
+            {
+                "atmo": 2,
+                "ISP": 0.001,
+                "Thrust": 0.0001
+            }
+        ],
+        "conso": [
+            "LiquidFuel"
+        ]
+    },
+    {
+        "id": "liquidEngine",
+        "name": "LV-T30 \"Reliant\" Liquid Fuel Engine",
+        "tech": "generalRocketry",
+        "cost": 1100,
+        "provider": "stock",
+        "mass": {
+            "empty": 1.25,
+            "full": 1.25
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 310,
+                "Thrust": 240
+            },
+            {
+                "atmo": 1,
+                "ISP": 265,
+                "Thrust": 205.1613
+            },
+            {
+                "atmo": 7,
+                "ISP": 0.001,
+                "Thrust": 0.0008
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "liquidEngine2",
+        "name": "LV-T45 \"Swivel\" Liquid Fuel Engine",
+        "tech": "basicRocketry",
+        "cost": 1200,
+        "provider": "stock",
+        "mass": {
+            "empty": 1.5,
+            "full": 1.5
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 320,
+                "Thrust": 215
+            },
+            {
+                "atmo": 1,
+                "ISP": 250,
+                "Thrust": 167.9688
+            },
+            {
+                "atmo": 6,
+                "ISP": 0.001,
+                "Thrust": 0.0007
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "liquidEngine1-2",
+        "name": "RE-M3 \"Mainsail\" Liquid Fuel Engine",
+        "tech": "heavierRocketry",
+        "cost": 13000,
+        "provider": "stock",
+        "mass": {
+            "empty": 6,
+            "full": 6
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 310,
+                "Thrust": 1500
+            },
+            {
+                "atmo": 1,
+                "ISP": 285,
+                "Thrust": 1379.0323
+            },
+            {
+                "atmo": 9,
+                "ISP": 0.001,
+                "Thrust": 0.0048
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "radialLiquidEngine1-2",
+        "name": "Mk-55 \"Thud\" Liquid Fuel Engine",
+        "tech": "advRocketry",
+        "cost": 820,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.9,
+            "full": 0.9
+        },
+        "stackable": {
+            "top": false,
+            "bottom": false
+        },
+        "is_radial": true,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 305,
+                "Thrust": 120
+            },
+            {
+                "atmo": 1,
+                "ISP": 275,
+                "Thrust": 108.1967
+            },
+            {
+                "atmo": 9,
+                "ISP": 0.001,
+                "Thrust": 0.0004
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "liquidEngine2-2",
+        "name": "RE-L10 \"Poodle\" Liquid Fuel Engine",
+        "tech": "heavyRocketry",
+        "cost": 1300,
+        "provider": "stock",
+        "mass": {
+            "empty": 1.75,
+            "full": 1.75
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 350,
+                "Thrust": 250
+            },
+            {
+                "atmo": 1,
+                "ISP": 90,
+                "Thrust": 64.2857
+            },
+            {
+                "atmo": 3,
+                "ISP": 0.001,
+                "Thrust": 0.0007
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "SSME",
+        "name": "S3 KS-25 \"Vector\" Liquid Fuel Engine",
+        "tech": "veryHeavyRocketry",
+        "cost": 18000,
+        "provider": "stock",
+        "mass": {
+            "empty": 4,
+            "full": 4
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 315,
+                "Thrust": 1000
+            },
+            {
+                "atmo": 1,
+                "ISP": 295,
+                "Thrust": 936.5079
+            },
+            {
+                "atmo": 12,
+                "ISP": 0.001,
+                "Thrust": 0.0032
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "engineLargeSkipper",
+        "name": "RE-I5 \"Skipper\" Liquid Fuel Engine",
+        "tech": "heavyRocketry",
+        "cost": 5300,
+        "provider": "stock",
+        "mass": {
+            "empty": 3,
+            "full": 3
+        },
+        "stackable": {
+            "top": "2",
+            "bottom": "2"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 320,
+                "Thrust": 650
+            },
+            {
+                "atmo": 1,
+                "ISP": 280,
+                "Thrust": 568.75
+            },
+            {
+                "atmo": 6,
+                "ISP": 0.001,
+                "Thrust": 0.002
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "RAPIER",
+        "name": "CR-7 R.A.P.I.E.R. Engine",
+        "tech": "aerospaceTech",
+        "cost": 6000,
+        "provider": "stock",
+        "mass": {
+            "empty": 2,
+            "full": 2
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 305,
+                "Thrust": 180
+            },
+            {
+                "atmo": 1,
+                "ISP": 275,
+                "Thrust": 162.2951
+            },
+            {
+                "atmo": 9,
+                "ISP": 0.001,
+                "Thrust": 0.0006
+            }
+        ],
+        "conso": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    },
+    {
+        "id": "solidBooster1-1",
+        "name": "BACC \"Thumper\" Solid Fuel Booster",
+        "tech": "generalRocketry",
+        "cost": 850,
+        "provider": "stock",
+        "mass": {
+            "empty": 1.5,
+            "full": 7.65
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 210,
+                "Thrust": 300
+            },
+            {
+                "atmo": 1,
+                "ISP": 175,
+                "Thrust": 250
+            },
+            {
+                "atmo": 6,
+                "ISP": 0.001,
+                "Thrust": 0.0014
+            }
+        ],
+        "conso": [
+            "SolidFuel"
+        ]
+    },
+    {
+        "id": "solidBooster",
+        "name": "RT-10 \"Hammer\" Solid Fuel Booster",
+        "tech": "basicRocketry",
+        "cost": 400,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.75,
+            "full": 3.5625
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 195,
+                "Thrust": 227
+            },
+            {
+                "atmo": 1,
+                "ISP": 170,
+                "Thrust": 197.8974
+            },
+            {
+                "atmo": 7,
+                "ISP": 0.001,
+                "Thrust": 0.0012
+            }
+        ],
+        "conso": [
+            "SolidFuel"
+        ]
+    },
+    {
+        "id": "solidBooster_sm",
+        "name": "RT-5 \"Flea\" Solid Fuel Booster",
+        "tech": "start",
+        "cost": 200,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.45,
+            "full": 1.5
+        },
+        "stackable": {
+            "top": "1",
+            "bottom": "1"
+        },
+        "is_radial": false,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 165,
+                "Thrust": 192
+            },
+            {
+                "atmo": 1,
+                "ISP": 140,
+                "Thrust": 162.9091
+            },
+            {
+                "atmo": 6,
+                "ISP": 0.001,
+                "Thrust": 0.0012
+            }
+        ],
+        "conso": [
+            "SolidFuel"
+        ]
+    },
+    {
+        "id": "sepMotor1",
+        "name": "Sepratron I",
+        "tech": "precisionPropulsion",
+        "cost": 75,
+        "provider": "stock",
+        "mass": {
+            "empty": 0.0125,
+            "full": 0.0725
+        },
+        "stackable": {
+            "top": false,
+            "bottom": false
+        },
+        "is_radial": true,
+        "curve": [
+            {
+                "atmo": 0,
+                "ISP": 154,
+                "Thrust": 18
+            },
+            {
+                "atmo": 1,
+                "ISP": 118,
+                "Thrust": 13.7922
+            },
+            {
+                "atmo": 6,
+                "ISP": 0.001,
+                "Thrust": 0.0001
+            }
+        ],
+        "conso": [
+            "SolidFuel"
+        ]
+    }
+]
