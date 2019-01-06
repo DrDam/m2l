@@ -293,12 +293,6 @@ var master;
             // Generate Engine Stacks
             $('#message').html("Working on engines");
             PartToCalculation.enginesStacks = makeEngineStacks(SelectedParts.engines, SelectedParts.couplers, simu.maxRadial);
-            console.log('aa');
-            // Generate Tank Stacks
-            $('#message').html("Welding tanks");
-           // PartToCalculation.fuelTanksStacks = makeFuelStacks(SelectedParts.fuelTanks, SelectedParts.adapters, simu.maxTanks);
-
-            console.log('End stack generation at ' + new Date());
 
             // Show table
             $('html, body').animate({
@@ -331,14 +325,14 @@ var master;
 
                 if (channel === 'end') {
                     PartToCalculation.fuelTanksStacks = e.data.stacks;
-                    console.log('Search Rockets');
+                    console.log('Search Rockets'  + new Date());
                     // Launch workers !
                     searchRockets(1);
         
                     $('#message').html("Recruiting Kerbals Engineer");
                 }
                 if(channel == 'info') {
-                    $('#message').html("welding more tanks (" + e.data.nb + ")");
+                    $('#message').html("Welding more tanks stacks (" + e.data.nb + ")");
                 }
             });
 
