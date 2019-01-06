@@ -318,6 +318,7 @@ var master;
 
             var fuelStacksWorker = new Worker('workers/fuelStacksWorker.js');
             fuelStacksWorker.postMessage({
+                
                 channel: 'create',
                 parts: SelectedParts.fuelTanks.concat(SelectedParts.adapters),
                 nbTanks: maxTanks,
