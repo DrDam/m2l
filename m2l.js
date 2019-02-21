@@ -200,7 +200,7 @@ var master;
                         SelectedParts[part_group] = [];
                         for (var part_id in Parts[part_group]) {
                             if (getKeys(Parts[part_group][part_id].provider)[0] == collection_name) {
-                                SelectedParts[part_group].push(Object.create((Parts[part_group][part_id]));
+                                SelectedParts[part_group].push(Object.create(Parts[part_group][part_id]));
                             }
                         }
                     }
