@@ -200,13 +200,13 @@ var master;
                         SelectedParts[part_group] = [];
                         for (var part_id in Parts[part_group]) {
                             if (getKeys(Parts[part_group][part_id].provider)[0] == collection_name) {
-                                SelectedParts[part_group].push(clone(Parts[part_group][part_id]));
+                                SelectedParts[part_group].push(Object.create((Parts[part_group][part_id]));
                             }
                         }
                     }
                 }
                 else {
-                    SelectedParts = clone(Parts);
+                    SelectedParts = Object.create(Parts);
                 }
             }
             else {
@@ -225,7 +225,7 @@ var master;
                     for (var key in Parts[part_category]) {
                         var part = Parts[part_category][key];
                         if (collection[part_category] && collection[part_category][part.id]) {
-                            SelectedParts[part_category].push(clone(Parts[part_category][key]));
+                            SelectedParts[part_category].push(Object.create(Parts[part_category][key]));
                         }
                     }
                 }
@@ -270,7 +270,7 @@ var master;
             PartToCalculation.adapters = SelectedParts.adapters;
             PartToCalculation.decouplers = SelectedParts.decouplers;
             PartToCalculation.enginesStacks = [];
-            PartToCalculation.fuelTanksStacks = [];
+            PartToCalculation.fuelTanksStacks = SelectedParts.fuelTanks;
             /**********************************/
             /* End Init calculation variables */
             /**********************************/
@@ -291,7 +291,7 @@ var master;
                 scrollTop: $("#results").offset().top
             }, 1000);
             // Generate Engine Stacks
-            $('#message').html("Working on engines");
+            $('#message').html("Contacting Werner Von Kerbraun & Serguei Kebolev");
             PartToCalculation.enginesStacks = makeEngineStacks(SelectedParts.engines, SelectedParts.couplers, simu.maxRadial);
 
             // Show table
@@ -299,45 +299,15 @@ var master;
                 scrollTop: $("#results").offset().top
             }, 1000);
 
-            makeFuelTanksStacks(simu.maxTanks);
+            console.log('Search Rockets'  + new Date());
+            // Launch workers !
+            searchRockets();
+
+            $('#message').html("Recruiting Kerbals Engineer");
 
             // Prevent default
             return false;
         });
-
-        /***************************/
-        /** Making fuel Tank Stack */
-        /***************************/
-        function makeFuelTanksStacks(maxTanks) {
-
-            var fuelStacksWorker = new Worker('workers/fuelStacksWorker.js');
-            fuelStacksWorker.postMessage({
-                
-                channel: 'create',
-                parts: SelectedParts.fuelTanks.concat(SelectedParts.adapters),
-                nbTanks: maxTanks,
-                debug: computationData.simu.debug
-            });
-
-            fuelStacksWorker.addEventListener('message', function (e) {
-                var result = e.data;
-                var channel = result.channel;
-
-                if (channel === 'end') {
-                    PartToCalculation.fuelTanksStacks = e.data.stacks;
-                    console.log('Search Rockets'  + new Date());
-                    // Launch workers !
-                    searchRockets(1);
-        
-                    $('#message').html("Recruiting Kerbals Engineer");
-                }
-                if(channel == 'info') {
-                    $('#message').html("Welding more tanks stacks (" + e.data.nb + ")");
-                }
-            });
-
-            fuelStacksWorker.postMessage({ channel: "run" });
-        }
 
 
         /**********************/
@@ -345,12 +315,11 @@ var master;
         /**********************/
 
         // Search all rockets
-        function searchRockets(nbStages) {
-            master = new Worker("workers/getRocket.js");
-            var master_id = "master-" + nbStages;
+        function searchRockets() {
+            master = new Worker("workers/makeRocket.js");
+            var master_id = "master";
 
-            var master_data = clone(computationData);
-            master_data.rocket.stages = nbStages;
+            var master_data = Object.create(computationData);
             master.postMessage({
                 channel: 'create',
                 parts: PartToCalculation,
