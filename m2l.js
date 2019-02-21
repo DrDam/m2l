@@ -316,7 +316,7 @@ var master;
 
         // Search all rockets
         function searchRockets() {
-            master = new Worker("workers/makeRocket.js");
+            master = new Worker("workers/master.js");
             var master_id = "master";
 
             var master_data = Object.create(computationData);
