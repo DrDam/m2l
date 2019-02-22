@@ -200,13 +200,13 @@ var master;
                         SelectedParts[part_group] = [];
                         for (var part_id in Parts[part_group]) {
                             if (getKeys(Parts[part_group][part_id].provider)[0] == collection_name) {
-                                SelectedParts[part_group].push(Object.create(Parts[part_group][part_id]));
+                                SelectedParts[part_group].push(clone(Parts[part_group][part_id]));
                             }
                         }
                     }
                 }
                 else {
-                    SelectedParts = Object.create(Parts);
+                    SelectedParts = clone(Parts);
                 }
             }
             else {
@@ -225,7 +225,7 @@ var master;
                     for (var key in Parts[part_category]) {
                         var part = Parts[part_category][key];
                         if (collection[part_category] && collection[part_category][part.id]) {
-                            SelectedParts[part_category].push(Object.create(Parts[part_category][key]));
+                            SelectedParts[part_category].push(clone(Parts[part_category][key]));
                         }
                     }
                 }
@@ -291,7 +291,7 @@ var master;
                 scrollTop: $("#results").offset().top
             }, 1000);
             // Generate Engine Stacks
-            $('#message').html("Contacting Werner Von Kerbraun & Serguei Kebolev");
+            $('#message').html("Recruiting Kerbals Engineer");
             PartToCalculation.enginesStacks = makeEngineStacks(SelectedParts.engines, SelectedParts.couplers, simu.maxRadial);
 
             // Show table
@@ -303,7 +303,7 @@ var master;
             // Launch workers !
             searchRockets();
 
-            $('#message').html("Recruiting Kerbals Engineer");
+            $('#message').html("Let's see Werner Von Kerbraun & Serguei Kebolev working together");
 
             // Prevent default
             return false;
@@ -319,14 +319,14 @@ var master;
             master = new Worker("workers/master.js");
             var master_id = "master";
 
-            var master_data = Object.create(computationData);
+            var master_data = clone(computationData);
             master.postMessage({
                 channel: 'create',
                 parts: PartToCalculation,
                 id: master_id,
                 debug: computationData.simu.debug
             });
-            master.postMessage({ channel: "init", data: master_data });
+
             master.addEventListener('message', function (e) {
                 var result = e.data;
                 var channel = result.channel;
@@ -351,16 +351,12 @@ var master;
                     var id_to_kill = result.id;
                     DEBUG.send(id_to_kill + ' # END');
                     master = undefined;
-                    if (computationData.rocket.stages >= nbStages + 1) {
-                        searchRockets(nbStages + 1, computationData);
-                    } else {
-                        console.log('END Calculations at ' + new Date());
-                        $('#stop').prop('disabled', true);
-                        $('#start').prop('disabled', false);
-                    }
+                    console.log('END Calculations at ' + new Date());
+                    $('#stop').prop('disabled', true);
+                    $('#start').prop('disabled', false);
                 }
             });
-            master.postMessage({ channel: "run" });
+            master.postMessage({ channel: "run", data: master_data });
         }
 
 
