@@ -1,26 +1,67 @@
-importScripts('../lib/lib.js', 'getFuelTanks.js');
+importScripts('../lib/lib.js');
 var startTime = new Date();
 
-// Generate 1 stage Rocket
+// Main worker data
 var worker_id;
 var Global_data = {};
 var Parts = {};
 var Global_status = 'run';
-var fragment_id;
 
+// EngineStack
+var EnginesStack = [];
+
+// FuelStackWorkers Status
+var FuelStackWorkers = {};
+var FuelStackWorkersStatus = {};
+var FuelStackWorkersCreated = false;
+
+// Wait for another pull of data to process
 function autostop() {
+    cleanData();
     var stopped = new Date();
-    Global_data = null;
     DEBUG.send(worker_id + ' # wait # ' + round((stopped - startTime) / 1000, 0) + "sec running");
     self.postMessage({ channel: 'wait', id: worker_id });
 }
 
+// Delete me
 function killMe() {
-    DEBUG.send(worker_id + ' # killMe');
-    self.postMessage({ channel: 'killMe', id: worker_id });
-    Global_data = null;
-    close();
+    if (Object.values(FuelStackWorkersStatus).join('') === '') {
+        DEBUG.send(worker_id + ' # killMe');
+        self.postMessage({ channel: 'killMe', id: worker_id });
+        cleanData();
+        Parts = {};
+        close();
+    }
 }
+
+// Refresh Temporary Results Stack & event listener
+function cleanData() {
+    Global_data = {};
+    EnginesStack = [];
+
+    EnginesStack.push = function (e) {
+        Array.prototype.push.call(EnginesStack, e);
+        self.dispatchEvent(new CustomEvent('StackPush'));
+    };
+
+    EnginesStack.shift = function (e) {
+        var output = Array.prototype.shift.call(EnginesStack, e);
+        if (output === undefined && EnginesStack.length === 0) {
+            self.dispatchEvent(new CustomEvent('StackIsEmpty'));
+        }
+        return output;
+    };
+}
+
+// Stop All Children
+function SendStopToAllChildren() {
+    for (var i in FuelStackWorkers) {
+        if (FuelStackWorkers[i] !== undefined) {
+            FuelStackWorkers[i].postMessage({ channel: "stop" });
+        }
+    }
+}
+
 
 // Communication
 self.addEventListener('message', function (e) {
@@ -28,7 +69,7 @@ self.addEventListener('message', function (e) {
     if (inputs.channel == 'stop') {
         Global_status = 'stop';
         DEBUG.send(worker_id + ' # to stop');
-        killMe();
+        SendStopToAllChildren();
     }
 
     if (inputs.channel == 'create') {
@@ -40,22 +81,80 @@ self.addEventListener('message', function (e) {
     }
 
     if (inputs.channel == 'run') {
+        cleanData();
         Global_data = inputs.data;
-        console.log(Global_data);
+        //console.log(Global_data);
         startTime = new Date();
         DEBUG.send(worker_id + ' # run');
-        drawMeARocket();
+        drawMeStages();
         return;
     }
 });
 
 // Processing functions
-function drawMeARocket() {
+function drawMeStages() {
+
+    // Create fuelStackWorker
+    if(FuelStackWorkersCreated == false) {
+        initFuelStackWorker();
+    }
+
     // Make Calculations
     giveMeAllSingleStage();
+}
 
-    // Add timeout before end computation message sending
-    setTimeout(function () { autostop(); }, 10);
+// Make Worker Collections
+function initFuelStackWorker() {
+    var i = 0;
+    while(i < Global_data.simu.nbWorker) {
+        // Prepare worker id
+        var worker_uid = worker_id + '--FuelStack--' + i;
+
+        // Init Worker
+        FuelStackWorkersStatus[worker_uid] = 'created';
+        var w = new Worker('getFuelStacks.js');
+        DEBUG.send('Generate woker ' + worker_uid);
+        FuelStackWorkers[worker_uid] = w;
+
+        // Add listener on worker
+        w.addEventListener('message', function (e) {
+            var channel = e.data.channel;
+            var sub_worker_id = e.data.id;
+            if (channel == 'badDesign') {
+                self.postMessage({ channel: 'badDesign' });
+            }
+            if (channel === 'killMe') {
+                FuelStackWorkers[sub_worker_id] = undefined;
+                FuelStackWorkersStatus[sub_worker_id] = '';
+                killMe();
+            }
+            if (channel === 'wait') {
+                FuelStackWorkersStatus[sub_worker_id] = 'wait';
+                // Continue calculation
+                generateStageStack(sub_worker_id);
+            }
+            if (channel === 'result') {
+                DEBUG.send(sub_worker_id + ' # send Result');
+                var result = e.data;
+                //  Manage results
+                
+                // If DeltaV & TWR ok => push to front
+
+                // Else => push to stack
+                /*RocketsStack.push({
+                    output: e.data.output,
+                    data: e.data.data
+                });*/
+                //console.log(result);
+            }
+        });
+
+        // Send create signal 
+        w.postMessage({ channel: 'create', id: worker_uid, parts: Parts, debug: Global_data.simu.debug });
+
+        // Next worker
+        i++;
+    }
 }
 
 function giveMeAllSingleStage() {
@@ -110,7 +209,7 @@ function giveMeAllSingleStage() {
         }
 
         var engine = Parts.engines[i];
-        console.log(engine);
+        //console.log(engine);
 
         // Prepare Masses values
         var MassEngineFull = engine.mass.full;
@@ -139,160 +238,98 @@ function giveMeAllSingleStage() {
 
             var Dv = ISP * SOI.Go * Math.log(MstageFull / MstageDry);
             var Dv_before_burn = restDvAfterEnd - Dv;
-            var AtmPressurBeforeBurne = AtmPressurEstimator(Dv_before_burn);
+            var AtmPressurBeforeBurn = AtmPressurEstimator(Dv_before_burn);
 
-            var stage = make_stage(AtmPressurBeforeBurne, engine, command, decoupler, null);
+            var stage = make_stage(AtmPressurBeforeBurn, engine, command, decoupler, null);
             self.postMessage({ channel: 'result', stage: stage, id: worker_id, data: Global_data });
+            continue engineLoop;
         }
 
-        // Generate all Tank stacks
-        //fuelStackLoop:
-        
-
-
-
-
-
-
-
-
-
-        // REWRITE
-        // REWRITE
-        // REWRITE
-
-        // Get Engine ISP / Thrust
-        //console.log(engine);
-        // @TODO : Add Atm curve
-        var curveData = getEngineCurveDateForAtm(caracts, 1);
-        var ISP = curveData.ISP;
-        var Thrust = curveData.Thrust;
-        var cu = clone(Global_data.cu);
-
-
-        cu.mass = cu.mass + decoupler.mass.full;
-
-        // calculate Fuel mass for the needed for Dv
-        var DvFactor = Math.exp(targetDv / (ISP * SOI.Go));
-        var Mcarbu = (DvFactor - 1) * MstageDry;
-
-        // Calcul of Mcarbu => OK ! Verified 10times
-
-        var no_tank = false;
-
-        // If Engine contain fuel ( Booster or TwinBoar )
-        var EngineFuelMass = 0;
-        if (MassEngineDry < MassEngineFull) {
-            EngineFuelMass = MassEngineFull - MassEngineDry;
-            Mcarbu -= EngineFuelMass;
-            // If onboard fuel are suffisant
-            if (Mcarbu < 0) {
-                Mcarbu = 0;
-                no_tank = true;
-            }
-        }
-
-
-
-        // Get Out engines where Mcarbu outrise twr
-        if (!testTwr(Thrust, MstageFull + Mcarbu, twr, SOI.Go)) {
-            //console.log('=>  OUT not enought TWR (' + Thrust / (MstageFull + Mcarbu) / SOI.Go + ')' );
-            self.postMessage({ channel: 'badDesign' });
-            continue;
-        }
-
-        var TankSolution = {};
-        if (no_tank === false) {
-            // Get Tank configuration
-            var stageDataForTank = {
-                // Engine informations
-                engine: engine,
-                ISP: ISP,
-                thrust: Thrust,
-
-                // Performance Target
-                cu: cu,
-                targetDv: targetDv,
-
-                // Constraints
-                twr: twr,
-                Go: SOI.Go
-            };
-            //console.log(' TESTING ' + Parts.engines[i].name + '(' + Parts.engines[i].id + ')');
-            TankSolution = getFuelTankSolution(stageDataForTank);
-            if (TankSolution === null) {
-                //console.log('=>  OUT not tank solution' );
-                self.postMessage({ channel: 'badDesign' });
-                continue;
-            }
-            else {
-                //console.log(stageDataForTank);
-            }
-            /*
-            console.log('#### FUEL TANK SOLUTION #####');
-            console.log(stageDataForTank);
-            console.log(TankSolution);
-            console.log('###########');
-            */
-        } else {
-            TankSolution.mFuel = 0;
-            TankSolution.mDry = 0;
-            TankSolution.cost = 0;
-            TankSolution.nb = 0;
-            TankSolution.solution = [];
-        }
-
-        // Make stage caracterics
-        MstageFull = cu.mass + MassEngineFull + TankSolution.mFuel + TankSolution.mDry;
-        MstageDry = cu.mass + MassEngineDry + TankSolution.mDry;
-        var stageFuelMass = TankSolution.mFuel + EngineFuelMass;
-        var TwrFull = Thrust / MstageFull / SOI.Go;
-        var TwrDry = Thrust / MstageDry / SOI.Go;
-        var burnDuration = stageFuelMass * ISP * SOI.Go / Thrust;
-        var Dv = ISP * SOI.Go * Math.log(MstageFull / MstageDry);
-        var cost = engine.cost + decoupler.cost + command.cost + TankSolution.cost;
-        var nb = engine.nb + 1 + command.nb + TankSolution.solution.length;
-        var stage = {
-            decoupler: decoupler.name,
-            commandModule: command.stack,
-            tanks: TankSolution.solution,
-            engine: engine.name,
-            mcarbu: stageFuelMass,
-            twr: {
-                min: TwrFull,
-                max: TwrDry
-            },
-            totalMass: MstageFull,
-            burn: burnDuration,
-            stageDv: Dv,
-            targetDv: targetDv,
-
+        // add Engine to Engine Stack
+        var data_to_calculation = {
+            cu: cu,
+            engine: engine,
+            command: command,
+            decoupler: decoupler,
+            SOI: SOI,
+            restDvAfterEnd: restDvAfterEnd,
+            twr: Global_data.rocket.twr,
+            max: Global_data.simu.maxTanks
         };
-        var output = {
-            stages: [stage],
-            totalMass: stage.totalMass,
-            burn: stage.burn,
-            stageDv: Dv,
-            nbStages: 1,
-            cost: cost,
-            nb:nb,
-            size: engine.stackable.bottom
-        };
-        self.postMessage({ channel: 'result', output: output, id: worker_id, data: Global_data });
+        EnginesStack.push(data_to_calculation);
+    }
+}
+       
+// When a Stack are pushed on tmp
+self.addEventListener('StackPush', function () {
+
+    DEBUG.send('# '+worker_id+' EnginesStack length # ' + EnginesStack.length);
+
+    for (var sub_worker_id in FuelStackWorkers) {
+        if (FuelStackWorkersStatus[sub_worker_id] === 'wait' || FuelStackWorkersStatus[sub_worker_id] === 'created') {
+            FuelStackWorkersStatus[sub_worker_id] = 'reserved';
+            generateStageStack(sub_worker_id);
+        }
+    }
+});
+
+// Signal end of all processing
+self.addEventListener('StackIsEmpty', function () {
+    if (Global_status === 'stop') {
+        SendStopToAllChildren();
+        return;
+    }
+
+    DEBUG.send('# '+worker_id+' EnginesStack is Empty');
+
+    // If there is nothing to compute, verify if end are possible
+    VerifyAutostop();
+});
+
+// Main calculation function
+function generateStageStack(sub_worker_id) {
+    // Intercept Stop command
+    if (Global_status === 'stop') {
+        SendStopToAllChildren();
+        return;
+    }
+
+    // Get new element
+    var Stack = EnginesStack.shift();
+
+    // If stack are empty, check if all calculation ended
+    if (Stack === undefined) {
+        VerifyAutostop();
+        return;
+    }
+
+    // Send Data to Worker
+    FuelStackWorkersStatus[sub_worker_id] = 'run';
+    FuelStackWorkers[sub_worker_id].postMessage({ channel: 'run', data: clone(Stack)  });
+}
+
+/******************/
+/** End condition */
+/******************/
+
+// control if with need autostop
+function VerifyAutostop() {
+    var nbRunning = 0;
+    for (var sub_worker_id in FuelStackWorkersStatus) {
+        if (FuelStackWorkersStatus[sub_worker_id] === 'run') {
+            nbRunning++;
+        }
+    }
+
+    if (nbRunning === 0) {
+        // Normal Stopping
+        autostop();
     }
 }
 
-
-
-
-
-
-
-
-
 /************/
-/* New code */
-/************/
+/* Helpers */
+/**********/
 
 // Get a Decoupler
 function getDecoupler(size) {
@@ -303,65 +340,6 @@ function getDecoupler(size) {
         }
     }
     return null;
-}
-
-// Test TWR
-function testTwr(Thrust, Mass, twr_target, Go) {
-    var Twr = Thrust / Mass / Go;
-
-    if (!twr_target.max) {
-        return Twr > twr_target.min;
-    }
-    else {
-        return (Twr > twr_target.min && Twr < twr_target.max);
-    }
-}
-
-// Get Estimated Atm Pressur from RestDv
-function AtmPressurEstimator(RestDv) {
-    if(RestDv >= 3500) return 0;
-
-    // Inject atm modele here
-    return Math.ceil(RestDv/3500);
-}
-
-// return ISP/thrust of Engine for a AtmPressur
-function getCaractForAtm(engineCurve, AtmPressur) {
-
-    // if AtmPressure need is vaccum, return it
-    if(AtmPressur == 0) {
-        return engineCurve[0];
-    }
-    else {
-        // Else set vac values
-        vac_isp = engineCurve[0].ISP;
-        vac_thrust = engineCurve[0].Thrust;
-    }
-
-    // Atmo curve are atm ascendent
-    for(var point in engineCurve) {
-        // if AtmPressur > last curve atmo
-        if(engineCurve[point].atmo < AtmPressur && typeof engineCurve[point+1] == 'undefined') {
-            return engineCurve[point];
-        }
-
-        // estimate value for atm pressure
-        if(engineCurve[point].atmo < AtmPressur && engineCurve[point+1].atmo > AtmPressur) {
-            var atm_diff = engineCurve[point+1].atmo - engineCurve[point].atmo;
-            var ISP_deriv = (engineCurve[point+1].ISP - engineCurve[point].ISP) / atm_diff;
-            var Thrust_deriv = (engineCurve[point+1].Thrust - engineCurve[point].Thrust) / atm_diff;
-            
-            var output = {
-                atmo:AtmPressur,
-                ISP: ISP_deriv * AtmPressur + vac_isp,
-                Thrust: Thrust_deriv * AtmPressur + vac_thrust,
-            };
-            
-            return output;
-        }
-    }
-
-    console.log({'msg':'Error','curve':engineCurve, 'atm':AtmPressur});
 }
 
 function make_stage(atm, engine, command, decoupler, fuelStack) {

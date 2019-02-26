@@ -267,10 +267,9 @@ var master;
                 simu: simu,
             };
 
-            PartToCalculation.adapters = SelectedParts.adapters;
             PartToCalculation.decouplers = SelectedParts.decouplers;
             PartToCalculation.engines = [];
-            PartToCalculation.fuelTanks = SelectedParts.fuelTanks;
+            PartToCalculation.fuelable = SelectedParts.fuelTanks.concat(SelectedParts.adapters);
             /**********************************/
             /* End Init calculation variables */
             /**********************************/

@@ -160,7 +160,7 @@ function MakeWorkers() {
                     output: e.data.output,
                     data: e.data.data
                 });*/
-                console.log(result);
+                //console.log(result);
             }
         });
 
@@ -223,7 +223,7 @@ function generateStageStack(sub_worker_id) {
     UpperData.stack = null;
 
     // Send Data to Worker
-    Workers[sub_worker_id] = 'run';
+    WorkersStatus[sub_worker_id] = 'run';
     Workers[sub_worker_id].postMessage({ channel: 'run', data: UpperData  });
 }
 
