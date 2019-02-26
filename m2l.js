@@ -261,7 +261,7 @@ var master;
             simu.debug.startTime = startTime.getTime();
 
             computationData = {
-                SOI: SOI,
+                SOI: SOI.kerbin,
                 rocket: rocket,
                 cu: CU,
                 simu: simu,
@@ -269,8 +269,8 @@ var master;
 
             PartToCalculation.adapters = SelectedParts.adapters;
             PartToCalculation.decouplers = SelectedParts.decouplers;
-            PartToCalculation.enginesStacks = [];
-            PartToCalculation.fuelTanksStacks = SelectedParts.fuelTanks;
+            PartToCalculation.engines = [];
+            PartToCalculation.fuelTanks = SelectedParts.fuelTanks;
             /**********************************/
             /* End Init calculation variables */
             /**********************************/
@@ -292,7 +292,7 @@ var master;
             }, 1000);
             // Generate Engine Stacks
             $('#message').html("Recruiting Kerbals Engineer");
-            PartToCalculation.enginesStacks = makeEngineStacks(SelectedParts.engines, SelectedParts.couplers, simu.maxRadial);
+            PartToCalculation.engines = makeEngineStacks(SelectedParts.engines, SelectedParts.couplers, simu.maxRadial);
 
             // Show table
             $('html, body').animate({

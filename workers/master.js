@@ -220,6 +220,7 @@ function generateStageStack(sub_worker_id) {
     var UpperData = clone(Stack);
     UpperData.originData = {};
     UpperData.originData.AllDv = Global_data.rocket.dv;
+    UpperData.stack = null;
 
     // Send Data to Worker
     Workers[sub_worker_id] = 'run';
