@@ -245,9 +245,9 @@ var master;
             rocket.stages = parseInt(elems.nbStage.value);
             rocket.twr = {
                 min: parseFloat(elems.Tmin.value),
-                max: (elems.Tmax.value != '') ? parseFloat(elems.Tmax.value) : undefined
+                max: (elems.Tmax.value != '') ? parseFloat(elems.Tmax.value) : undefined,
+                step: parseFloat(elems.Tstep.value),
             };
-
             var debug_status = elems.debug.checked;
             var nbWorkers = parseInt(elems.nbworker.value);
 

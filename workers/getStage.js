@@ -145,7 +145,7 @@ function initFuelStackWorker() {
                     output: e.data.output,
                     data: e.data.data
                 });*/
-                //console.log(result);
+                console.log(result);
             }
         });
 
@@ -159,13 +159,11 @@ function initFuelStackWorker() {
 
 function giveMeAllSingleStage() {
 
-    // Rewrite All ! 
-
     var targetDv = Global_data.rocket.dv;
     var twr = Global_data.rocket.twr;
     var SOI = Global_data.SOI;
     var cu = Global_data.cu;
-
+    
     var restDvAfterEnd = (Global_data.stack != null) ? Global_data.originData.AllDv - Global_data.stack.dv : Global_data.originData.AllDv;
     var AtmPressurAtEnd = AtmPressurEstimator(restDvAfterEnd);
 
@@ -221,7 +219,7 @@ function giveMeAllSingleStage() {
         var ISP = curveData.ISP;
         var Thrust = curveData.Thrust;
 
-        if(!testTwr(Thrust, MstageDry, twr, SOI.Go)) {
+        if(!testTwr(Thrust, MstageDry, twr, SOI.Go, AtmPressurAtEnd)) {
             console.log('=>  OUT not enought TWR on empty for ' + engine.name );
             self.postMessage({ channel: 'badDesign' });
             continue engineLoop;
@@ -230,15 +228,16 @@ function giveMeAllSingleStage() {
         // Manage solid Boosters
         if (engine.conso[0] == 'SolidFuel') {
             // No fuel tack possible
-            if(!testTwr(Thrust, MstageFull, twr, SOI.Go)) {
-                console.log('=>  OUT not enought TWR on fuel for booster ' + engine.name );
-                self.postMessage({ channel: 'badDesign' });
-                continue engineLoop;
-            }
 
             var Dv = ISP * SOI.Go * Math.log(MstageFull / MstageDry);
             var Dv_before_burn = restDvAfterEnd - Dv;
             var AtmPressurBeforeBurn = AtmPressurEstimator(Dv_before_burn);
+
+            if(!testTwr(Thrust, MstageFull, twr, SOI.Go, AtmPressurBeforeBurn)) {
+                console.log('=>  OUT not enought TWR on fuel for booster ' + engine.name );
+                self.postMessage({ channel: 'badDesign' });
+                continue engineLoop;
+            }
 
             var stage = make_stage(AtmPressurBeforeBurn, engine, command, decoupler, null);
             self.postMessage({ channel: 'result', stage: stage, id: worker_id, data: Global_data });

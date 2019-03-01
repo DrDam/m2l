@@ -121,7 +121,7 @@ function generateFuelStacks(fuelStack) {
         var curveData_before = getCaractForAtm(Global_data.engine.curve, AtmPressurBerforeBurn);
 
         // Calculate TWR for beforeBurne condition
-        if(!testTwr(curveData_before.Thrust, MstageFull, Global_data.twr, Global_data.SOI.Go)) {
+        if(!testTwr(curveData_before.Thrust, MstageFull, Global_data.twr, Global_data.SOI.Go, AtmPressurBerforeBurn)) {
             console.log('=> FuelStack to heavy');
             self.postMessage({ channel: 'badDesign' });
             continue ;
