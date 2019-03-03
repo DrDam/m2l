@@ -132,43 +132,46 @@ function MakeWorkers() {
         Workers[worker_uid] = w;
 
         // Add listener on worker
-        w.addEventListener('message', function (e) {
-            var channel = e.data.channel;
-            var sub_worker_id = e.data.id;
-            if (channel == 'badDesign') {
-                self.postMessage({ channel: 'badDesign' });
-            }
-            if (channel === 'killMe') {
-                Workers[sub_worker_id] = undefined;
-                WorkersStatus[sub_worker_id] = '';
-                killMe();
-            }
-            if (channel === 'wait') {
-                WorkersStatus[sub_worker_id] = 'wait';
-                // Continue calculation
-                generateStageStack(sub_worker_id);
-            }
-            if (channel === 'result') {
-                DEBUG.send(sub_worker_id + ' # send Result');
-                var result = e.data;
-                //  Manage results
-                
-                // If DeltaV & TWR ok => push to front
-
-                // Else => push to stack
-                /*RocketsStack.push({
-                    output: e.data.output,
-                    data: e.data.data
-                });*/
-                //console.log(result);
-            }
-        });
+        w.addEventListener('message', WorkerEventListener);
 
         // Send create signal 
         w.postMessage({ channel: 'create', id: worker_uid, parts: Parts, debug: Global_data.simu.debug });
 
         // Next worker
         i++;
+    }
+}
+
+// Set Event Listener On worker
+function WorkerEventListener (e) {
+    var channel = e.data.channel;
+    var sub_worker_id = e.data.id;
+    if (channel == 'badDesign') {
+        self.postMessage({ channel: 'badDesign' });
+    }
+    if (channel === 'killMe') {
+        Workers[sub_worker_id] = undefined;
+        WorkersStatus[sub_worker_id] = '';
+        killMe();
+    }
+    if (channel === 'wait') {
+        WorkersStatus[sub_worker_id] = 'wait';
+        // Continue calculation
+        generateStageStack(sub_worker_id);
+    }
+    if (channel === 'result') {
+        DEBUG.send(sub_worker_id + ' # send Result');
+        var result = e.data;
+        //  Manage results
+        
+        // If DeltaV & TWR ok => push to front
+
+        // Else => push to stack
+        /*RocketsStack.push({
+            output: e.data.output,
+            data: e.data.data
+        });*/
+        //console.log(result);
     }
 }
 

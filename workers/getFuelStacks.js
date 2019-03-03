@@ -62,6 +62,7 @@ function run() {
 function generateFuelStacks(fuelStack) {
 
     if(fuelStack == null) {
+        //console.log('init stack');
         fuelStack = {};
         fuelStack.mass = {};
         fuelStack.mass.full = 0;
@@ -71,13 +72,15 @@ function generateFuelStacks(fuelStack) {
         fuelStack.solution = [];
         fuelStack.bottom = null;
     }
+    else {
+        //console.log('use provided stack');
+    }
 
     var EnginesNeeded = Global_data.engine.conso;
     var cu_size = Global_data.cu.size;
     var engine_size = Global_data.engine.stackable.top;
     var AtmPressurAtEnd = AtmPressurEstimator(Global_data.restDvAfterEnd);
     var curveData_after = getCaractForAtm(Global_data.engine.curve, AtmPressurAtEnd);
-
 
     for(var id in Parts.fuelable) {
         if (Global_status == 'stop') {
@@ -95,11 +98,13 @@ function generateFuelStacks(fuelStack) {
             // Test bottom on no radial engine
             Global_data.engine.is_radial != true && part.stackable.bottom != engine_size
             ) {
+            //console.log(part.id + ' part out for size');
             continue;
         }
 
         // Control Fuel Type
-        if (part.ressources != undefined && !part.ressources.equals(getKeys(EnginesNeeded))) {
+        if (part.ressources != undefined && !part.ressources.equals(EnginesNeeded)) {
+            //console.log(part.id + ' part out for fuel');
             continue;
         }
 
@@ -122,16 +127,17 @@ function generateFuelStacks(fuelStack) {
 
         // Calculate TWR for beforeBurne condition
         if(!testTwr(curveData_before.Thrust, MstageFull, Global_data.twr, Global_data.SOI.Go, AtmPressurBerforeBurn)) {
-            console.log('=> FuelStack to heavy');
+            //console.log('=> FuelStack to heavy');
             self.postMessage({ channel: 'badDesign' });
             continue ;
         }
 
         // Calculate Dv for BeforeBurn Conditions
         var Dv_theo_2 = curveData_before.ISP * Global_data.SOI.Go * Math.log(MstageFull / MstageDry);
-        self.postMessage({ channel: 'result', stack:localStack, dv: Dv_theo_2, data:Global_data});
+        self.postMessage({ channel: 'result', id: worker_id, stack:localStack, dv: Dv_theo_2, data:Global_data});
 
         if(localStack.nb < Global_data.max) {
+            //console.log('add part in stack');
             generateFuelStacks(localStack);
         }
     }

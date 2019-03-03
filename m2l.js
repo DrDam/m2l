@@ -2,10 +2,9 @@
 // Global Variables
 var computationData = {};
 var PartToCalculation = {};
-PartToCalculation.adapters = [];
 PartToCalculation.decouplers = [];
-PartToCalculation.enginesStacks = [];
-PartToCalculation.fuelTanksStacks = [];
+PartToCalculation.engines = [];
+PartToCalculation.fuelable = [];
 var collection = {};
 var SelectedParts = {};
 

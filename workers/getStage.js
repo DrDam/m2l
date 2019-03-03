@@ -117,43 +117,46 @@ function initFuelStackWorker() {
         FuelStackWorkers[worker_uid] = w;
 
         // Add listener on worker
-        w.addEventListener('message', function (e) {
-            var channel = e.data.channel;
-            var sub_worker_id = e.data.id;
-            if (channel == 'badDesign') {
-                self.postMessage({ channel: 'badDesign' });
-            }
-            if (channel === 'killMe') {
-                FuelStackWorkers[sub_worker_id] = undefined;
-                FuelStackWorkersStatus[sub_worker_id] = '';
-                killMe();
-            }
-            if (channel === 'wait') {
-                FuelStackWorkersStatus[sub_worker_id] = 'wait';
-                // Continue calculation
-                generateStageStack(sub_worker_id);
-            }
-            if (channel === 'result') {
-                DEBUG.send(sub_worker_id + ' # send Result');
-                var result = e.data;
-                //  Manage results
-                
-                // If DeltaV & TWR ok => push to front
-
-                // Else => push to stack
-                /*RocketsStack.push({
-                    output: e.data.output,
-                    data: e.data.data
-                });*/
-                console.log(result);
-            }
-        });
+        w.addEventListener('message', WorkerEventListener);
 
         // Send create signal 
         w.postMessage({ channel: 'create', id: worker_uid, parts: Parts, debug: Global_data.simu.debug });
 
         // Next worker
         i++;
+    }
+}
+
+// Set Event Listener On worker
+function WorkerEventListener(e) {
+    var channel = e.data.channel;
+    var sub_worker_id = e.data.id;
+    if (channel == 'badDesign') {
+        self.postMessage({ channel: 'badDesign' });
+    }
+    if (channel === 'killMe') {
+        FuelStackWorkers[sub_worker_id] = undefined;
+        FuelStackWorkersStatus[sub_worker_id] = '';
+        killMe();
+    }
+    if (channel === 'wait') {
+        FuelStackWorkersStatus[sub_worker_id] = 'wait';
+        // Continue calculation
+        generateStageStack(sub_worker_id);
+    }
+    if (channel === 'result') {
+        DEBUG.send(sub_worker_id + ' # send Result');
+        var result = e.data;
+        //  Manage results
+        
+        // If DeltaV & TWR ok => push to front
+
+        // Else => push to stack
+        /*RocketsStack.push({
+            output: e.data.output,
+            data: e.data.data
+        });*/
+        console.log(result);
     }
 }
 
@@ -198,6 +201,9 @@ function giveMeAllSingleStage() {
     // => => 3.5 : calculate Dv of stack
     // => => 3.6 : return Stage
 
+    // Limit on Twin-Boar for test
+    //Parts.engines = [Parts.engines[11]];
+
     engineLoop:
     for (var i in Parts.engines) {
 
@@ -207,7 +213,6 @@ function giveMeAllSingleStage() {
         }
 
         var engine = Parts.engines[i];
-        //console.log(engine);
 
         // Prepare Masses values
         var MassEngineFull = engine.mass.full;
