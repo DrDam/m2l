@@ -123,11 +123,11 @@ function MakeWorkers() {
     var i = 0;
     while(i < Global_data.simu.nbWorker) {
         // Prepare worker id
-        var worker_uid = 'Worker--' + i;
+        var worker_uid = 'Staging--' + i;
 
         // Init Worker
         WorkersStatus[worker_uid] = 'created';
-        var w = new Worker('getStage.js');
+        var w = new Worker('getStaging.js');
         DEBUG.send('Generate woker ' + worker_uid);
         Workers[worker_uid] = w;
 
@@ -164,14 +164,7 @@ function WorkerEventListener (e) {
         var result = e.data;
         //  Manage results
         
-        // If DeltaV & TWR ok => push to front
-
-        // Else => push to stack
-        /*RocketsStack.push({
-            output: e.data.output,
-            data: e.data.data
-        });*/
-        //console.log(result);
+        console.log(result);
     }
 }
 

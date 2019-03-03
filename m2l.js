@@ -239,7 +239,10 @@ var master;
             CU.size = elems.sizeCU.value;
 
             var rocket = {};
-            rocket.dv = parseFloat(elems.DvCible.value);
+            rocket.dv = {
+                target: parseFloat(elems.DvTarget.value),
+                tolerance: parseFloat(elems.DvTol.value),
+            };
             rocket.type = elems.type.value;
             rocket.stages = parseInt(elems.nbStage.value);
             rocket.twr = {
@@ -297,7 +300,7 @@ var master;
                 scrollTop: $("#results").offset().top
             }, 1000);
 
-            console.log('Search Rockets'  + new Date());
+            console.log('Search Rockets '  + new Date());
             // Launch workers !
             searchRockets();
 

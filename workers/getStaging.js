@@ -127,52 +127,20 @@ function initFuelStackWorker() {
     }
 }
 
-// Set Event Listener On worker
-function WorkerEventListener(e) {
-    var channel = e.data.channel;
-    var sub_worker_id = e.data.id;
-    if (channel == 'badDesign') {
-        self.postMessage({ channel: 'badDesign' });
-    }
-    if (channel === 'killMe') {
-        FuelStackWorkers[sub_worker_id] = undefined;
-        FuelStackWorkersStatus[sub_worker_id] = '';
-        killMe();
-    }
-    if (channel === 'wait') {
-        FuelStackWorkersStatus[sub_worker_id] = 'wait';
-        // Continue calculation
-        generateStageStack(sub_worker_id);
-    }
-    if (channel === 'result') {
-        DEBUG.send(sub_worker_id + ' # send Result');
-        var result = e.data;
-        //  Manage results
-        
-        // If DeltaV & TWR ok => push to front
+// Generate first batch of calculation
+function giveMeAllSingleStage(stack) {
 
-        // Else => push to stack
-        /*RocketsStack.push({
-            output: e.data.output,
-            data: e.data.data
-        });*/
-        console.log(result);
-    }
-}
-
-function giveMeAllSingleStage() {
-
-    var targetDv = Global_data.rocket.dv;
     var twr = Global_data.rocket.twr;
     var SOI = Global_data.SOI;
-    var cu = Global_data.cu;
-    
-    var restDvAfterEnd = (Global_data.stack != null) ? Global_data.originData.AllDv - Global_data.stack.dv : Global_data.originData.AllDv;
-    var AtmPressurAtEnd = AtmPressurEstimator(restDvAfterEnd);
+    var rocket_dv_target =(stack == null) ? Global_data.rocket.dv.target : stack.rest_dv ;
+    var rocket_cu = (stack == null) ? Global_data.cu : stack.as_cu ;
+    var stack_stages = (stack == null) ? [] : stack.stages ;
+    var restStages = (stack == null) ? Global_data.rocket.stages : Global_data.rocket.stages - stack.stages.length ;
+    var AtmPressurAtEnd = AtmPressurEstimator(rocket_dv_target);
 
     // Add decoupler mass
     var decoupler = {};
-    decoupler = getDecoupler(cu.size);
+    decoupler = getDecoupler(rocket_cu.size);
     if (decoupler === null) {
         decoupler = {};
         decoupler.mass = {};
@@ -201,41 +169,45 @@ function giveMeAllSingleStage() {
     // => => 3.5 : calculate Dv of stack
     // => => 3.6 : return Stage
 
-    // Limit on Twin-Boar for test
+
+    var localEngines = Parts.engines;
+    // Limit on Twin-Boar for test of stack
     //Parts.engines = [Parts.engines[11]];
 
+    // Limit on Skipper for test of staging
+    localEngines = [Parts.engines[73]];
+
     engineLoop:
-    for (var i in Parts.engines) {
+    for (var i in localEngines) {
 
         // Intercept Stop
         if (Global_status == 'stop') {
             return null;
         }
 
-        var engine = Parts.engines[i];
-
+        var engine = localEngines[i];
         // Prepare Masses values
         var MassEngineFull = engine.mass.full;
         var MassEngineDry = engine.mass.empty;
-        var MstageDry = cu.mass + decoupler.mass.full + command.mass + MassEngineDry;
-        var MstageFull = cu.mass + decoupler.mass.full + command.mass + MassEngineFull;
+        var MstageDry = rocket_cu.mass + decoupler.mass.full + command.mass + MassEngineDry;
+        var MstageFull = rocket_cu.mass + decoupler.mass.full + command.mass + MassEngineFull;
 
         var curveData = getCaractForAtm(engine.curve, AtmPressurAtEnd);
         var ISP = curveData.ISP;
         var Thrust = curveData.Thrust;
 
         if(!testTwr(Thrust, MstageDry, twr, SOI.Go, AtmPressurAtEnd)) {
-            console.log('=>  OUT not enought TWR on empty for ' + engine.name );
+            //console.log('=>  OUT not enought TWR on empty for ' + engine.name );
             self.postMessage({ channel: 'badDesign' });
             continue engineLoop;
         }
 
-        // Manage solid Boosters
+        //  !! rework stage output !!
         if (engine.conso[0] == 'SolidFuel') {
             // No fuel tack possible
-
+/*
             var Dv = ISP * SOI.Go * Math.log(MstageFull / MstageDry);
-            var Dv_before_burn = restDvAfterEnd - Dv;
+            var Dv_before_burn = Global_data.rocket.dv.target - Dv;
             var AtmPressurBeforeBurn = AtmPressurEstimator(Dv_before_burn);
 
             if(!testTwr(Thrust, MstageFull, twr, SOI.Go, AtmPressurBeforeBurn)) {
@@ -244,23 +216,33 @@ function giveMeAllSingleStage() {
                 continue engineLoop;
             }
 
+            //  !! rework stage output !!
             var stage = make_stage(AtmPressurBeforeBurn, engine, command, decoupler, null);
-            self.postMessage({ channel: 'result', stage: stage, id: worker_id, data: Global_data });
+            console.log(stage);
+            //self.postMessage({ channel: 'result', stage: stage, id: worker_id, data: Global_data });
+                    
+            output_solution(stages_stack);
+            */
             continue engineLoop;
         }
 
         // add Engine to Engine Stack
         var data_to_calculation = {
-            cu: cu,
+            cu: rocket_cu,
             engine: engine,
             command: command,
             decoupler: decoupler,
             SOI: SOI,
-            restDvAfterEnd: restDvAfterEnd,
-            twr: Global_data.rocket.twr,
-            max: Global_data.simu.maxTanks
+            restDvAfterEnd: rocket_dv_target,
+            twr: twr,
+            max: Global_data.simu.maxTanks,
+            solution: {},
+            booster_possible: (restStages >= 2) ? true : false,
         };
+
+        data_to_calculation.solution.stages = stack_stages;
         EnginesStack.push(data_to_calculation);
+
     }
 }
        
@@ -277,6 +259,121 @@ self.addEventListener('StackPush', function () {
     }
 });
 
+// Process one item in stages stacks
+function generateStageStack(sub_worker_id) {
+    // Intercept Stop command
+    if (Global_status === 'stop') {
+        SendStopToAllChildren();
+        return;
+    }
+
+    // Get new element
+    var data_for_stage_calculation = EnginesStack.shift();
+
+    // If stack are empty, check if all calculation ended
+    if (data_for_stage_calculation === undefined) {
+        VerifyAutostop();
+        return;
+    }
+
+    // Send Data to Worker
+    FuelStackWorkersStatus[sub_worker_id] = 'run';
+    FuelStackWorkers[sub_worker_id].postMessage({ channel: 'run', data: clone(data_for_stage_calculation)  });
+}
+
+// Set Event Listener On worker
+function WorkerEventListener(e) {
+    var channel = e.data.channel;
+    var sub_worker_id = e.data.id;
+    if (channel == 'badDesign') {
+        self.postMessage({ channel: 'badDesign' });
+    }
+    if (channel === 'killMe') {
+        FuelStackWorkers[sub_worker_id] = undefined;
+        FuelStackWorkersStatus[sub_worker_id] = '';
+        killMe();
+    }
+    if (channel === 'wait') {
+        FuelStackWorkersStatus[sub_worker_id] = 'wait';
+        // Continue calculation
+        generateStageStack(sub_worker_id);
+    }
+    if (channel === 'result') {
+        DEBUG.send(sub_worker_id + ' # send Result');
+        process_worker_output(e.data);
+    }
+}
+
+// Process worker output
+function process_worker_output(result)  {
+    //console.log(result);
+    var calculation_data = result.data;
+
+    var dv_needed_before_stage = calculation_data.restDvAfterEnd - result.dv;
+    var result_stages = [];
+
+    // Make stage from data
+    if(result.is_multiple == false) {
+        result_stages = [
+            make_stage_item(
+                AtmPressurEstimator(dv_needed_before_stage), 
+                calculation_data.engine, 
+                calculation_data.command, 
+                calculation_data.decoupler, 
+                result.stack
+                )
+            ];
+    }
+
+    // Add Stage to current stage Stack
+    var stages_stack = calculation_data.solution;
+
+    for(var i in result_stages) {
+        // add Stages to current stage Stack
+        stages_stack.stages.push(result_stages[i]);
+    }
+
+
+
+    // Dv goal achieved => return solution & end
+    if(dv_needed_before_stage < 0) {
+        // console.log('Dv goal achieved ' + dv_needed_before_stage);
+        self.postMessage({ channel: 'result', staging: stages_stack.stages, id: worker_id, data: Global_data });
+        return;
+    }
+
+    // If staging completed => end ! 
+    if(Global_data.rocket.stages <= stages_stack.length){
+        // dv goal achieved in tolerance
+        if(dv_needed_before_stage <= (Global_data.rocket.dv.target * Global_data.rocket.dv.tolerance / 100)) {
+            // console.log('Dv goal achieved in tolerance' + dv_needed_before_stage);
+            self.postMessage({ channel: 'result', staging: stages_stack.stages, id: worker_id, data: Global_data });
+        }
+        else {
+            // No solution
+            // console.log('=>  No staging solution');
+            self.postMessage({ channel: 'badDesign' });
+        }
+        // No more stages !
+        return;
+    }
+
+    // Prepare all next stage solution
+    var stack_data = {
+        stages: stages_stack.stages,
+        rest_dv: dv_needed_before_stage,
+        as_cu: {
+            mass: result.total_mass + calculation_data.cu.mass,
+            size: result.stack.bottom,
+        }
+    };
+    giveMeAllSingleStage(stack_data);
+}
+
+/******************/
+/** End condition */
+/******************/
+
 // Signal end of all processing
 self.addEventListener('StackIsEmpty', function () {
     if (Global_status === 'stop') {
@@ -290,31 +387,6 @@ self.addEventListener('StackIsEmpty', function () {
     VerifyAutostop();
 });
 
-// Main calculation function
-function generateStageStack(sub_worker_id) {
-    // Intercept Stop command
-    if (Global_status === 'stop') {
-        SendStopToAllChildren();
-        return;
-    }
-
-    // Get new element
-    var Stack = EnginesStack.shift();
-
-    // If stack are empty, check if all calculation ended
-    if (Stack === undefined) {
-        VerifyAutostop();
-        return;
-    }
-
-    // Send Data to Worker
-    FuelStackWorkersStatus[sub_worker_id] = 'run';
-    FuelStackWorkers[sub_worker_id].postMessage({ channel: 'run', data: clone(Stack)  });
-}
-
-/******************/
-/** End condition */
-/******************/
 
 // control if with need autostop
 function VerifyAutostop() {
@@ -346,7 +418,7 @@ function getDecoupler(size) {
     return null;
 }
 
-function make_stage(atm, engine, command, decoupler, fuelStack) {
+function make_stage_item(start_stage_atm, engine, command, decoupler, fuelStack) {
 
     if(fuelStack == null) {
         fuelStack = {};
@@ -358,13 +430,13 @@ function make_stage(atm, engine, command, decoupler, fuelStack) {
         fuelStack.solution = [];
     }
 
-    var curveData = getCaractForAtm(engine.curve, atm);
+    var curveData = getCaractForAtm(engine.curve, start_stage_atm);
     var ISP = curveData.ISP;
     var Thrust = curveData.Thrust;
 
     // Make stage caracterics
-    MstageFull = Global_data.cu.mass + engine.mass.full + fuelStack.mass.full;
-    MstageDry = Global_data.cu.mass + engine.mass.empty + fuelStack.mass.empty;
+    MstageFull = Global_data.cu.mass + decoupler.mass.full + command.mass + engine.mass.full + fuelStack.mass.full;
+    MstageDry = Global_data.cu.mass + decoupler.mass.empty + command.mass + engine.mass.empty + fuelStack.mass.empty;
     EngineFuelMass = engine.mass.full - engine.mass.empty;
     var stageFuelMass = fuelStack.mass.full - fuelStack.mass.empty + EngineFuelMass;
     var TwrFull = Thrust / MstageFull / Global_data.SOI.Go;
@@ -372,33 +444,33 @@ function make_stage(atm, engine, command, decoupler, fuelStack) {
     var burnDuration = stageFuelMass * ISP * Global_data.SOI.Go / Thrust;
     var Dv = ISP * Global_data.SOI.Go * Math.log(MstageFull / MstageDry);
     var cost = engine.cost + decoupler.cost + command.cost + fuelStack.cost;
-    var nb = engine.nb + 1 + command.nb + fuelStack.solution.length;
+    var nb = engine.nb + 1 + command.nb + fuelStack.nb;
     var stage = {
-        decoupler: decoupler.name,
-        commandModule: command.stack,
-        tanks: fuelStack.solution,
-        engine: engine.name,
-        twr: {
-            min: TwrFull,
-            max: TwrDry
+        parts: {
+            decoupler: decoupler.name,
+            commandModule: command.stack,
+            tanks: fuelStack.solution,
+            engine: engine.name,
         },
-        mass: {
-            full: MstageFull,
-            empty: MstageDry,
+        caracts : {
+            twr: {
+                min: TwrFull,
+                max: TwrDry
+            },
+            stageDv: Dv,
+            burn: burnDuration,
+            nb: nb,
+            cost : cost,
+            mass: {
+                full: MstageFull - Global_data.cu.mass,
+                empty: MstageDry - Global_data.cu.mass,
+            },
         },
-        burn: burnDuration,
-        stageDv: Dv,
-    };
-    var output = {
-        stages: [stage],
-        totalMass: stage.mass.full,
-        burn: stage.burn,
-        stageDv: Dv,
-        nbStages: 1,
-        cost: cost,
-        nb:nb,
-        size: engine.stackable.bottom
+        size: {
+            top: decoupler.size,
+            bottom: engine.stackable.bottom
+        },
     };
 
-    return output;
+    return stage;
 }

@@ -121,20 +121,42 @@ function generateFuelStacks(fuelStack) {
         var Dv_theo = curveData_after.ISP * Global_data.SOI.Go * Math.log(MstageFull / MstageDry);
         var Dv_before_burn = Global_data.restDvAfterEnd - Dv_theo;
 
-        // Estimation curve "before burn"
-        var AtmPressurBerforeBurn = AtmPressurEstimator(Dv_before_burn);
-        var curveData_before = getCaractForAtm(Global_data.engine.curve, AtmPressurBerforeBurn);
-
-        // Calculate TWR for beforeBurne condition
-        if(!testTwr(curveData_before.Thrust, MstageFull, Global_data.twr, Global_data.SOI.Go, AtmPressurBerforeBurn)) {
-            //console.log('=> FuelStack to heavy');
-            self.postMessage({ channel: 'badDesign' });
-            continue ;
+        // If part are adapter without fuel
+        if(Dv_theo == 0) {
+            // Calculate TWR for afterBurn condition because of no fuel = no burn
+            if(!testTwr(curveData_after.Thrust, MstageFull, Global_data.twr, Global_data.SOI.Go, AtmPressurAtEnd)) {
+                //console.log('=> FuelStack to heavy');
+                self.postMessage({ channel: 'badDesign' });
+                continue ;
+            } 
         }
+        // If part contained fuel
+        else {
+            // Estimation curve "before burn"
+            var AtmPressurBerforeBurn = AtmPressurEstimator(Dv_before_burn);
+            var curveData_before = getCaractForAtm(Global_data.engine.curve, AtmPressurBerforeBurn);
 
-        // Calculate Dv for BeforeBurn Conditions
-        var Dv_theo_2 = curveData_before.ISP * Global_data.SOI.Go * Math.log(MstageFull / MstageDry);
-        self.postMessage({ channel: 'result', id: worker_id, stack:localStack, dv: Dv_theo_2, data:Global_data});
+            // Calculate TWR for beforeBurne condition
+            if(!testTwr(curveData_before.Thrust, MstageFull, Global_data.twr, Global_data.SOI.Go, AtmPressurBerforeBurn)) {
+                //console.log('=> FuelStack to heavy');
+                self.postMessage({ channel: 'badDesign' });
+                continue ;
+            }
+
+            // Calculate Dv for BeforeBurn Conditions
+            var Dv_theo_2 = curveData_before.ISP * Global_data.SOI.Go * Math.log(MstageFull / MstageDry);
+            self.postMessage(
+                {
+                    channel: 'result',
+                    id: worker_id,
+                    stack:localStack,
+                    dv: Dv_theo_2,
+                    data:Global_data,
+                    is_multiple:false,
+                    total_mass: MstageFull,
+                }
+            );
+        }
 
         if(localStack.nb < Global_data.max) {
             //console.log('add part in stack');
