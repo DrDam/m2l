@@ -333,7 +333,7 @@ var master;
                 var channel = result.channel;
                 if (channel === 'result') {
                     //console.log(e.data.output);
-                    var dataToTable = e.data.output;
+                    var dataToTable = e.data.rocket;
                     dataToTable.cu = computationData.cu;
                     dataToTable.cuHTML = cuHTML;
                     valid_count++;
@@ -366,7 +366,7 @@ var master;
             result_id++;
             var mass = round(data.totalMass + data.cu.mass);
             var nbStages = data.nbStages;
-            var dv = round(data.stageDv, 2);
+            var dv = round(data.totalDv, 2);
             var Cu_part = round(round(data.cu.mass / mass, 4) * 100, 2);
             var count = data.nb;
             var cost = data.cost;
@@ -387,25 +387,25 @@ var master;
                 var stageData = {};
                 stageData.resultId = result_id;
                 stageData.stage_id = parseInt(i) + 1;
-                stageData.stageDv = round(stage.stageDv);
+                stageData.stageDv = round(stage.caracts.stageDv);
                 stageData.FullDv = round(fullDv);
                 stageData.MassLauncher = round(fullMass);
-                stageData.burn = round(stage.burn);
-                stageData.twrMax = round(stage.twr.max);
-                stageData.twrMin = round(stage.twr.min);
-                stageData.totalMass = round(stage.totalMass);
+                stageData.burn = round(stage.caracts.burn);
+                stageData.twrMax = round(stage.caracts.twr.max);
+                stageData.twrMin = round(stage.caracts.twr.min);
+                stageData.totalMass = round(stage.caracts.mass.full);
 
-                stageData.decoupler = stage.decoupler;
-                stageData.engine = stage.engine;
+                stageData.decoupler = stage.parts.decoupler;
+                stageData.engine = stage.parts.engine;
 
                 stageData.tanks = [];
-                var tanks = stage.tanks;
+                var tanks = stage.parts.tanks;
                 for (var j in tanks) {
                     var tank = tanks[j];
                     stageData.tanks.push({ tank_name: tank.name });
                 }
                 stageData.command = [];
-                var command = stage.commandModule;
+                var command = stage.parts.commandModule;
                 for (var k in command) {
                     var part = command[k];
                     stageData.command.push({ part_name: part.name });

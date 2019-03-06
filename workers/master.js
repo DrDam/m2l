@@ -106,7 +106,7 @@ function run() {
     }
 
     // Generate fist group of stages
-    WorkersStatus['Worker--0'] = 'reserved';
+    WorkersStatus['Staging--0'] = 'reserved';
 
     // Make data for UpperStage
     var UpperData = clone(Global_data);
@@ -114,8 +114,8 @@ function run() {
     UpperData.originData.AllDv = Global_data.rocket.dv;
 
     // Send Data to Worker
-    WorkersStatus['Worker--0'] = 'run';
-    Workers['Worker--0'].postMessage({ channel: 'run', data: UpperData  });
+    WorkersStatus['Staging--0'] = 'run';
+    Workers['Staging--0'].postMessage({ channel: 'run', data: UpperData  });
 }
 
 // Make Worker Collections
@@ -163,8 +163,7 @@ function WorkerEventListener (e) {
         DEBUG.send(sub_worker_id + ' # send Result');
         var result = e.data;
         //  Manage results
-        
-        console.log(result);
+        returnRocket(result.staging);
     }
 }
 
@@ -221,6 +220,30 @@ function generateStageStack(sub_worker_id) {
     // Send Data to Worker
     WorkersStatus[sub_worker_id] = 'run';
     Workers[sub_worker_id].postMessage({ channel: 'run', data: UpperData  });
+}
+
+function returnRocket(stages) {
+
+    var rocket = {
+        totalMass: 0,
+        nbStages: 0,
+        totalDv: 0,
+        nbStages: stages.length,
+        cost: 0,
+        stages: [],
+    };
+
+    for(var i in stages) {
+        var stage = stages[i];
+        rocket.cost += stage.caracts.cost;
+        rocket.totalMass += stage.caracts.mass.full;
+        rocket.totalDv += stage.caracts.stageDv;
+        rocket.nbStages += stage.caracts.nb;
+        rocket.stages.push(stage);
+    }
+
+    self.postMessage({channel: 'result', rocket: rocket});
+
 }
 
 /******************/
