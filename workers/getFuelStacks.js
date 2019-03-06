@@ -1,4 +1,4 @@
-importScripts('../lib/lib.js');
+importScripts('../lib/models.js','../lib/lib.js');
 var startTime = new Date();
 
 // Generate 1 stage Rocket

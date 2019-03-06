@@ -1,4 +1,4 @@
-importScripts('../lib/lib.js');
+importScripts('../lib/models.js','../lib/lib.js');
 var startTime = new Date();
 
 // Main worker data
@@ -169,23 +169,15 @@ function giveMeAllSingleStage(stack) {
     // => => 3.5 : calculate Dv of stack
     // => => 3.6 : return Stage
 
-
-    var localEngines = Parts.engines;
-    // Limit on Twin-Boar for test of stack
-    //Parts.engines = [Parts.engines[11]];
-
-    // Limit on Skipper for test of staging
-    localEngines = [Parts.engines[73]];
-
     engineLoop:
-    for (var i in localEngines) {
+    for (var i in Parts.engines) {
 
         // Intercept Stop
         if (Global_status == 'stop') {
             return null;
         }
 
-        var engine = localEngines[i];
+        var engine = Parts.engines[i];
         // Prepare Masses values
         var MassEngineFull = engine.mass.full;
         var MassEngineDry = engine.mass.empty;

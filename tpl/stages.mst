@@ -17,7 +17,7 @@
             <li>Fuel Stack : 
                 <ul class="fuelstack">
                     {{#tanks}}
-                        <li>{{tank_name}}</li>
+                        <li>{{tank_name}} x {{tank_nb}}</li>
                     {{/tanks}}    
                 </ul>
             </li>

@@ -226,7 +226,7 @@ function returnRocket(stages) {
 
     var rocket = {
         totalMass: 0,
-        nbStages: 0,
+        nb: 0,
         totalDv: 0,
         nbStages: stages.length,
         cost: 0,
@@ -238,7 +238,7 @@ function returnRocket(stages) {
         rocket.cost += stage.caracts.cost;
         rocket.totalMass += stage.caracts.mass.full;
         rocket.totalDv += stage.caracts.stageDv;
-        rocket.nbStages += stage.caracts.nb;
+        rocket.nb += stage.caracts.nb;
         rocket.stages.push(stage);
     }
 

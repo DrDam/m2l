@@ -397,12 +397,12 @@ var master;
 
                 stageData.decoupler = stage.parts.decoupler;
                 stageData.engine = stage.parts.engine;
-
+//console.log( stage.parts.tanks);
                 stageData.tanks = [];
                 var tanks = stage.parts.tanks;
                 for (var j in tanks) {
                     var tank = tanks[j];
-                    stageData.tanks.push({ tank_name: tank.name });
+                    stageData.tanks.push({ tank_name: tank.name, tank_nb : tank.nb});
                 }
                 stageData.command = [];
                 var command = stage.parts.commandModule;
