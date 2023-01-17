@@ -4,6 +4,7 @@
         "name": "Stratus-V Minified Monopropellant Tank",
         "tech": "propulsionSystems",
         "cost": 30,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.01,
             "full": 0.04
@@ -22,6 +23,7 @@
         "name": "FL-R5 RCS Fuel Tank",
         "tech": "advFuelSystems",
         "cost": 960,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.25,
             "full": 1.85
@@ -40,6 +42,7 @@
         "name": "FL-A150 Fuel Tank Adapter",
         "tech": "fuelSystems",
         "cost": 160,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.1,
             "full": 0.9
@@ -59,6 +62,7 @@
         "name": "FL-A151L Fuel Tank Adapter",
         "tech": "fuelSystems",
         "cost": 600,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.375,
             "full": 3.375
@@ -78,6 +82,7 @@
         "name": "FL-A151S Fuel Tank Adapter",
         "tech": "advRocketry",
         "cost": 160,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.1,
             "full": 0.9
@@ -97,6 +102,7 @@
         "name": "FL-A215 Fuel Tank Adapter",
         "tech": "fuelSystems",
         "cost": 1200,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.75,
             "full": 6.75
@@ -116,6 +122,7 @@
         "name": "FL-TX220 Fuel Tank",
         "tech": "advRocketry",
         "cost": 220,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.1375,
             "full": 1.2375
@@ -135,6 +142,7 @@
         "name": "FL-TX440 Fuel Tank",
         "tech": "fuelSystems",
         "cost": 440,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.275,
             "full": 2.475
@@ -154,6 +162,7 @@
         "name": "FL-TX900 Fuel Tank",
         "tech": "fuelSystems",
         "cost": 900,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.5625,
             "full": 5.0625
@@ -173,6 +182,7 @@
         "name": "FL-TX1800 Fuel Tank",
         "tech": "advFuelSystems",
         "cost": 1800,
+        "provider": "makingHistory",
         "mass": {
             "empty": 1.125,
             "full": 10.125
@@ -192,6 +202,7 @@
         "name": "FL-C1000 Fuel Tank",
         "tech": "fuelSystems",
         "cost": 1400,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.75,
             "full": 6.78
@@ -212,6 +223,7 @@
         "name": "Kerbodyne S3-S4 Adapter Tank",
         "tech": "highPerformanceFuelSystems",
         "cost": 6400,
+        "provider": "makingHistory",
         "mass": {
             "empty": 4,
             "full": 36
@@ -231,6 +243,7 @@
         "name": "Kerbodyne Engine Cluster Adapter Tank",
         "tech": "highPerformanceFuelSystems",
         "cost": 9000,
+        "provider": "makingHistory",
         "mass": {
             "empty": 5.625,
             "full": 50.625
@@ -250,6 +263,7 @@
         "name": "Kerbodyne S4-64 Fuel Tank",
         "tech": "highPerformanceFuelSystems",
         "cost": 6400,
+        "provider": "makingHistory",
         "mass": {
             "empty": 4,
             "full": 36
@@ -269,6 +283,7 @@
         "name": "Kerbodyne S4-128 Fuel Tank",
         "tech": "highPerformanceFuelSystems",
         "cost": 12800,
+        "provider": "makingHistory",
         "mass": {
             "empty": 8,
             "full": 72
@@ -288,6 +303,7 @@
         "name": "Kerbodyne S4-256 Fuel Tank",
         "tech": "highPerformanceFuelSystems",
         "cost": 25600,
+        "provider": "makingHistory",
         "mass": {
             "empty": 16,
             "full": 144
@@ -307,6 +323,7 @@
         "name": "Kerbodyne S4-512 Fuel Tank",
         "tech": "highPerformanceFuelSystems",
         "cost": 51200,
+        "provider": "makingHistory",
         "mass": {
             "empty": 32,
             "full": 288

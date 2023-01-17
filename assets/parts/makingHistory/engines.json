@@ -4,6 +4,7 @@
         "name": "Kerbodyne KE-1 \"Mastodon\" Liquid Fuel Engine",
         "tech": "veryHeavyRocketry",
         "cost": 22000,
+        "provider": "makingHistory",
         "mass": {
             "empty": 5,
             "full": 5
@@ -40,7 +41,8 @@
                             "Oxidizer": 1.1
                         },
                         "total": {
-                            "mass": 0.4745,
+                            "provider": "makingHistory",
+        "mass": 0.4745,
                             "unit": 94.9067
                         }
                     },
@@ -54,6 +56,7 @@
         "name": "LV-T91 \"Cheetah\" Liquid Fuel Engine",
         "tech": "heavierRocketry",
         "cost": 1000,
+        "provider": "makingHistory",
         "mass": {
             "empty": 1,
             "full": 1
@@ -90,7 +93,8 @@
                             "Oxidizer": 1.1
                         },
                         "total": {
-                            "mass": 0.0369,
+                            "provider": "makingHistory",
+        "mass": 0.0369,
                             "unit": 7.3867
                         }
                     },
@@ -104,6 +108,7 @@
         "name": "LV-TX87 \"Bobcat\" Liquid Fuel Engine",
         "tech": "heavierRocketry",
         "cost": 2000,
+        "provider": "makingHistory",
         "mass": {
             "empty": 2,
             "full": 2
@@ -140,7 +145,8 @@
                             "Oxidizer": 1.1
                         },
                         "total": {
-                            "mass": 0.1315,
+                            "provider": "makingHistory",
+        "mass": 0.1315,
                             "unit": 26.3063
                         }
                     },
@@ -154,6 +160,7 @@
         "name": "RE-I2 \"Skiff\" Liquid Fuel Engine",
         "tech": "heavierRocketry",
         "cost": 1500,
+        "provider": "makingHistory",
         "mass": {
             "empty": 1,
             "full": 1
@@ -190,7 +197,8 @@
                             "Oxidizer": 1.1
                         },
                         "total": {
-                            "mass": 0.0927,
+                            "provider": "makingHistory",
+        "mass": 0.0927,
                             "unit": 18.534
                         }
                     },
@@ -204,6 +212,7 @@
         "name": "RE-J10 \"Wolfhound\" Liquid Fuel Engine AJ10",
         "tech": "heavyRocketry",
         "cost": 1680,
+        "provider": "makingHistory",
         "mass": {
             "empty": 2.5,
             "full": 2.5
@@ -240,7 +249,8 @@
                             "Oxidizer": 1.1
                         },
                         "total": {
-                            "mass": 0.0928,
+                            "provider": "makingHistory",
+        "mass": 0.0928,
                             "unit": 18.5565
                         }
                     },
@@ -254,6 +264,7 @@
         "name": "RK-7 \"Kodiak\" Liquid Fueled Engine",
         "tech": "heavierRocketry",
         "cost": 1300,
+        "provider": "makingHistory",
         "mass": {
             "empty": 1.25,
             "full": 1.25
@@ -290,6 +301,7 @@
                             "Oxidizer": 1.1
                         },
                         "total": {
+                            "provider": "makingHistory",
                             "mass": 0.0802,
                             "unit": 16.0425
                         }
@@ -304,6 +316,7 @@
         "name": "RV-1 \"Cub\" Vernier Engine",
         "tech": "heavierRocketry",
         "cost": 1000,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.18,
             "full": 0.18
@@ -340,7 +353,8 @@
                             "Oxidizer": 1.1
                         },
                         "total": {
-                            "mass": 0.0127,
+                            "provider": "makingHistory",
+        "mass": 0.0127,
                             "unit": 2.5484
                         }
                     },

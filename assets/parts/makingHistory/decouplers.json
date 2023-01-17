@@ -4,6 +4,7 @@
         "name": "TD-18 Decoupler",
         "tech": "generalConstruction",
         "cost": 475,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.09,
             "full": 0.09
@@ -20,6 +21,7 @@
         "name": "TD-50 Decoupler",
         "tech": "highPerformanceFuelSystems",
         "cost": 650,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.64,
             "full": 0.64
@@ -36,6 +38,7 @@
         "name": "TS-18 Stack Separator",
         "tech": "advConstruction",
         "cost": 715,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.12,
             "full": 0.12
@@ -52,6 +55,7 @@
         "name": "TS-50 Stack Separator",
         "tech": "highPerformanceFuelSystems",
         "cost": 975,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.85,
             "full": 0.85
@@ -68,6 +72,7 @@
         "name": "Size 1.5 Decoupler",
         "tech": "advConstruction",
         "cost": 475,
+        "provider": "makingHistory",
         "mass": {
             "empty": 0.09,
             "full": 0.09

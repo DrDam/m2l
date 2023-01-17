@@ -167,9 +167,11 @@ var master;
             $('#start').prop('disabled', true);
             $('#stop').prop('disabled', false);
 
+            $('#results').show();
+
             // If table not prepared, init it
             if (resultTable === null) {
-                $('#results').show();
+
                 resultTable = $('#results table').DataTable({
                     searching: false,
                     language: {
@@ -272,8 +274,8 @@ var master;
             };
 
             PartToCalculation.decouplers = SelectedParts.decouplers;
-            PartToCalculation.engines = [];
-            PartToCalculation.fuelable = SelectedParts.fuelTanks.concat(SelectedParts.adapters);
+            PartToCalculation.engines = [];
+
             /**********************************/
             /* End Init calculation variables */
             /**********************************/
@@ -290,23 +292,33 @@ var master;
              console.log('###################');
              */
 
-            $('html, body').animate({
-                scrollTop: $("#results").offset().top
-            }, 1000);
-            // Generate Engine Stacks
-            $('#message').html("Recruiting Kerbals Engineer");
-            PartToCalculation.engines = makeEngineStacks(SelectedParts.engines, SelectedParts.couplers, simu.maxRadial);
-
             // Show table
             $('html, body').animate({
                 scrollTop: $("#results").offset().top
             }, 1000);
 
-            console.log('Search Rockets '  + new Date());
-            // Launch workers !
-            searchRockets();
+            // Generate Engine Stacks
+            $('#message').html("Contacting Nikolai Kuznetsov for engines configuration.");
+            console.group('Generate Engine Stacks');
+            console.log('Start : ' + new Date());
+            PartToCalculation.engines = makeEngineStacks(SelectedParts.engines, SelectedParts.couplers, simu.maxRadial);
+            console.log('End : ' + new Date());
+            console.groupEnd();
+            // Generate Fuel Stacks
+            $('#message').html("Contacting Sergeï Kerolev for fuels stacks");
+            console.group('Generate Fuel Stacks');
+            console.log('Start : ' + new Date());
+            PartToCalculation.fuelable = generateTanksStacks(SelectedParts.fuelTanks, SelectedParts.adapters, simu.maxTanks);
+            console.log('End : ' + new Date());
+            console.log(PartToCalculation.fuelable);
+            console.groupEnd();
 
-            $('#message').html("Let's see Werner Von Kerbraun & Serguei Kebolev working together");
+
+
+            // Launch workers !
+            $('#message').html("Let's see Nikolai Kuznetsov & Serguei Kebolev working together");
+            console.log('Search Rockets '  + new Date());
+            searchRockets();
 
             // Prevent default
             return false;
