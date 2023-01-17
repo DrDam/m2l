@@ -1,5 +1,5 @@
-{
-    "monopropMiniSphere": {
+[
+    {
         "id": "monopropMiniSphere",
         "name": "Stratus-V Minified Monopropellant Tank",
         "tech": "propulsionSystems",
@@ -17,7 +17,7 @@
             "MonoPropellant": "7.5"
         }
     },
-    "Size1p5_Monoprop": {
+    {
         "id": "Size1p5_Monoprop",
         "name": "FL-R5 RCS Fuel Tank",
         "tech": "advFuelSystems",
@@ -35,7 +35,7 @@
             "MonoPropellant": "400"
         }
     },
-    "Size1p5_Size0_Adapter_01": {
+    {
         "id": "Size1p5_Size0_Adapter_01",
         "name": "FL-A150 Fuel Tank Adapter",
         "tech": "fuelSystems",
@@ -54,7 +54,7 @@
             "Oxidizer": "88"
         }
     },
-    "Size1p5_Size1_Adapter_01": {
+    {
         "id": "Size1p5_Size1_Adapter_01",
         "name": "FL-A151L Fuel Tank Adapter",
         "tech": "fuelSystems",
@@ -73,7 +73,7 @@
             "Oxidizer": "330"
         }
     },
-    "Size1p5_Size1_Adapter_02": {
+    {
         "id": "Size1p5_Size1_Adapter_02",
         "name": "FL-A151S Fuel Tank Adapter",
         "tech": "advRocketry",
@@ -92,7 +92,7 @@
             "Oxidizer": "88"
         }
     },
-    "Size1p5_Size2_Adapter_01": {
+    {
         "id": "Size1p5_Size2_Adapter_01",
         "name": "FL-A215 Fuel Tank Adapter",
         "tech": "fuelSystems",
@@ -111,7 +111,7 @@
             "Oxidizer": "660"
         }
     },
-    "Size1p5_Tank_01": {
+    {
         "id": "Size1p5_Tank_01",
         "name": "FL-TX220 Fuel Tank",
         "tech": "advRocketry",
@@ -130,7 +130,7 @@
             "Oxidizer": "121"
         }
     },
-    "Size1p5_Tank_02": {
+    {
         "id": "Size1p5_Tank_02",
         "name": "FL-TX440 Fuel Tank",
         "tech": "fuelSystems",
@@ -149,7 +149,7 @@
             "Oxidizer": "242"
         }
     },
-    "Size1p5_Tank_03": {
+    {
         "id": "Size1p5_Tank_03",
         "name": "FL-TX900 Fuel Tank",
         "tech": "fuelSystems",
@@ -168,7 +168,7 @@
             "Oxidizer": "495"
         }
     },
-    "Size1p5_Tank_04": {
+    {
         "id": "Size1p5_Tank_04",
         "name": "FL-TX1800 Fuel Tank",
         "tech": "advFuelSystems",
@@ -187,7 +187,7 @@
             "Oxidizer": "990"
         }
     },
-    "Size1p5_Tank_05": {
+    {
         "id": "Size1p5_Tank_05",
         "name": "FL-C1000 Fuel Tank",
         "tech": "fuelSystems",
@@ -207,7 +207,7 @@
             "SolidFuel": "4"
         }
     },
-    "Size3_Size4_Adapter_01": {
+    {
         "id": "Size3_Size4_Adapter_01",
         "name": "Kerbodyne S3-S4 Adapter Tank",
         "tech": "highPerformanceFuelSystems",
@@ -226,7 +226,7 @@
             "Oxidizer": "3520"
         }
     },
-    "Size4_EngineAdapter_01": {
+    {
         "id": "Size4_EngineAdapter_01",
         "name": "Kerbodyne Engine Cluster Adapter Tank",
         "tech": "highPerformanceFuelSystems",
@@ -245,7 +245,7 @@
             "Oxidizer": "4950"
         }
     },
-    "Size4_Tank_01": {
+    {
         "id": "Size4_Tank_01",
         "name": "Kerbodyne S4-64 Fuel Tank",
         "tech": "highPerformanceFuelSystems",
@@ -264,7 +264,7 @@
             "Oxidizer": "3520"
         }
     },
-    "Size4_Tank_02": {
+    {
         "id": "Size4_Tank_02",
         "name": "Kerbodyne S4-128 Fuel Tank",
         "tech": "highPerformanceFuelSystems",
@@ -283,7 +283,7 @@
             "Oxidizer": "7040"
         }
     },
-    "Size4_Tank_03": {
+    {
         "id": "Size4_Tank_03",
         "name": "Kerbodyne S4-256 Fuel Tank",
         "tech": "highPerformanceFuelSystems",
@@ -302,7 +302,7 @@
             "Oxidizer": "14080"
         }
     },
-    "Size4_Tank_04": {
+    {
         "id": "Size4_Tank_04",
         "name": "Kerbodyne S4-512 Fuel Tank",
         "tech": "highPerformanceFuelSystems",
@@ -321,4 +321,4 @@
             "Oxidizer": "28160"
         }
     }
-}
+]

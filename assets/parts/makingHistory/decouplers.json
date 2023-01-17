@@ -1,5 +1,5 @@
-{
-    "Decoupler_1p5": {
+[
+    {
         "id": "Decoupler_1p5",
         "name": "TD-18 Decoupler",
         "tech": "generalConstruction",
@@ -15,7 +15,7 @@
         "is_radial": false,
         "isOmniDecoupler": false
     },
-    "Decoupler_4": {
+    {
         "id": "Decoupler_4",
         "name": "TD-50 Decoupler",
         "tech": "highPerformanceFuelSystems",
@@ -31,7 +31,7 @@
         "is_radial": false,
         "isOmniDecoupler": false
     },
-    "Separator_1p5": {
+    {
         "id": "Separator_1p5",
         "name": "TS-18 Stack Separator",
         "tech": "advConstruction",
@@ -47,7 +47,7 @@
         "is_radial": false,
         "isOmniDecoupler": true
     },
-    "Separator_4": {
+    {
         "id": "Separator_4",
         "name": "TS-50 Stack Separator",
         "tech": "highPerformanceFuelSystems",
@@ -63,7 +63,7 @@
         "is_radial": false,
         "isOmniDecoupler": true
     },
-    "Size1p5_Strut_Decoupler": {
+    {
         "id": "Size1p5_Strut_Decoupler",
         "name": "Size 1.5 Decoupler",
         "tech": "advConstruction",
@@ -79,4 +79,4 @@
         "is_radial": false,
         "isOmniDecoupler": false
     }
-}
+]

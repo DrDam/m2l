@@ -1,5 +1,5 @@
-{
-    "LiquidEngineKE-1": {
+[
+    {
         "id": "LiquidEngineKE-1",
         "name": "Kerbodyne KE-1 \"Mastodon\" Liquid Fuel Engine",
         "tech": "veryHeavyRocketry",
@@ -49,7 +49,7 @@
             ]
         }
     },
-    "LiquidEngineLV-T91": {
+    {
         "id": "LiquidEngineLV-T91",
         "name": "LV-T91 \"Cheetah\" Liquid Fuel Engine",
         "tech": "heavierRocketry",
@@ -99,7 +99,7 @@
             ]
         }
     },
-    "LiquidEngineLV-TX87": {
+    {
         "id": "LiquidEngineLV-TX87",
         "name": "LV-TX87 \"Bobcat\" Liquid Fuel Engine",
         "tech": "heavierRocketry",
@@ -149,7 +149,7 @@
             ]
         }
     },
-    "LiquidEngineRE-I2": {
+    {
         "id": "LiquidEngineRE-I2",
         "name": "RE-I2 \"Skiff\" Liquid Fuel Engine",
         "tech": "heavierRocketry",
@@ -199,7 +199,7 @@
             ]
         }
     },
-    "LiquidEngineRE-J10": {
+    {
         "id": "LiquidEngineRE-J10",
         "name": "RE-J10 \"Wolfhound\" Liquid Fuel Engine AJ10",
         "tech": "heavyRocketry",
@@ -249,7 +249,7 @@
             ]
         }
     },
-    "LiquidEngineRK-7": {
+    {
         "id": "LiquidEngineRK-7",
         "name": "RK-7 \"Kodiak\" Liquid Fueled Engine",
         "tech": "heavierRocketry",
@@ -299,7 +299,7 @@
             ]
         }
     },
-    "LiquidEngineRV-1": {
+    {
         "id": "LiquidEngineRV-1",
         "name": "RV-1 \"Cub\" Vernier Engine",
         "tech": "heavierRocketry",
@@ -349,4 +349,4 @@
             ]
         }
     }
-}
+]

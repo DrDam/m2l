@@ -52,36 +52,38 @@ var master;
 
         // Populate "advanced" part selector
         var domParent = '#advanced_part_list';
-        $.get('../tpl/partList.mst', function (data) {
-            var partListTpl = data;
 
-            // Generate Advanced part selection
-            for (var category in Parts) {
-                part_category = [];
-                for (var part_item in Parts[category]) {
-                    var part = Parts[category][part_item];
-                    part_category.push({ name: part.name, id: part.id, provider: part.provider });
+        setTimeout(() => {
+            $.get('../tpl/partList.mst', function (data) {
+                var partListTpl = data;
+
+                // Generate Advanced part selection
+                for (var category in Parts) {
+                    part_category = [];
+                    for (var part_item in Parts[category]) {
+                        var part = Parts[category][part_item];
+                        part_category.push({ name: part.name, id: part.id, provider: part.provider });
+                    }
+
+                    var html = Mustache.render(partListTpl, { category: category, parts: part_category });
+                    $(domParent).append(html);
+
                 }
 
-                var html = Mustache.render(partListTpl, { category: category, parts: part_category });
-                $(domParent).append(html);
+                // Add interactions on advanced part selection
+                $('.part-category').click(function () {
+                    var ref = $(this).attr('data-ref');
+                    $('ul[data-ref=' + ref + ']').toggle();
+                    if ($(this).hasClass('closed')) {
+                        $(this).removeClass('closed');
+                    }
+                    else {
+                        $(this).addClass('closed');
+                    }
+                });
 
-            }
-
-            // Add interactions on advanced part selection
-            $('.part-category').click(function () {
-                var ref = $(this).attr('data-ref');
-                $('ul[data-ref=' + ref + ']').toggle();
-                if ($(this).hasClass('closed')) {
-                    $(this).removeClass('closed');
-                }
-                else {
-                    $(this).addClass('closed');
-                }
-            });
-
-        }, 'text');
-
+            }, 'text');
+        }, 500);
         /**********************/
         /* End Populate items */
         /**********************/
