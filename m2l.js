@@ -50,9 +50,28 @@ var master;
             $('#parts').append($('<option>', data));
         });
 
+        // Populate "SOI"
+        $.each(SOI, function (i, item) {
+            var data = {
+                value: i,
+                text: item.Name
+            };
+            if (item.Name === 'Kerbin') {
+                data.selected = 'selected';
+            }
+            $('#g0').append($('<option>', data));
+        });
+        // Set Kerbin LowOrbitDv for default Dv Target
+        $('#DvTarget').val(SOI[0].LowOrbitDv);
+        // if SOI change, update Dv Target
+        $('#g0').change(function () {
+            let val = $(this).find(":selected").val();
+            $('#DvTarget').val(SOI[val].LowOrbitDv);
+        })
+
         // Populate "advanced" part selector
         var domParent = '#advanced_part_list';
-
+        // wait data gathering.
         setTimeout(() => {
             $.get('../tpl/partList.mst', function (data) {
                 var partListTpl = data;
@@ -67,7 +86,6 @@ var master;
 
                     var html = Mustache.render(partListTpl, { category: category, parts: part_category });
                     $(domParent).append(html);
-
                 }
 
                 // Add interactions on advanced part selection
@@ -97,11 +115,22 @@ var master;
             $("#readme").toggle("slow", function () { });
         });
 
-        // toggle advanced configuration
-        $("#advanced_button").click(function (event) {
-            event.preventDefault();
-            $("#advanced").toggle("slow", function () { });
-            return false;
+        // Disable "Dangerous features
+        $('.warning_field_set:checkbox').change(function () {
+            var check = $(this).prop('checked');
+
+            if(check === false) {
+                $(this).parents('fieldset').find(".fieldset_content").addClass('fieldset_disabled');
+                $(this).parents('fieldset').find(".fieldset_content").find('input, select').each(function () {
+                    $(this).attr('disabled', 'disabled');
+                });
+            }
+            else {
+                $(this).parents('fieldset').find(".fieldset_content").removeClass('fieldset_disabled');
+                $(this).parents('fieldset').find(".fieldset_content").find('input, select').each(function () {
+                    $(this).attr('disabled', null);
+                });
+            }
         });
 
         // Toggle part Mode
@@ -259,15 +288,17 @@ var master;
 
             var simu = {};
             simu.nbWorker = nbWorkers;
-            simu.step = parseInt(elems.Step.value);
+          //  simu.step = parseInt(elems.Step.value);
             simu.maxTanks = parseInt(elems.nbTanks.value);
             simu.maxRadial = parseInt(elems.nbRadial.value);
             simu.debug = {};
             simu.debug.status = debug_status;
             simu.debug.startTime = startTime.getTime();
 
+            let soi = parseInt(elems.g0.value);
+
             computationData = {
-                SOI: SOI.kerbin,
+                SOI: SOI[soi],
                 rocket: rocket,
                 cu: CU,
                 simu: simu,
@@ -298,24 +329,26 @@ var master;
             }, 1000);
 
             // Generate Engine Stacks
+            //@TODO : maybe move this in 2 worker ?
             $('#message').html("Contacting Nikolai Kuznetsov for engines configuration.");
             console.group('Generate Engine Stacks');
             console.log('Start : ' + new Date());
             PartToCalculation.engines = makeEngineStacks(SelectedParts.engines, SelectedParts.couplers, simu.maxRadial);
             console.log('End : ' + new Date());
+            //console.log(PartToCalculation.engines);
             console.groupEnd();
+
             // Generate Fuel Stacks
             $('#message').html("Contacting Sergeï Kerolev for fuels stacks");
             console.group('Generate Fuel Stacks');
             console.log('Start : ' + new Date());
             PartToCalculation.fuelable = generateTanksStacks(SelectedParts.fuelTanks, SelectedParts.adapters, simu.maxTanks);
             console.log('End : ' + new Date());
-            console.log(PartToCalculation.fuelable);
+            //console.log(PartToCalculation.fuelable);
             console.groupEnd();
 
-
-
             // Launch workers !
+            //@TODO : When engine & fuelable worker have finished, run !
             $('#message').html("Let's see Nikolai Kuznetsov & Serguei Kebolev working together");
             console.log('Search Rockets '  + new Date());
             searchRockets();
@@ -355,7 +388,7 @@ var master;
                 }
                 if (channel === 'wait') {
                     var master_id = result.id;
-                    // If Master end all is processing, kill it
+                    // If Master has end all is processing, kill it
                     DEBUG.send(master_id + ' # Send wait');
                     master.postMessage({ channel: 'stop' });
                 }
@@ -411,7 +444,7 @@ var master;
 
                 stageData.decoupler = stage.parts.decoupler;
                 stageData.engine = stage.parts.engine;
-//console.log( stage.parts.tanks);
+                //console.log( stage.parts.tanks);
                 stageData.tanks = [];
                 var tanks = stage.parts.tanks;
                 for (var j in tanks) {
