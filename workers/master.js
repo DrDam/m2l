@@ -139,9 +139,7 @@ function run() {
 
     // Clone Data and prepare for first worker.
     let UpperData = clone(Global_data);
-    UpperData.originData = {};
-    UpperData.originData.AllDv = Global_data.rocket.dv;
-
+    UpperData.originTarget = Global_data.rocket.dv.target;
     // Make firstborn as working and push it to work !
     WorkersStatus['Staging--0'] = 'run';
     Workers['Staging--0'].postMessage({ channel: 'run', data: UpperData  });
@@ -152,7 +150,7 @@ function run() {
  */
 function MakeWorkers() {
     let i = 0;
-    while(i < Global_data.simu.nbWorker) {
+    while(i <= Global_data.simu.nbWorker) {
 
         // Prepare worker id.
         let worker_uid = 'Staging--' + i;
@@ -184,17 +182,39 @@ function WorkerEventListener (e) {
     let channel = e.data.channel;
     let sub_worker_id = e.data.id;
 
+
     // Worker have tried an BadDesign.
     if (channel === 'badDesign') {
         // Send message to main script.
         self.postMessage({ channel: 'badDesign' });
+        return;
     }
 
     // Worker find a good design
     if (channel === 'result') {
-        DEBUG.send(sub_worker_id + ' # send Result');
+
+        //DEBUG.send(sub_worker_id + ' # send Result');
         //  Manage design.
-        manage_stage(e.data.output);
+        let result = e.data.output;
+        //console.log(result);
+        if(result.info.dv >= Global_data.rocket.dv.target ) {
+            returnRocket(result.stages);
+            return;
+        }
+        else {
+            if(result.info.bottomSize === false) {
+                DEBUG.send(sub_worker_id + ' # bad Design');
+                self.postMessage({ channel: 'badDesign' });
+                return;
+            }
+            DEBUG.send(sub_worker_id + ' # add element in stack');
+            let UpperData = clone(Global_data);
+            UpperData.originTarget = round(Global_data.rocket.dv.target - result.info.dv);
+            UpperData.stages = result.stages;
+            UpperData.cu.mass = result.info.massFull;
+            UpperData.cu.size = result.info.bottomSize;
+            RocketsStack.push(UpperData);
+        }
     }
 
     // Worker as finished is task, and wait a new one.
@@ -215,10 +235,6 @@ function WorkerEventListener (e) {
         // Try to terminate myself.
         killMe();
     }
-}
-
-function manage_stage(stage) {
-    console.log(stage);
 }
 
 /*
@@ -261,9 +277,11 @@ self.addEventListener('StackIsEmpty', function () {
  * @param {string} sub_worker_id
  */
 function generateStageStack(sub_worker_id) {
+
     // If main script call to stop, Stop !!!!
     if (Global_status === 'stop') {
         SendStopToAllChildren();
+        WorkersStatus[sub_worker_id] = 'wait';
         return;
     }
 
@@ -273,18 +291,13 @@ function generateStageStack(sub_worker_id) {
     // If stack are empty
     if (Stack === undefined) {
         // Check if all calculation are ended.
+        WorkersStatus[sub_worker_id] = 'wait';
         VerifyautoStop();
     }
     else {
-        // Make data for stage calculation.
-        let UpperData = clone(Stack);
-        UpperData.originData = {};
-        UpperData.originData.AllDv = Global_data.rocket.dv;
-        UpperData.stack = null;
-
         // Send Data to Worker.
         WorkersStatus[sub_worker_id] = 'run';
-        Workers[sub_worker_id].postMessage({ channel: 'run', data: UpperData });
+        Workers[sub_worker_id].postMessage({ channel: 'run', data: Stack });
     }
 }
 
@@ -292,6 +305,7 @@ function generateStageStack(sub_worker_id) {
  * A full rocket are finished
  */
 function returnRocket(stages) {
+
 
     let rocket = {
         totalMass: 0,

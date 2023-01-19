@@ -6,11 +6,10 @@ importScripts('../lib/models.js','../lib/lib.js');
 let startTime = new Date();
 
 // Main worker data
-let worker_id;
 let Global_data = {};
 let Parts = {};
 let Global_status = 'run';
-
+let worker_id;
 
 /*********************/
 /* Utility functions */
@@ -54,7 +53,7 @@ self.addEventListener('message', function (e) {
     if (inputs.channel === 'run') {
         cleanData();
         Global_data = inputs.data;
-        //console.log(Global_data);
+      //  console.log(Global_data);
         startTime = new Date();
         DEBUG.send(worker_id + ' # run');
         run();
@@ -352,20 +351,27 @@ function make_stage_item(start_stage_atm, engine, command, decoupler, fuelStack)
  */
 function return_staging(stage) {
     let data = {};
-
+    data.info = {};
+    data.info.dv = 0;
     // if 1 stage (nearest of the payload), create stagging.
-    if( Global_data.staging === undefined ) {
-        data.staging = {};
-        data.staging.stages = [];
-        data.staging.info = {};
-        data.staging.info.dv = Global_data.rocket.dv.target;
-        data.staging.info.target = Global_data.rocket.dv;
+    if( Global_data.stages === undefined ) {
+        data.stages = [];
+    }
+    else {
+        data.stages = clone(Global_data.stages);
+        for (let stagesKey in data.stages) {
+            data.info.dv = round( data.info.dv + data.stages[stagesKey].caracts.stageDv);
+        }
     }
 
+    data.info.target = Global_data.rocket.dv;
+
     // Add Stage to staging
-    data.staging.stages.push(stage);
-    data.staging.info.dv -= stage.caracts.stageDv;
+    data.stages.push(stage);
+    data.info.dv = round(data.info.dv + stage.caracts.stageDv);
+    data.info.bottomSize = stage.size.bottom;
+    data.info.massFull = Global_data.cu.mass + stage.caracts.mass.full;
 
     // Push data to Master.
-    self.postMessage({ channel: 'result', output: data, id: worker_id, data: Global_data});
+    self.postMessage({ channel: 'result', output: data, id: worker_id});
 }
