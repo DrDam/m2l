@@ -7,20 +7,20 @@ if (typeof Worker === 'undefined') {
 /******************/
 /* Init Variables */
 /******************/
+let startTime = new Date();
 
 // Computation data / status
-var Global_data = {};
-var Parts = {};
-var Global_status = 'run';
-var startTime = new Date();
+let Global_data = {};
+let Parts = {};
+let Global_status = 'run';
 
 // Workers Status
-var Workers = {};
-var WorkersStatus = {};
-var WorkersCreated = false;
+const Workers = {};
+const WorkersStatus = {};
+let WorkersCreated = false;
 
 // Rockets Stacks
-var RocketsStack = [];
+let RocketsStack = [];
 
 /*********************/
 /* Utility functions */
@@ -43,7 +43,7 @@ function cleanData() {
 
     // Add an event on shift : StackIsEmpty.
     RocketsStack.shift = function (e) {
-        var output = Array.prototype.shift.call(RocketsStack, e);
+        let output = Array.prototype.shift.call(RocketsStack, e);
         if (output === undefined && RocketsStack.length === 0) {
             self.dispatchEvent(new CustomEvent('StackIsEmpty'));
         }
@@ -54,9 +54,9 @@ function cleanData() {
 /**
  * Calculation ended, waiting for a new work.
  */
-function autostop() {
+function autoStop() {
     cleanData();
-    var stopped = new Date();
+    let stopped = new Date();
     DEBUG.send('Master # wait # ' + round((stopped - startTime) / 1000, 0) + "sec running");
     // Send message to main script, I'm wating.
     self.postMessage({ channel: 'wait', id: 'Master' });
@@ -69,7 +69,7 @@ function killMe() {
     // If all subworker are killed
     if (Object.values(WorkersStatus).join('') === '') {
         DEBUG.send('Master # killMe');
-        // Send message to main script, I will terminated.
+        // Send message to main script, I will terminate.
         self.postMessage({ channel: 'killMe', id: 'Master' });
         // Clear data.
         cleanData();
@@ -83,7 +83,7 @@ function killMe() {
  * Send "Stop" message to all subWorkers.
  */
 function SendStopToAllChildren() {
-    for (var i in Workers) {
+    for (let i in Workers) {
         if (Workers[i] !== undefined) {
             Workers[i].postMessage({ channel: "stop" });
         }
@@ -94,9 +94,9 @@ function SendStopToAllChildren() {
  * Message from main script.
  */
 self.addEventListener('message', function (e) {
-    var inputs = e.data;
+    let inputs = e.data;
 
-    // I'm a new born, main script feed me with collection of parts.
+    // I'm a newborn, main script feed me with collection of parts.
     if (inputs.channel === 'create') {
         Parts = inputs.parts;
         DEBUG.setStatus(inputs.debug.status);
@@ -120,7 +120,6 @@ self.addEventListener('message', function (e) {
         Global_status = 'stop';
         DEBUG.send('Master # to stop');
         SendStopToAllChildren();
-        return;
     }
 });
 
@@ -135,15 +134,15 @@ function run() {
         MakeWorkers();
     }
 
-    // Invoke my first born.
+    // Invoke my firstborn.
     WorkersStatus['Staging--0'] = 'reserved';
 
     // Clone Data and prepare for first worker.
-    var UpperData = clone(Global_data);
+    let UpperData = clone(Global_data);
     UpperData.originData = {};
     UpperData.originData.AllDv = Global_data.rocket.dv;
 
-    // Make first born as working and push it to work !
+    // Make firstborn as working and push it to work !
     WorkersStatus['Staging--0'] = 'run';
     Workers['Staging--0'].postMessage({ channel: 'run', data: UpperData  });
 }
@@ -152,21 +151,21 @@ function run() {
  * Generate my children
  */
 function MakeWorkers() {
-    var i = 0;
+    let i = 0;
     while(i < Global_data.simu.nbWorker) {
 
         // Prepare worker id.
-        var worker_uid = 'Staging--' + i;
+        let worker_uid = 'Staging--' + i;
 
         // Init Worker.
-        var w = new Worker('getStaging.js');
+        let w = new Worker('getStaging.js');
         DEBUG.send('Generate woker ' + worker_uid);
         Workers[worker_uid] = w;
 
         // Add listener with workers.
         w.addEventListener('message', WorkerEventListener);
 
-        // Tag him to created.
+        // Tag him to create.
         WorkersStatus[worker_uid] = 'created';
         w.postMessage({ channel: 'create', id: worker_uid, parts: Parts, debug: Global_data.simu.debug });
 
@@ -177,16 +176,16 @@ function MakeWorkers() {
 
 /**
  * How to comunicate with Staging workers.
- * @param Event e
+ * @param e
  */
 function WorkerEventListener (e) {
 
     // Decode channel & worker.
-    var channel = e.data.channel;
-    var sub_worker_id = e.data.id;
+    let channel = e.data.channel;
+    let sub_worker_id = e.data.id;
 
     // Worker have tried an BadDesign.
-    if (channel == 'badDesign') {
+    if (channel === 'badDesign') {
         // Send message to main script.
         self.postMessage({ channel: 'badDesign' });
     }
@@ -195,9 +194,9 @@ function WorkerEventListener (e) {
     if (channel === 'result') {
         DEBUG.send(sub_worker_id + ' # send Result');
         var result = e.data;
-
+//console.log(result);
         //  Manage design.
-        returnRocket(result.staging);
+       // returnRocket(e.data.staging);
     }
 
     // Worker as finished is task, and wait a new one.
@@ -206,7 +205,7 @@ function WorkerEventListener (e) {
         WorkersStatus[sub_worker_id] = 'wait';
 
         // Try to find him a new work.
-        generateStageStack(sub_worker_id);
+      //  generateStageStack(sub_worker_id);
     }
 
     // Worker had been terminated.
@@ -228,7 +227,7 @@ self.addEventListener('StackPush', function () {
     DEBUG.send('# Master RocketsStack length # ' + RocketsStack.length);
 
     // Find if one woker wait for work.
-    for (var sub_worker_id in Workers) {
+    for (let sub_worker_id in Workers) {
         if (WorkersStatus[sub_worker_id] === 'wait' || WorkersStatus[sub_worker_id] === 'created') {
 
             // If one worker are waiting, send it to work.
@@ -251,13 +250,13 @@ self.addEventListener('StackIsEmpty', function () {
     DEBUG.send('# Master RocketsStack is Empty');
 
     // If there is nothing to compute, verify if there is the end.
-    VerifyAutostop();
+    VerifyautoStop();
 });
 
 /**
  * Send work to a worker
  *
- * @param {int} sub_worker_id
+ * @param {string} sub_worker_id
  */
 function generateStageStack(sub_worker_id) {
     // If main script call to stop, Stop !!!!
@@ -267,16 +266,16 @@ function generateStageStack(sub_worker_id) {
     }
 
     // Get new element from the stack.
-    var Stack = RocketsStack.shift();
+    let Stack = RocketsStack.shift();
 
     // If stack are empty
     if (Stack === undefined) {
         // Check if all calculation are ended.
-        VerifyAutostop();
+        VerifyautoStop();
     }
     else {
         // Make data for stage calculation.
-        var UpperData = clone(Stack);
+        let UpperData = clone(Stack);
         UpperData.originData = {};
         UpperData.originData.AllDv = Global_data.rocket.dv;
         UpperData.stack = null;
@@ -292,7 +291,7 @@ function generateStageStack(sub_worker_id) {
  */
 function returnRocket(stages) {
 
-    var rocket = {
+    let rocket = {
         totalMass: 0,
         nb: 0,
         totalDv: 0,
@@ -301,8 +300,8 @@ function returnRocket(stages) {
         stages: [],
     };
 
-    for(var i in stages) {
-        var stage = stages[i];
+    for(let i in stages) {
+        let stage = stages[i];
         rocket.cost += stage.caracts.cost;
         rocket.totalMass += stage.caracts.mass.full;
         rocket.totalDv += stage.caracts.stageDv;
@@ -317,11 +316,11 @@ function returnRocket(stages) {
 /**
  * Natural End Condition.
  */
-function VerifyAutostop() {
+function VerifyautoStop() {
 
-    var nbRunning = 0;
+    let nbRunning = 0;
     // Check all worker if some-one still working.
-    for (var sub_worker_id in WorkersStatus) {
+    for (let sub_worker_id in WorkersStatus) {
         if (WorkersStatus[sub_worker_id] === 'run') {
             nbRunning++;
         }
@@ -330,6 +329,6 @@ function VerifyAutostop() {
     // If no one working.
     if (nbRunning === 0) {
         // Normal Stopping.
-        autostop();
+        autoStop();
     }
 }
