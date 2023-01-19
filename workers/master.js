@@ -205,7 +205,7 @@ function WorkerEventListener (e) {
         WorkersStatus[sub_worker_id] = 'wait';
 
         // Try to find him a new work.
-      //  generateStageStack(sub_worker_id);
+        generateStageStack(sub_worker_id);
     }
 
     // Worker had been terminated.

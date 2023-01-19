@@ -26,9 +26,9 @@ function cleanData() {
 /**
  * Calculation ended, waiting for a new work.
  */
-function autostop() {
+function autoStop() {
     cleanData();
-    var stopped = new Date();
+    let stopped = new Date();
     DEBUG.send(worker_id + ' # wait # ' + round((stopped - startTime) / 1000, 0) + "sec running");
     // Send message to master script, I'm waiting.
     self.postMessage({ channel: 'wait', id: worker_id });
@@ -61,10 +61,14 @@ self.addEventListener('message', function (e) {
         return;
     }
 
-    // Master call to stop calculations.
+    // Master doesn't need me anymore so I can disappear.
     if (inputs.channel === 'stop') {
-        Global_status = 'stop';
-        DEBUG.send(worker_id + ' # to stop');
+        DEBUG.send(worker_id + ' # killMe');
+        self.postMessage({ channel: 'killMe', id: worker_id });
+        // Clear data.
+        Global_data = null;
+        // clear worker
+        close();
     }
 });
 
@@ -165,9 +169,7 @@ function run() {
                 let atm0 = AtmPressurEstimator(rocket_dv_target - Dv0, SOI);
                 // Redo calculation
                 let curveData = getCaractForAtm(engine.curve, atm0);
-                let estimateAlt = getAltFromAtm(atm0, SOI);
-
-                let correctTwr = twr.min * (1 - estimateAlt/1000 * (twrCorrection / 10));
+                let correctTwr = TwrCorrection(atm0, SOI, twr);
                 let ISP = curveData.ISP;
                 let Thrust = curveData.Thrust;
 
@@ -180,7 +182,6 @@ function run() {
                 if (rocket_dv_target - DvAtm0 > SOI.LowOrbitDv) {
                     ignitionPressure = 0;
                 } else {
-
                     ignitionPressure = AtmPressurEstimator(rocket_dv_target - DvAtm0, SOI);
                 }
             }
@@ -190,10 +191,8 @@ function run() {
 
         // 1.4 : define TWR adjusted to atm => MfuelMax
         let curveDataIngition = getCaractForAtm(engine.curve, ignitionPressure);
-        let estimateAltAtIgnition = getAltFromAtm(ignitionPressure, SOI);
-        let correctTwrAtIgnition = twr.min * (1 - estimateAltAtIgnition/1000 * (twrCorrection / 10));
+        let correctTwrAtIgnition = TwrCorrection(ignitionPressure, SOI, twr);
         let ThrustOnIgnition = curveDataIngition.Thrust;
-        let ISPOnIgnition = curveDataIngition.ISP;
         let Mtot = ThrustOnIgnition / correctTwrAtIgnition / SOI.Go;
         let MmaxFuelTanks = Mtot - Mdead - MEngineFuel;
 
@@ -230,8 +229,7 @@ function run() {
 
                 // 2.3 : check fuel type (tank.ressources == engine.conso)
                 if (tankStack.info.ressources.join('-') !== engine.conso.join('-')) {
-                  //  DEBUG.send(worker_id + ' # test Tank ' + tankStack.id.join('-') + ' # ressources : ' + tankStack.info.ressources.join('-') + ' VS ' + engine.conso.join('-'));
-                    continue;
+                   continue;
                 }
 
                 // 2.1 : check size (size.top == decoupler.size && size.bottom = engine.size)
@@ -240,7 +238,6 @@ function run() {
                     ||
                     (!engine.is_radial && tankStack.info.stackable.bottom !== engine.stackable.top)
                 ) {
-               //     DEBUG.send(worker_id + ' # test Tank ' + tankStack.id.join('-') + ' # stackable : ' + tankStack.info.stackable.top + ' VS ' + decoupler.size + " AND " + tankStack.info.stackable.bottom + 'VS ' + engine.stackable.top??'radial');
                     continue;
                 }
 
@@ -270,8 +267,7 @@ function run() {
     }
 
     // Ended all stack passes
-    console.log('ended ' + new Date());
-    self.postMessage({ channel: 'wait', id: worker_id });
+    autoStop();
 }
 
 
@@ -321,7 +317,8 @@ function make_stage_item(start_stage_atm, engine, command, decoupler, fuelStack)
     let Dv = ISP * Global_data.SOI.Go * Math.log(MstageFull / MstageDry);
     let cost = engine.cost + decoupler.cost + command.cost + fuelStack.info.cost;
     let nb = engine.nb + 1 + command.nb + fuelStack.info.nb;
-    let stage = {
+
+    return {
         parts: {
             decoupler: decoupler.name,
             commandModule: command.stack,
@@ -348,7 +345,6 @@ function make_stage_item(start_stage_atm, engine, command, decoupler, fuelStack)
         },
     };
 
-    return stage;
 }
 
 /**
