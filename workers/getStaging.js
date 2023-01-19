@@ -307,14 +307,14 @@ function make_stage_item(start_stage_atm, engine, command, decoupler, fuelStack)
     let Thrust = curveData.Thrust;
 
     // Make stage caracterics
-    let MstageFull = Global_data.cu.mass + decoupler.mass.full + command.mass + engine.mass.full + fuelStack.info.mass.full;
-    let MstageDry = Global_data.cu.mass + decoupler.mass.empty + command.mass + engine.mass.empty + fuelStack.info.mass.empty;
+    let MstageFull = round(Global_data.cu.mass + decoupler.mass.full + command.mass + engine.mass.full + fuelStack.info.mass.full, 4);
+    let MstageDry = round(Global_data.cu.mass + decoupler.mass.empty + command.mass + engine.mass.empty + fuelStack.info.mass.empty, 4);
     let EngineFuelMass = engine.mass.full - engine.mass.empty;
     let stageFuelMass = fuelStack.info.mass.full - fuelStack.info.mass.empty + EngineFuelMass;
-    let TwrFull = Thrust / MstageFull / Global_data.SOI.Go;
-    let TwrDry = Thrust / MstageDry / Global_data.SOI.Go;
-    let burnDuration = stageFuelMass * ISP * Global_data.SOI.Go / Thrust;
-    let Dv = ISP * Global_data.SOI.Go * Math.log(MstageFull / MstageDry);
+    let TwrFull = round(Thrust / MstageFull / Global_data.SOI.Go);
+    let TwrDry = round(Thrust / MstageDry / Global_data.SOI.Go);
+    let burnDuration = round(stageFuelMass * ISP * Global_data.SOI.Go / Thrust);
+    let Dv = round(ISP * Global_data.SOI.Go * Math.log(MstageFull / MstageDry));
     let cost = engine.cost + decoupler.cost + command.cost + fuelStack.info.cost;
     let nb = engine.nb + 1 + command.nb + fuelStack.info.nb;
 
@@ -335,8 +335,8 @@ function make_stage_item(start_stage_atm, engine, command, decoupler, fuelStack)
             nb: nb,
             cost: cost,
             mass: {
-                full: MstageFull - Global_data.cu.mass,
-                empty: MstageDry - Global_data.cu.mass,
+                full: round(MstageFull - Global_data.cu.mass),
+                empty: round(MstageDry - Global_data.cu.mass),
             },
         },
         size: {
@@ -358,13 +358,13 @@ function return_staging(stage) {
         data.staging = {};
         data.staging.stages = [];
         data.staging.info = {};
-        data.staging.info.dv = stage.caracts.stageDv;
+        data.staging.info.dv = Global_data.rocket.dv.target;
         data.staging.info.target = Global_data.rocket.dv;
     }
-    else {
-        data.staging.stages.push(stage);
-        data.staging.info.dv -= stage.caracts.stageDv;
-    }
+
+    // Add Stage to staging
+    data.staging.stages.push(stage);
+    data.staging.info.dv -= stage.caracts.stageDv;
 
     // Push data to Master.
     self.postMessage({ channel: 'result', output: data, id: worker_id, data: Global_data});

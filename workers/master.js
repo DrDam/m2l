@@ -193,10 +193,8 @@ function WorkerEventListener (e) {
     // Worker find a good design
     if (channel === 'result') {
         DEBUG.send(sub_worker_id + ' # send Result');
-        var result = e.data;
-//console.log(result);
         //  Manage design.
-       // returnRocket(e.data.staging);
+        manage_stage(e.data.output);
     }
 
     // Worker as finished is task, and wait a new one.
@@ -217,6 +215,10 @@ function WorkerEventListener (e) {
         // Try to terminate myself.
         killMe();
     }
+}
+
+function manage_stage(stage) {
+    console.log(stage);
 }
 
 /*
