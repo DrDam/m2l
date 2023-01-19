@@ -85,10 +85,9 @@ function run() {
     let rocket_cu = Global_data.cu;
 
     // Simu parameters
-    let TankFuelRatio = 8;
-    let twrCorrection = twr.step;
-    let AcceptedPerformanceSpread = 3;
-
+    let TankFuelRatio = 8;  // => parameters
+    let AcceptedPerformanceSpread = 3; // => parameters
+    twr.spread = AcceptedPerformanceSpread;
     // Add a decoupler
     let decoupler = {};
     decoupler = getDecoupler(rocket_cu.size);
@@ -111,16 +110,19 @@ function run() {
      *
      * How to :
      * For Each EngineStack
-     * 1: Estimate Atm on Ignition
-     *   1.0 : if SOI groundPressure == 0 => do nothing, all ready in vaccum
-     *   1.1 : Calculate possible Dv from ground (with TWR & atm = SOI.groundPressure) => Dv0
-     *   1.2 : Estimate Atm condition on ignition of engine => DvAll - Dv0 => atm0
-     *   1.3 : If DvAll - Dv0 < SOI.LowOrbitDv => atm = vacuum, else redo
+     * * For Each TankStack
+     * * * 0 : Ths stack is valid ? Fuel / Size ?
+     * * * 1 : Estimate Atm on Ignition
+     *     1.0 : if SOI groundPressure == 0 => do nothing, all ready in vaccum
+     *     1.1 : Calculate possible Dv from ground (with TWR & atm = SOI.groundPressure) => Dv0
+     *     1.2 : Estimate Atm condition on ignition of engine => DvAll - Dv0 => atm0
+     *     1.3 : If DvAll - Dv0 < SOI.LowOrbitDv => atm = vacuum, else redo
      *           Else ReCalculate on possible Dv from atm0 condition (with adjusted TWR) => DvAtm0
      *           ( DvAtm0 > Dv0 => because atm0 < SOI.groundPressure)
      *           If  DvAll - DvAtm0 > SOI.LowOrbitDv => atm = vacuum.
      *             Else Estimate condition on ignition of engine => DvAll - DvAtm0 => atm
-     *   1.4 : define TWR adjusted to atm => MfuelMax
+     *     1.4 : define TWR adjusted to atm => MfuelMax
+     *
      * 2 : Foreach TankStack
      *   2.1 : check if tank.mass.full = MfuelMax +- AcceptedPerformanceSpread % => BadId
      *   2.2 : check size (size.top == decoupler.size && size.bottom = engine.size)
@@ -138,130 +140,64 @@ function run() {
 
         let engine = Parts.engines[engineKey];
         //DEBUG.send(worker_id + ' # test Engine ' + engine.name);
-        let Mdead = decoupler.mass.full + command.mass + rocket_cu.mass + engine.mass.empty;
+        let StageMDry = decoupler.mass.full + command.mass + rocket_cu.mass + engine.mass.empty;
         let MEngineFuel = engine.mass.full - engine.mass.empty
-
-        // Preparation for SolidFuel Engines => non fuel tanks will be avalaibles.
-        let StageMDry = Mdead;
         let StageMFull = StageMDry + MEngineFuel;
 
-        // 1. Estimate Atm on Ignition
-        let ignitionPressure;
-        if (SOI.groundPressure === 0) {
-            ignitionPressure = 0;
-        } else {
-            // 1.1 : Calculate Possible Dv from ground => Dv0
-            let curveData = getCaractForAtm(engine.curve, SOI.groundPressure);
-            let ISP = curveData.ISP;
-            let Thrust = curveData.Thrust;
-            let Mtot = Thrust / twr.min / SOI.Go;
+        let StageParts = {};
+        StageParts.engine = engine;
+        StageParts.decoupler = decoupler;
+        StageParts.command = command;
 
-            let Mfuel = (Mtot - Mdead - MEngineFuel) * (TankFuelRatio / (TankFuelRatio + 1)) ;
-            let Dv0 = ISP * SOI.Go * Math.log(Mtot / (Mtot - Mfuel));
+        if (MEngineFuel > 0) {
 
-            // 1.2 : Estimate Atm condition on ignition of engine => DvAll - Dv0 => atm0
-            if (rocket_dv_target - Dv0 > SOI.LowOrbitDv) {
-                ignitionPressure = 0;
-            } else {
-
-                // 1.3 : If DvAll - Dv0 > SOI.LowOrbitDv redo calculation
-                let atm0 = AtmPressurEstimator(rocket_dv_target - Dv0, SOI);
-                // Redo calculation
-                let curveData = getCaractForAtm(engine.curve, atm0);
-                let correctTwr = TwrCorrection(atm0, SOI, twr);
-                let ISP = curveData.ISP;
-                let Thrust = curveData.Thrust;
-
-                let Mtot = Thrust / correctTwr / SOI.Go;
-                let Mfuel = (Mtot - Mdead - MEngineFuel) * TankFuelRatio / (TankFuelRatio + 1);
-
-                let DvAtm0 = ISP * SOI.Go * Math.log(Mtot / (Mtot - Mfuel));
-
-                // 1.2 : Estimate Atm condition on ignition of engine => DvAll - Dv0 => atm0
-                if (rocket_dv_target - DvAtm0 > SOI.LowOrbitDv) {
-                    ignitionPressure = 0;
-                } else {
-                    ignitionPressure = AtmPressurEstimator(rocket_dv_target - DvAtm0, SOI);
-                }
+            // Process without fuel Tank
+            let stage = trytoMakeStage(StageParts, SOI, StageMFull, StageMDry, rocket_dv_target, twr);
+            if (stage === false) {
+                self.postMessage({ channel: 'badDesign' });
+            }
+            else {
+                return_staging(stage);
             }
         }
 
-        //DEBUG.send(worker_id + ' # test Engine ' + engine.name + ' # ignition pressure : ' + ignitionPressure);
+        // Loop en tanksStacks
+        for (let tankKey in Parts.fuelable) {
 
-        // 1.4 : define TWR adjusted to atm => MfuelMax
-        let curveDataIngition = getCaractForAtm(engine.curve, ignitionPressure);
-        let correctTwrAtIgnition = TwrCorrection(ignitionPressure, SOI, twr);
-        let ThrustOnIgnition = curveDataIngition.Thrust;
-        let Mtot = ThrustOnIgnition / correctTwrAtIgnition / SOI.Go;
-        let MmaxFuelTanks = Mtot - Mdead - MEngineFuel;
+            // Intercept Stop
+            if (Global_status === 'stop') {
+                return null;
+            }
 
-        // In case of engine self-contained fuel like SolidBooster or twinboar.
-        if(MEngineFuel > 0) {
-            // 2.3 : Calculate real Dv & TWR with this TankStack and check TWR +- AcceptedPerformanceSpread %
-            StageMFull = Mdead + MEngineFuel;
-            let StageTwr = ThrustOnIgnition / StageMFull / SOI.Go;
+            let tankStack = Parts.fuelable[tankKey];
 
-            // Check TWR
-            if (StageTwr > twr.min - (AcceptedPerformanceSpread / 100)
-                &&
-                (twr.max !== undefined || StageTwr < twr.max + (AcceptedPerformanceSpread / 100))
+
+            // 2.3 : check fuel type (tank.ressources == engine.conso)
+            if (tankStack.info.ressources.join('-') !== engine.conso.join('-')) {
+                continue;
+            }
+
+            // 2.1 : check size (size.top == decoupler.size && size.bottom = engine.size)
+            if (
+                tankStack.info.stackable.top !== decoupler.size
+                ||
+                (!engine.is_radial && tankStack.info.stackable.bottom !== engine.stackable.top)
             ) {
-                // Make stack info & return to master
-                let stage = make_stage_item(ignitionPressure, engine, command, decoupler);
+                continue;
+            }
+
+            let MtDry = StageMDry + tankStack.info.mass.empty;
+            let MtFull = StageMFull + tankStack.info.mass.full;
+            StageParts.fuelStack = tankStack;
+            // Process stack
+            let stage = trytoMakeStage(StageParts, SOI, MtFull, MtDry, rocket_dv_target, twr);
+            if (stage === false) {
+                self.postMessage({ channel: 'badDesign' });
+                continue;
+            }
+            else {
                 return_staging(stage);
             }
-        }
-
-        // If a fuel tank are needed.
-        if(MmaxFuelTanks > 0) {
-
-            // 2. Foreach TankStack
-            for (let tankKey in Parts.fuelable) {
-
-                // Intercept Stop
-                if (Global_status === 'stop') {
-                    return null;
-                }
-
-                let tankStack = Parts.fuelable[tankKey];
-
-
-                // 2.3 : check fuel type (tank.ressources == engine.conso)
-                if (tankStack.info.ressources.join('-') !== engine.conso.join('-')) {
-                   continue;
-                }
-
-                // 2.1 : check size (size.top == decoupler.size && size.bottom = engine.size)
-                if (
-                    tankStack.info.stackable.top !== decoupler.size
-                    ||
-                    (!engine.is_radial && tankStack.info.stackable.bottom !== engine.stackable.top)
-                ) {
-                    continue;
-                }
-
-                // 2.3 : Calculate real Dv & TWR with this TankStack and check TWR +- AcceptedPerformanceSpread %
-                let StackFuel = tankStack.info.mass.full - tankStack.info.mass.empty;
-                StageMDry = Mdead + tankStack.info.mass.empty;
-                StageMFull = StageMDry + MEngineFuel + StackFuel;
-                let StageTwr = ThrustOnIgnition / StageMFull / SOI.Go;
-
-                // Check TWR
-                if (StageTwr < twr.min - (AcceptedPerformanceSpread / 100)
-                    ||
-                    (twr.max !== undefined && StageTwr > twr.max + (AcceptedPerformanceSpread / 100))
-                ) {
-                    continue;
-                }
-
-                // Make stack info & return to master
-                let stage = make_stage_item(ignitionPressure, engine, command, decoupler, tankStack);
-                return_staging(stage);
-            }
-        }
-        else {
-            // Engine not have enougth trust in current conditions, or he produces to many Dv for current situation
-            self.postMessage({ channel: 'badDesign' });
         }
     }
 
@@ -269,10 +205,64 @@ function run() {
     autoStop();
 }
 
-
 /************/
 /* Helpers */
 /**********/
+
+function getIgnitionPressure(SOI, engineCurve, Mtot, Mdry, DvTarget) {
+
+    if (SOI.groundPressure === 0) {
+        return 0;
+    }
+    else {
+        // 1.1 : Calculate Possible Dv from ground => Dv0
+        let curveDataOnGround = getCaractForAtm(engineCurve, SOI.groundPressure);
+
+        // Get Theorical Dv on ground
+        let Dv0 = curveDataOnGround.ISP * SOI.Go * Math.log(Mtot / Mdry);
+
+        // 1.2 : Estimate atmPressure condition on ignition of engine => DvAll - Dv0
+        if (DvTarget - Dv0 > SOI.LowOrbitDv) {
+            return 0;
+        } else {
+
+            // 1.3 : If DvAll - Dv0 > SOI.LowOrbitDv redo calculation
+            let atmPressureIgnition = AtmPressurEstimator(DvTarget - Dv0, SOI);
+            let curveDataIgnition = getCaractForAtm(engineCurve, atmPressureIgnition);
+            let DvIgnition = curveDataIgnition.ISP * SOI.Go * Math.log(Mtot / Mdry);
+
+            // 1.4 : Estimate Atm condition on ignition of engine => DvAll - DvIgnition => atm0
+            if (DvTarget - DvIgnition > SOI.LowOrbitDv) {
+                return 0;
+            } else {
+                return AtmPressurEstimator(DvTarget - DvIgnition, SOI);
+            }
+        }
+    }
+}
+
+function trytoMakeStage(Parts, SOI, Mtot, Mdry, DvTarget, twr) {
+
+    engineCurve = Parts.engine.curve;
+
+    // We have ignition parameters. This Engine + FuelStar can flight ?
+    let ignitionPressure = getIgnitionPressure(SOI, engineCurve, Mtot, Mdry, DvTarget);
+    let curveDataIgnition = getCaractForAtm(engineCurve, ignitionPressure);
+    let twrIgnition = curveDataIgnition.Thrust / SOI.Go / Mtot;
+
+    // Check TWR
+    if (twrIgnition < twr.min - (twr.spread / 100)
+        ||
+        (twr.max !== undefined && twrIgnition > twr.max + (twr.spread / 100))
+    ) {
+        // Bad design
+        return false;
+    }
+    else {
+        return make_stage_item(ignitionPressure, Parts);
+    }
+}
+
 
 /**
  * Get a decoupler.
@@ -289,7 +279,12 @@ function getDecoupler(size) {
 /**
  * Properly format stage
  */
-function make_stage_item(start_stage_atm, engine, command, decoupler, fuelStack) {
+function make_stage_item(start_stage_atm, Parts) {
+
+    let engine = Parts.engine;
+    let command = Parts.command;
+    let decoupler = Parts.decoupler;
+    let fuelStack = Parts.fuelStack;
 
     if (fuelStack == null) {
         fuelStack = {};

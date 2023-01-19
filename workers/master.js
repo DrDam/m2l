@@ -150,7 +150,7 @@ function run() {
  */
 function MakeWorkers() {
     let i = 0;
-    while(i <= Global_data.simu.nbWorker) {
+    while(i < Global_data.simu.nbWorker) {
 
         // Prepare worker id.
         let worker_uid = 'Staging--' + i;
@@ -196,17 +196,24 @@ function WorkerEventListener (e) {
         //DEBUG.send(sub_worker_id + ' # send Result');
         //  Manage design.
         let result = e.data.output;
+
+
+
         //console.log(result);
         if(result.info.dv >= Global_data.rocket.dv.target ) {
             returnRocket(result.stages);
             return;
         }
         else {
-            if(result.info.bottomSize === false) {
+            if(result.info.bottomSize === false
+                ||
+                Global_data.rocket.stages <= result.stages.length
+                ) {
                 DEBUG.send(sub_worker_id + ' # bad Design');
                 self.postMessage({ channel: 'badDesign' });
                 return;
             }
+
             DEBUG.send(sub_worker_id + ' # add element in stack');
             let UpperData = clone(Global_data);
             UpperData.originTarget = round(Global_data.rocket.dv.target - result.info.dv);
@@ -288,6 +295,8 @@ function generateStageStack(sub_worker_id) {
     // Get new element from the stack.
     let Stack = RocketsStack.shift();
 
+    DEBUG.send(sub_worker_id + ' # pick one, ' + RocketsStack.length + " waiting");
+
     // If stack are empty
     if (Stack === undefined) {
         // Check if all calculation are ended.
@@ -333,7 +342,6 @@ function returnRocket(stages) {
  * Natural End Condition.
  */
 function VerifyautoStop() {
-
     let nbRunning = 0;
     // Check all worker if some-one still working.
     for (let sub_worker_id in WorkersStatus) {
