@@ -17,22 +17,26 @@
 </head>
 
 <body>
-<h1>Make Me a Launcher</h1>
-<p>v0.0.2</p>
-<a href="plan.txt" target="_blank">Development plan</a>
-<a href="changelog.txt" target="_blank">changelog</a> <br>
-<button id="readme_button" title="Purpose" type="button">Purpose & current Limitation</button>
-<div id="readme" style="display:none">
-    <label>This is a "rocket configuration generator"</label>
-    <ul>
-        <li>Model are "only atm" capacity ( ISP / Thrust)</li>
-        <li>The generator not using Jet Engine</li>
-        <li>Use only staged Engines ( not radials)</li>
-    </ul>
+    <header>
+        <div class="title">
+            <h1>Make Me a Launcher</h1>
+            <p>v0.0.2</p>
+        </div>
+        <div class="about">
+                <a href="plan.txt" target="_blank">Development plan</a><br />
+                <a href="changelog.txt" target="_blank">changelog</a><br />
+                <button id="readme_button" title="Purpose" type="button">Purpose & current limitation</button>
+        </div>
+    </header>
 
-</div>
-
-<hr>
+            <div id="readme" style="display:none">
+                <label>This is a "rocket configuration generator"</label>
+                <ul>
+                    <li>Model are "only atm" capacity ( ISP / Thrust)</li>
+                    <li>The generator not using Jet Engine</li>
+                    <li>Use only staged Engines ( not radials)</li>
+                </ul>
+            </div>
 
 <form id='param'>
     <div class="form_wrapper">
@@ -46,8 +50,8 @@
                             <label for="type">Launcher Type</label>
                             <select id="type" name="type">
                                 <option value="all" selected>All</option>
-                                <option value="mono">Monobloc (Saturn V / Falcon9 / Vega)</option>
-                                <option value="booster">With Boosters (Ariane V / Soyouz )</option>
+                                <option value="mono">Monobloc (Saturn V / Falcon 9)</option>
+                                <option value="booster">With Boosters (Ariane 5-6 )</option>
                             </select>
                         </li>
                         <li>

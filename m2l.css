@@ -1,22 +1,47 @@
+/* General */
+
 body {
   width: 95%;
   margin: auto;
 }
 
-/* Form */
+ul {
+  padding-left: 20px;
+}
 
-.main_form_fieldset, .secondary_form_fieldset, ul.part-list-items {
+header,
+.main_form_fieldset,
+.secondary_form_fieldset,
+ul.part-list-items {
   display: flex;
   flex-wrap: wrap;
 }
+
+/* HEADER */
+
+header {
+  border-bottom: 1px grey solid;;
+}
+header div{
+  width: 45%;
+}
+
+header div.about {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      text-align: right;
+}
+/* Form */
+
 
 .form_wrapper fieldset {
   border: 1px grey solid;
   padding-left: 15px;
   padding-right: 15px;
   padding-bottom: 15px;
-  width: 450px;
-  margin: 20px;
+  min-width: 400px;
+  width: 31%;
+  margin: 1%;
 }
 
 .secondary_form_fieldset fieldset{
@@ -141,7 +166,7 @@ ul.part-list-items > li {
 
 .stage {
     width: auto;
-    float: left;  
+    float: left;
 }
 
 .caracts ul,

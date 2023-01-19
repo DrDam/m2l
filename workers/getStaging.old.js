@@ -1,10 +1,6 @@
 importScripts('../lib/models.js','../lib/lib.js');
 var startTime = new Date();
 
-/******************/
-/* Init Variables */
-/******************/
-
 // Main worker data
 var worker_id;
 var Global_data = {};
@@ -19,26 +15,35 @@ var FuelStackWorkers = {};
 var FuelStackWorkersStatus = {};
 var FuelStackWorkersCreated = false;
 
-/*********************/
-/* Utility functions */
-/*********************/
+// Wait for another pull of data to process
+function autostop() {
+    cleanData();
+    var stopped = new Date();
+    DEBUG.send(worker_id + ' # wait # ' + round((stopped - startTime) / 1000, 0) + "sec running");
+    self.postMessage({ channel: 'wait', id: worker_id });
+}
 
-/**
- * Refresh Temporary Results Stack & event listener
- */
+// Delete me
+function killMe() {
+    if (Object.values(FuelStackWorkersStatus).join('') === '') {
+        DEBUG.send(worker_id + ' # killMe');
+        self.postMessage({ channel: 'killMe', id: worker_id });
+        cleanData();
+        Parts = {};
+        close();
+    }
+}
+
+// Refresh Temporary Results Stack & event listener
 function cleanData() {
     Global_data = {};
     EnginesStack = [];
 
-    // Need to add 2 events on array prototype.
-
-    // Add an event on push : StackPush.
     EnginesStack.push = function (e) {
         Array.prototype.push.call(EnginesStack, e);
         self.dispatchEvent(new CustomEvent('StackPush'));
     };
 
-    // Add an event on shift : StackIsEmpty.
     EnginesStack.shift = function (e) {
         var output = Array.prototype.shift.call(EnginesStack, e);
         if (output === undefined && EnginesStack.length === 0) {
@@ -48,37 +53,7 @@ function cleanData() {
     };
 }
 
-/**
- * Calculation ended, waiting for a new work.
- */
-function autostop() {
-    cleanData();
-    var stopped = new Date();
-    DEBUG.send(worker_id + ' # wait # ' + round((stopped - startTime) / 1000, 0) + "sec running");
-    // Send message to master script, I'm wating.
-    self.postMessage({ channel: 'wait', id: worker_id });
-}
-
-/**
- * SubWorkers have been killed, so I can disapear.
- */
-function killMe() {
-    // If all subworker are killed
-    if (Object.values(FuelStackWorkersStatus).join('') === '') {
-        DEBUG.send(worker_id + ' # killMe');
-        // Send message to master, I will terminated.
-        self.postMessage({ channel: 'killMe', id: worker_id });
-        // Clear data.
-        cleanData();
-        Parts = {};
-        // clear worker
-        close();
-    }
-}
-
-/**
- * Send "Stop" message to all subWorkers.
- */
+// Stop All Children
 function SendStopToAllChildren() {
     for (var i in FuelStackWorkers) {
         if (FuelStackWorkers[i] !== undefined) {
@@ -88,13 +63,15 @@ function SendStopToAllChildren() {
 }
 
 
-/**
- * Messages from Master.
- */
+// Communication
 self.addEventListener('message', function (e) {
     var inputs = e.data;
+    if (inputs.channel == 'stop') {
+        Global_status = 'stop';
+        DEBUG.send(worker_id + ' # to stop');
+        SendStopToAllChildren();
+    }
 
-    // I'm a new born, Master give me a name & feed me with collection of parts.
     if (inputs.channel == 'create') {
         DEBUG.setStatus(inputs.debug.status);
         DEBUG.setStart(inputs.debug.startTime);
@@ -103,7 +80,6 @@ self.addEventListener('message', function (e) {
         DEBUG.send(worker_id + ' # created');
     }
 
-    // Masster send me data to process and I go to work.
     if (inputs.channel == 'run') {
         cleanData();
         Global_data = inputs.data;
@@ -112,13 +88,6 @@ self.addEventListener('message', function (e) {
         DEBUG.send(worker_id + ' # run');
         drawMeStages();
         return;
-    }
-
-    // Mastercall to stop calculations.
-    if (inputs.channel == 'stop') {
-        Global_status = 'stop';
-        DEBUG.send(worker_id + ' # to stop');
-        SendStopToAllChildren();
     }
 });
 
@@ -150,7 +119,7 @@ function initFuelStackWorker() {
         // Add listener on worker
         w.addEventListener('message', WorkerEventListener);
 
-        // Send create signal
+        // Send create signal 
         w.postMessage({ channel: 'create', id: worker_uid, parts: Parts, debug: Global_data.simu.debug });
 
         // Next worker
@@ -187,10 +156,10 @@ function giveMeAllSingleStage(stack) {
     // 1: estimate Atm condition on "end" of engine => DvAll - DvNexStage
     // => if > 3400 => vacum
     // => else => estimate atm condition
-    // 2: Controle TWR
+    // 2: Controle TWR 
     // => if < TWR taget for atm condition => next engine
     // => else : estimate empty fuel mass possible
-    // 3: Generate all fuel stack with empty mass < max empty mass
+    // 3: Generate all fuel stack with empty mass < max empty mass 
     // => foreach
     // => => 3.0 : if massFuelStackEmpty > max empty mass => next stack
     // => => 3.1 : calculate Dv on "end condition"
@@ -243,7 +212,7 @@ function giveMeAllSingleStage(stack) {
             var stage = make_stage(AtmPressurBeforeBurn, engine, command, decoupler, null);
             console.log(stage);
             //self.postMessage({ channel: 'result', stage: stage, id: worker_id, data: Global_data });
-
+                    
             output_solution(stages_stack);
             */
             continue engineLoop;
@@ -268,7 +237,7 @@ function giveMeAllSingleStage(stack) {
 
     }
 }
-
+       
 // When a Stack are pushed on tmp
 self.addEventListener('StackPush', function () {
 
@@ -339,10 +308,10 @@ function process_worker_output(result)  {
     if(result.is_multiple == false) {
         result_stages = [
             make_stage_item(
-                AtmPressurEstimator(dv_needed_before_stage),
-                calculation_data.engine,
-                calculation_data.command,
-                calculation_data.decoupler,
+                AtmPressurEstimator(dv_needed_before_stage), 
+                calculation_data.engine, 
+                calculation_data.command, 
+                calculation_data.decoupler, 
                 result.stack
                 )
             ];
@@ -365,7 +334,7 @@ function process_worker_output(result)  {
         return;
     }
 
-    // If staging completed => end !
+    // If staging completed => end ! 
     if(Global_data.rocket.stages <= stages_stack.length){
         // dv goal achieved in tolerance
         if(dv_needed_before_stage <= (Global_data.rocket.dv.target * Global_data.rocket.dv.tolerance / 100)) {
