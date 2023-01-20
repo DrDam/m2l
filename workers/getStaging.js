@@ -85,7 +85,6 @@ function run() {
     let rocket_cu = Global_data.cu;
 
     // Simu parameters
-    let TankFuelRatio = 8;  // => parameters
     let AcceptedPerformanceSpread = 3; // => parameters
     twr.spread = AcceptedPerformanceSpread;
     // Add a decoupler
@@ -209,38 +208,52 @@ function run() {
 /* Helpers */
 /**********/
 
+/**
+ * Try to find the "most probable atmospheric pressure" on stage Ignition
+ */
 function getIgnitionPressure(SOI, engineCurve, Mtot, Mdry, DvTarget) {
 
     if (SOI.groundPressure === 0) {
         return 0;
     }
     else {
-        // 1.1 : Calculate Possible Dv from ground => Dv0
-        let curveDataOnGround = getCaractForAtm(engineCurve, SOI.groundPressure);
+        let ignitionPressure = SOI.groundPressure;
+        for (let i = 0; i <= 5; i++) {
+            ignitionPressure = calculateIgnitionPressure(ignitionPressure, engineCurve, SOI, Mtot, Mdry, DvTarget);
+        }
 
-        // Get Theorical Dv on ground
-        let Dv0 = curveDataOnGround.ISP * SOI.Go * Math.log(Mtot / Mdry);
+        // Calculate Dv produice in engine ignition
+        let curveDataIgnition = getCaractForAtm(engineCurve, ignitionPressure);
+        let DvIgnition = curveDataIgnition.ISP * SOI.Go * Math.log(Mtot / Mdry);
 
-        // 1.2 : Estimate atmPressure condition on ignition of engine => DvAll - Dv0
-        if (DvTarget - Dv0 > SOI.LowOrbitDv) {
+        // Estimate Atm condition on ignition of engine => DvAll - DvIgnition => atm0
+        if (DvTarget - DvIgnition > SOI.LowOrbitDv) {
             return 0;
         } else {
+            return AtmPressurEstimator(DvTarget - DvIgnition, SOI);
 
-            // 1.3 : If DvAll - Dv0 > SOI.LowOrbitDv redo calculation
-            let atmPressureIgnition = AtmPressurEstimator(DvTarget - Dv0, SOI);
-            let curveDataIgnition = getCaractForAtm(engineCurve, atmPressureIgnition);
-            let DvIgnition = curveDataIgnition.ISP * SOI.Go * Math.log(Mtot / Mdry);
-
-            // 1.4 : Estimate Atm condition on ignition of engine => DvAll - DvIgnition => atm0
-            if (DvTarget - DvIgnition > SOI.LowOrbitDv) {
-                return 0;
-            } else {
-                return AtmPressurEstimator(DvTarget - DvIgnition, SOI);
-            }
         }
     }
 }
 
+/**
+ * Try to estimate a more "probable" atmospheric pressure one engine ignition.
+ */
+function calculateIgnitionPressure(localPressure, engineCurve, SOI, Mtot, Mdry, dvTarget) {
+    // Get ISP from local pressure
+    let curveDataOnGround = getCaractForAtm(engineCurve, localPressure);
+    // Get Theorical Dv in this local pressure
+    let Dv0 = curveDataOnGround.ISP * SOI.Go * Math.log(Mtot / Mdry);
+    // Estimate local pressure on ignition
+    let atmPressureIgnition = AtmPressurEstimator(dvTarget - Dv0, SOI);
+
+    // Return mean between the two
+    return (atmPressureIgnition + localPressure) /2
+}
+
+/**
+ * Test if an engin/tank stack are capable, and format it.
+ */
 function trytoMakeStage(Parts, SOI, Mtot, Mdry, DvTarget, twr) {
 
     engineCurve = Parts.engine.curve;
