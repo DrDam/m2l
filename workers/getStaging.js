@@ -84,9 +84,6 @@ function run() {
     let twr = Global_data.rocket.twr;
     let rocket_cu = Global_data.cu;
 
-    // Simu parameters
-    let AcceptedPerformanceSpread = 3; // => parameters
-    twr.spread = AcceptedPerformanceSpread;
     // Add a decoupler
     let decoupler = {};
     decoupler = getDecoupler(rocket_cu.size);

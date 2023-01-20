@@ -2,18 +2,21 @@
 # Developpement Plan #
 ######################
 
-Current Step : 
-v1 : Initial POC
+Current Step :
+v0.1 : Reforge S2L
 - Generate Nstage launcher configurations ( like SpaceX Falcon 9 )
 - with :
 -- selection of the engines of each stage (1 per upper stage, possible multi in first Stage)
 -- selection of fuel tanks
 - List all configuration in a comparative table
 - Add booster propostion in first stage
+- Add basis of atmospheric modeling
 
 further step :
 - Add launcher capacity calculate from orbit specifications ( Ap / Pe )
-- Add hypothesis of atmos-flying
+- Re-add parts for making History
 - Add DLC's Engine plate capacity
 - Add "guidance solution" and "desorbiting fuel" for last stage
-
+- Add some tracking (parameters / duration .. )
+- Add StageWithBooster generation
+- Actualy only kerbin

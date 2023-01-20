@@ -274,7 +274,6 @@ var master;
             var rocket = {};
             rocket.dv = {
                 target: parseFloat(elems.DvTarget.value),
-                tolerance: parseFloat(elems.DvTol.value),
             };
             rocket.type = elems.type.value;
             rocket.stages = parseInt(elems.nbStage.value);
@@ -282,6 +281,7 @@ var master;
                 min: parseFloat(elems.Tmin.value),
                 max: (elems.Tmax.value != '') ? parseFloat(elems.Tmax.value) : undefined,
                 step: parseFloat(elems.Tstep.value),
+                spread: 3,
             };
             var debug_status = elems.debug.checked;
             var nbWorkers = parseInt(elems.nbworker.value);

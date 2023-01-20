@@ -32,9 +32,9 @@
             <div id="readme" style="display:none">
                 <label>This is a "rocket configuration generator"</label>
                 <ul>
-                    <li>Model are "only atm" capacity ( ISP / Thrust)</li>
                     <li>The generator not using Jet Engine</li>
-                    <li>Only monobloc launcher set.</li>
+                    <li>Only Stock parts</li>
+                    <li>Generation maybe long</li>
                 </ul>
             </div>
 
@@ -51,13 +51,15 @@
                             <select id="type" name="type">
                                 <option value="all" selected>All</option>
                                 <option value="mono">Monobloc (Saturn V / Falcon 9)</option>
-                                <option value="booster">With Boosters (Ariane 5-6 )</option>
+                          <!--     <option value="booster">With Boosters (Ariane 5-6 )</option> -->
                             </select>
                         </li>
                         <li>
                             <label for="nbStage">Maximal stage quantity</label>
                             <input type='text' id='nbStage' name='nbstage' value='2' size="3" />
-                            <span data-tooltip="In the case of rocket with booster, the group 'main+booster' count for 1 stage">(?)</span>
+                            <span data-tooltip="In the case of rocket with booster, the group 'main+booster' count for 1 stage.
+                            To many stage can use more & more CPU time and RAM usage.
+                            It can be freeze or damage your computer. It's your computer, not mine ">(?)</span>
                         </li>
                     </ul>
                     <label> TWR
@@ -119,13 +121,6 @@
                             <label for="DvTarget">Launcher Capacity targeted</label>
                             <input id="DvTarget" name="DvTarget" type="text" value="43400" size="10" /> m/s
                             <span data-tooltip="By default the Dv to the Low Orbit are proposed.">(?)</span>
-                        </li>
-                        <li>
-                            <label for="DvTol">Tolerance of the solution</label>
-                            <input id="DvTol" name="DvTol" type="text" value="3" size="5"/> %
-                            <span data-tooltip="Which performance spread is allowed in the results.
-                            This allows more flexibility in the selection of stage parts and may be useful if the weight
-                            of the fairing is not known, or to allow for some last minute adjustments.">(?)</span>
                         </li>
                     </ul>
                 </div>
