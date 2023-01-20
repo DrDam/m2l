@@ -32,7 +32,10 @@ header div.about {
       text-align: right;
 }
 /* Form */
-
+#param {
+  width: fit-content;
+  margin: auto;
+}
 
 .form_wrapper fieldset {
   border: 1px grey solid;
@@ -40,12 +43,12 @@ header div.about {
   padding-right: 15px;
   padding-bottom: 15px;
   min-width: 400px;
-  width: 31%;
-  margin: 1%;
+  width: 400px;
+  margin: 30px;
 }
 
 .secondary_form_fieldset fieldset{
-  width: 98%;
+  width: 1330px;
 }
 
 legend {

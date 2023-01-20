@@ -209,8 +209,7 @@ var master;
                     order: [[3, "desc"]],
                     columnDefs: [
                         { width: 50, targets: 0 },
-                        { width: 100, targets: [1, 2] },
-                        { width: 200, targets: [3, 4] }
+                        { width: 100, targets: [1, 2, 3,4 ,5 ,6] }
 
                     ],
                     fixedColumns: true
