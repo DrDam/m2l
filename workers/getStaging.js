@@ -157,30 +157,37 @@ function run() {
             }
         }
 
-        // Loop en tanksStacks
-        for (let tankKey in Parts.fuelable) {
+        let fuel = engine.conso.sort().join('--')
+
+        // No tanks stack for this ressource and sizes
+        if (Parts.fuelable[fuel] == undefined ||
+            Parts.fuelable[fuel][rocket_cu.size] == undefined ||
+            (!engine.is_radial && Parts.fuelable[fuel][rocket_cu.size][engine.stackable.top] == undefined)
+        )
+            {
+                // Next engine
+                continue;
+            }
+
+        let FuelableStack = [];
+        // If engine is radial, disable filter in engineTopSize
+        if (engine.is_radial) {
+            for (let sizebottom in Parts.fuelable[fuel][rocket_cu.size]){
+                FuelableStack = FuelableStack.concat(Parts.fuelable[fuel][rocket_cu.size][sizebottom]);
+            }
+        }
+        else {
+            FuelableStack = Parts.fuelable[fuel][rocket_cu.size][engine.stackable.top]
+        }
+
+        for (let tankKey in FuelableStack) {
 
             // Intercept Stop
             if (Global_status === 'stop') {
                 return null;
             }
 
-            let tankStack = Parts.fuelable[tankKey];
-
-
-            // 2.3 : check fuel type (tank.ressources == engine.conso)
-            if (tankStack.info.ressources.join('-') !== engine.conso.join('-')) {
-                continue;
-            }
-
-            // 2.1 : check size (size.top == decoupler.size && size.bottom = engine.size)
-            if (
-                tankStack.info.stackable.top !== decoupler.size
-                ||
-                (!engine.is_radial && tankStack.info.stackable.bottom !== engine.stackable.top)
-            ) {
-                continue;
-            }
+            let tankStack = FuelableStack[tankKey];
 
             let MtDry = StageMDry + tankStack.info.mass.empty;
             let MtFull = StageMFull + tankStack.info.mass.full;
@@ -194,6 +201,7 @@ function run() {
             else {
                 return_staging(stage);
             }
+
         }
     }
 
