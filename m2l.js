@@ -151,6 +151,8 @@ var master;
             console.log('END Calculations at ' + new Date());
             $('#stop').prop('disabled', true);
             $('#start').prop('disabled', false);
+            $('#start').addClass('btn-danger').removeClass('btn-secondary');
+            $('#stop').addClass('btn-secondary').removeClass('btn-success');
         });
 
         /*******************************/
@@ -195,6 +197,8 @@ var master;
             // Manage Start / Stop buttons
             $('#start').prop('disabled', true);
             $('#stop').prop('disabled', false);
+            $('#start').addClass('btn-secondary').removeClass('btn-danger');
+            $('#stop').addClass('btn-success').removeClass('btn-secondary');
 
             $('#results').show();
 
@@ -401,6 +405,8 @@ var master;
                     console.log('END Calculations at ' + new Date());
                     $('#stop').prop('disabled', true);
                     $('#start').prop('disabled', false);
+                    $('#start').addClass('btn-danger').removeClass('btn-secondary');
+                    $('#stop').addClass('btn-secondary').removeClass('btn-success');
                 }
             });
             master.postMessage({ channel: "run", data: master_data });
