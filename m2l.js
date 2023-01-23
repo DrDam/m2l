@@ -3,8 +3,8 @@
 var computationData = {};
 var PartToCalculation = {};
 PartToCalculation.decouplers = [];
-PartToCalculation.engines = [];
-PartToCalculation.fuelable = [];
+PartToCalculation.engines = [];
+PartToCalculation.fuelable = [];
 var collection = {};
 var SelectedParts = {};
 
@@ -331,34 +331,95 @@ var master;
                 scrollTop: $("#results").offset().top
             }, 1000);
 
-            // Generate Engine Stacks
-            //@TODO : maybe move this in 2 worker ?
-            $('#message').html("Contacting Nikolai Kuznetsov for engines configuration.");
-            console.group('Generate Engine Stacks');
-            console.log('Start : ' + new Date());
-            PartToCalculation.engines = makeEngineStacks(SelectedParts.engines, SelectedParts.couplers, simu.maxRadial);
-            console.log('End : ' + new Date());
-            //console.log(PartToCalculation.engines);
-            console.groupEnd();
+            $('#message').html(
+                "Nikolai Kuznetsov provides us <span class='nb_engines'>0</span> engines.<br/>" +
+                "Sergeï Kerolev provides us <span class='nb_fuel'>0</span> fuels stacks"
+            );
 
-            // Generate Fuel Stacks
-            $('#message').html("Contacting Sergeï Kerolev for fuels stacks");
-            console.group('Generate Fuel Stacks');
-            console.log('Start : ' + new Date());
-            PartToCalculation.fuelable = generateTanksStacks(SelectedParts.fuelTanks, SelectedParts.adapters, simu.maxTanks);
-            console.log('End : ' + new Date());
-            //console.log(PartToCalculation.fuelable);
+
+            console.group('Part Stack generation');
+            console.log('stating ' + new Date());
+            let engineWorkerStatus = 'created';
+            let fuelTankWorkerStatus = 'created';
+
+            // Generate Engine Stacks
+            let engineWorker = new Worker("workers/makeEngineStack.js");
+            engineWorker.postMessage({
+                channel: 'create',
+                parts: SelectedParts,
+                debug: computationData.simu.debug,
+                radials: computationData.simu.maxRadial,
+            });
+            engineWorker.addEventListener('message', function (e) {
+                var result = e.data;
+                var channel = result.channel;
+                if (channel === 'nb') {
+                    let nb = result.nb;
+                    $('#message .nb_engines').html(nb);
+                }
+                if (channel === 'results') {
+                    PartToCalculation.engines = result.results;
+                    engineWorkerStatus = undefined;
+                    engineWorker.postMessage({ channel: "stop" });
+                    console.log('finishing Engine stack generation');
+                    //console.log(result.results);
+                    // If engine worker has already finished.
+                    if(fuelTankWorkerStatus === undefined) {
+                        makeStages();
+                    }
+                }
+
+            });
+            console.log('starting Engine stack generation');
+            engineWorker.postMessage({ channel: "run" });
+
+            // Generate Fuel Tank Stacks
+            let fuelTankWorker = new Worker("workers/MakeFuelStack.js");
+            fuelTankWorker.postMessage({
+                channel: 'create',
+                parts: SelectedParts,
+                debug: computationData.simu.debug,
+                maxTanks: computationData.simu.maxTanks,
+            });
+            fuelTankWorker.addEventListener('message', function (e) {
+                var result = e.data;
+                var channel = result.channel;
+                if (channel === 'nb') {
+                    let nb = result.nb;
+                    $('#message .nb_fuel').html(nb);
+                }
+                if (channel === 'results') {
+                    PartToCalculation.fuelable = result.results;
+                    fuelTankWorkerStatus = undefined;
+                    fuelTankWorker.postMessage({ channel: "stop" });
+                    //console.log(result.results);
+                    console.log('finishing fuel tank stack generation');
+                    // If engine worker has already finished.
+                    if(engineWorkerStatus === undefined) {
+                        makeStages();
+                    }
+                }
+            });
+            console.log('starting fuel tank stack generation');
+            fuelTankWorker.postMessage({ channel: "run" });
+
+        });
+
+        function makeStages() {
+
+            console.log('starting Stage stack generation');
+            console.log('finishing Stage stack generation');
+            console.log('finishing ' + new Date());
             console.groupEnd();
 
             // Launch workers !
-            //@TODO : When engine & fuelable worker have finished, run !
             $('#message').html("Let's see Nikolai Kuznetsov & Serguei Kebolev working together");
             console.log('Search Rockets '  + new Date());
-            searchRockets();
+             searchRockets();
 
             // Prevent default
             return false;
-        });
+        }
 
 
         /**********************/
