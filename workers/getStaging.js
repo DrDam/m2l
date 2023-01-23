@@ -140,6 +140,11 @@ function run() {
         let MEngineFuel = engine.mass.full - engine.mass.empty
         let StageMFull = StageMDry + MEngineFuel;
 
+        let maxMass = getMaxMassInVacuum(engine, twr, SOI);
+        if(StageMFull > maxMass) {
+            continue;
+        }
+
         let StageParts = {};
         StageParts.engine = engine;
         StageParts.decoupler = decoupler;
@@ -191,6 +196,11 @@ function run() {
 
             let MtDry = StageMDry + tankStack.info.mass.empty;
             let MtFull = StageMFull + tankStack.info.mass.full;
+
+            if(MtFull > maxMass) {
+                continue;
+            }
+
             StageParts.fuelStack = tankStack;
             // Process stack
             let stage = trytoMakeStage(StageParts, SOI, MtFull, MtDry, rocket_dv_target, twr);
