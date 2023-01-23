@@ -413,8 +413,6 @@ var master;
             console.groupEnd();
 
             // Launch workers !
-            $('#message').html("Let's see Nikolai Kuznetsov & Serguei Kebolev working together");
-            console.log('Search Rockets '  + new Date());
              searchRockets();
 
             // Prevent default
@@ -428,6 +426,9 @@ var master;
 
         // Search all rockets
         function searchRockets() {
+            $('#message').html("Let's see Nikolai Kuznetsov & Serguei Kebolev working together");
+            console.log('Search Rockets '  + new Date());
+
             master = new Worker("workers/master.js");
             var master_id = "master";
 
