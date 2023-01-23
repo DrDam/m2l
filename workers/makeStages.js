@@ -150,9 +150,7 @@ function processStage(engine, fuelStack) {
         stage.parts.fuelStack = fuelStack.parts;
         stage.cost = round(stage.cost + fuelStack.info.cost);
         stage.nb = round(stage.nb + fuelStack.info.nb);
-        if(engine.id === 'Size2LFB') {
-          //  console.log(engine);
-        }
+
         stage.mass.full = round(stage.mass.full + fuelStack.info.mass.full);
         stage.mass.empty = round(stage.mass.empty + fuelStack.info.mass.empty);
         //      stage.provider = stage.provider.concat(stageParts.fuelStack.info.provider);

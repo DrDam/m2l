@@ -114,7 +114,7 @@ function run() {
         // console.log(Parts.stages[rocket_cu.size][enginekey].length);
         for (let stageKey in Parts.stages[rocket_cu.size][enginekey]) {
 
-            // Intercept Stop
+            // Intercept Stop.
             if (Global_status === 'stop') {
                 return null;
             }
@@ -125,14 +125,14 @@ function run() {
             let MEngineFuel = stage.mass.full - stage.mass.empty
             let StageMFull = StageMDry + MEngineFuel;
 
-            // If "stage + CU" mass is now too high for engine, change engine.
+            // If "stage + CU" mass is now too high for engine in vacuum (better thrust).
             let maxMass = getMaxMassInVacuum(stage, Global_data.rocket.twr, Global_data.SOI);
             if (StageMFull > maxMass) {
                 continue loopEngine;
             }
 
             if (Global_data.rocket.max !== undefined) {
-                // If Mass are to low so TWR > TWRmax in GroundSOI
+                // Not any mass in stage to respect max DV on ground (worst thrust).
                 let minMass = getMinMassInSOI(stage, Global_data.rocket.twr, Global_data.SOI);
                 if (StageMFull < minMass) {
                     continue;
