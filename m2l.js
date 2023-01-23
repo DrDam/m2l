@@ -3,8 +3,12 @@
 var computationData = {};
 var PartToCalculation = {};
 PartToCalculation.decouplers = [];
-PartToCalculation.engines = [];
-PartToCalculation.fuelable = [];
+PartToCalculation.stages = {};
+
+var PartToStaging = {};
+PartToStaging.engines = [];
+PartToStaging.fuelable = {};
+
 var collection = {};
 var SelectedParts = {};
 
@@ -308,7 +312,6 @@ var master;
             };
 
             PartToCalculation.decouplers = SelectedParts.decouplers;
-            PartToCalculation.engines = [];
 
             /**********************************/
             /* End Init calculation variables */
@@ -332,8 +335,9 @@ var master;
             }, 1000);
 
             $('#message').html(
-                "Nikolai Kuznetsov provides us <span class='nb_engines'>0</span> engines.<br/>" +
-                "Sergeï Kerolev provides us <span class='nb_fuel'>0</span> fuels stacks"
+                "Nikolai Kuznetsov provides us <span class='nb_engines'>0</span> engines.<br />" +
+                "Sergeï Kerolev provides us <span class='nb_fuel'>0</span> fuels stacks. <br />" +
+                "Werner von Kerman assemble all of this in  <span class='nb_stage'>0</span> possible stages. <br />"
             );
 
 
@@ -358,7 +362,7 @@ var master;
                     $('#message .nb_engines').html(nb);
                 }
                 if (channel === 'results') {
-                    PartToCalculation.engines = result.results;
+                    PartToStaging.engines = result.results;
                     engineWorkerStatus = undefined;
                     engineWorker.postMessage({ channel: "stop" });
                     console.log('finishing Engine stack generation');
@@ -389,7 +393,7 @@ var master;
                     $('#message .nb_fuel').html(nb);
                 }
                 if (channel === 'results') {
-                    PartToCalculation.fuelable = result.results;
+                    PartToStaging.fuelable = result.results;
                     fuelTankWorkerStatus = undefined;
                     fuelTankWorker.postMessage({ channel: "stop" });
                     //console.log(result.results);
@@ -407,15 +411,33 @@ var master;
 
         function makeStages() {
 
+            // Generate Fuel Tank Stacks
+            let stageWorker = new Worker("workers/makeStages.js");
+            stageWorker.postMessage({
+                channel: 'create',
+                parts: PartToStaging,
+                debug: computationData.simu.debug,
+                twr: computationData.rocket.twr,
+                soi: computationData.SOI,
+            });
+            stageWorker.addEventListener('message', function (e) {
+                var result = e.data;
+                var channel = result.channel;
+                if (channel === 'nb') {
+                    let nb = result.nb;
+                    $('#message .nb_stage').html(nb);
+                }
+                if (channel === 'results') {
+                    PartToCalculation.stages = result.results;
+                    stageWorker.postMessage({ channel: "stop" });
+                    //console.log(result.results);
+                    console.log('finishing Stage stack generation');
+                    // Launch workers !
+                    searchRockets();
+                }
+            });
             console.log('starting Stage stack generation');
-            console.log('finishing Stage stack generation');
-            console.log('finishing ' + new Date());
-            console.groupEnd();
-
-            // Launch workers !
-            $('#message').html("Let's see Nikolai Kuznetsov & Serguei Kebolev working together");
-            console.log('Search Rockets '  + new Date());
-             searchRockets();
+            stageWorker.postMessage({ channel: "run" });
 
             // Prevent default
             return false;
@@ -428,13 +450,24 @@ var master;
 
         // Search all rockets
         function searchRockets() {
+
+           // console.log(PartToCalculation.stages);
+
+            console.log('finishing ' + new Date());
+            console.groupEnd();
+            $('#message').html("Let's see Kerbal ingeneer working together");
+            console.log('Search Rockets '  + new Date());
+
             master = new Worker("workers/master.js");
             var master_id = "master";
 
             var master_data = clone(computationData);
+            let PartForProcessing = clone(PartToCalculation);
+            delete PartForProcessing.engines;
+            delete PartForProcessing.fuelable;
             master.postMessage({
                 channel: 'create',
-                parts: PartToCalculation,
+                parts: PartForProcessing,
                 id: master_id,
                 debug: computationData.simu.debug
             });
@@ -509,7 +542,13 @@ var master;
                 stageData.totalMass = round(stage.caracts.mass.full);
 
                 stageData.decoupler = stage.parts.decoupler;
-                stageData.engine = stage.parts.engine;
+                stageData.engines = []
+                var engines = stage.parts.engine;
+                for (var j in engines) {
+                    var engine = engines[j];
+                    stageData.engines.push({ engine_name: engine.name, engine_nb : engine.nb});
+                }
+
                 //console.log( stage.parts.tanks);
                 stageData.tanks = [];
                 var tanks = stage.parts.tanks;

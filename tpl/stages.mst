@@ -21,7 +21,13 @@
                     {{/tanks}}    
                 </ul>
             </li>
-            <li>engine : {{engine}}</li>
+            <li>engine Stack :
+                <ul class="fuelstack">
+                    {{#engines}}
+                        <li>{{engine_name}} x {{engine_nb}}</li>
+                    {{/engines}}
+                </ul>
+            </li>
         </ul>
     
     </div>

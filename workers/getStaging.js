@@ -103,118 +103,47 @@ function run() {
 
     /**
      * How I meet your Engine ?
-     *
-     * How to :
-     * For Each EngineStack
-     * * For Each TankStack
-     * * * 0 : Ths stack is valid ? Fuel / Size ?
-     * * * 1 : Estimate Atm on Ignition
-     *     1.0 : if SOI groundPressure == 0 => do nothing, all ready in vaccum
-     *     1.1 : Calculate possible Dv from ground (with TWR & atm = SOI.groundPressure) => Dv0
-     *     1.2 : Estimate Atm condition on ignition of engine => DvAll - Dv0 => atm0
-     *     1.3 : If DvAll - Dv0 < SOI.LowOrbitDv => atm = vacuum, else redo
-     *           Else ReCalculate on possible Dv from atm0 condition (with adjusted TWR) => DvAtm0
-     *           ( DvAtm0 > Dv0 => because atm0 < SOI.groundPressure)
-     *           If  DvAll - DvAtm0 > SOI.LowOrbitDv => atm = vacuum.
-     *             Else Estimate condition on ignition of engine => DvAll - DvAtm0 => atm
-     *     1.4 : define TWR adjusted to atm => MfuelMax
-     *
-     * 2 : Foreach TankStack
-     *   2.1 : check if tank.mass.full = MfuelMax +- AcceptedPerformanceSpread % => BadId
-     *   2.2 : check size (size.top == decoupler.size && size.bottom = engine.size)
-     *   2.3 : check fuel type (tank.ressources == engine.conso)
-     *   2.4 : Calculate real Dv & TWR with this TankStack and check TWR +- AcceptedPerformanceSpread %
-     *   2.5 : if all Ok => format Stack & return to master
      */
-    loopEngine:
-        for (let engineKey in Parts.engines) {
 
+    if(Parts.stages[rocket_cu.size] === undefined) {
+        return;
+    }
+
+    loopEngine:
+    for (let enginekey in Parts.stages[rocket_cu.size]) {
+
+        for (let stageKey in Parts.stages[rocket_cu.size][enginekey]) {
             // Intercept Stop
             if (Global_status === 'stop') {
                 return null;
             }
 
-            let engine = Parts.engines[engineKey];
-            //DEBUG.send(worker_id + ' # test Engine ' + engine.name);
-            let StageMDry = decoupler.mass.full + command.mass + rocket_cu.mass + engine.mass.empty;
-            let MEngineFuel = engine.mass.full - engine.mass.empty
+            let stage = Parts.stages[rocket_cu.size][enginekey][stageKey];
+
+            let StageData = {};
+            StageData.stage = stage;
+            StageData.decoupler = decoupler;
+            StageData.command = command;
+
+            let StageMDry = decoupler.mass.full + command.mass + rocket_cu.mass + stage.mass.empty;
+            let MEngineFuel = stage.mass.full - stage.mass.empty
             let StageMFull = StageMDry + MEngineFuel;
 
-            let maxMass = getMaxMassInVacuum(engine, twr, SOI);
-            if(StageMFull > maxMass) {
-                continue;
+            // If stage + CU are to high for engine, return.
+            let maxMass = getMaxMassInVacuum(stage, twr, SOI);
+            if (StageMFull > maxMass) {
+                continue loopEngine;
             }
 
-            let StageParts = {};
-            StageParts.engine = engine;
-            StageParts.decoupler = decoupler;
-            StageParts.command = command;
-
-            if (MEngineFuel > 0) {
-
-                // Process without fuel Tank
-                let stage = trytoMakeStage(StageParts, SOI, StageMFull, StageMDry, rocket_dv_target, twr);
-                if (stage === false) {
-                    self.postMessage({ channel: 'badDesign' });
-                }
-                else {
-                    return_staging(stage);
-                }
-            }
-
-            let fuel = engine.conso.sort().join('--')
-
-            // No tanks stack for this ressource and sizes
-            if (Parts.fuelable[fuel] == undefined ||
-                Parts.fuelable[fuel][rocket_cu.size] == undefined ||
-                (!engine.is_radial && Parts.fuelable[fuel][rocket_cu.size][engine.stackable.top] == undefined)
-            )
-                {
-                    // Next engine
-                    continue;
-                }
-
-            let FuelableStack = [];
-            // If engine is radial, disable filter in engineTopSize
-            if (engine.is_radial) {
-                for (let sizebottom in Parts.fuelable[fuel][rocket_cu.size]){
-                    FuelableStack = FuelableStack.concat(Parts.fuelable[fuel][rocket_cu.size][sizebottom]);
-                }
-            }
-            else {
-                FuelableStack = Parts.fuelable[fuel][rocket_cu.size][engine.stackable.top]
-            }
-
-            for (let tankKey in FuelableStack) {
-
-                // Intercept Stop
-                if (Global_status === 'stop') {
-                    return null;
-                }
-
-                let tankStack = FuelableStack[tankKey];
-
-                let MtDry = StageMDry + tankStack.info.mass.empty;
-                let MtFull = StageMFull + tankStack.info.mass.full;
-
-                // Fuel tanks are sort by mass, if it's too heavy, next are too.
-                if(MtFull > maxMass) {
-                    continue loopEngine;
-                }
-
-                StageParts.fuelStack = tankStack;
-                // Process stack
-                let stage = trytoMakeStage(StageParts, SOI, MtFull, MtDry, rocket_dv_target, twr);
-                if (stage === false) {
-                    self.postMessage({ channel: 'badDesign' });
-                    continue;
-                }
-                else {
-                    return_staging(stage);
-                }
-
+            // Process without fuel Tank
+            let validatedStage = trytoMakeStage(StageData, SOI, StageMFull, StageMDry, rocket_dv_target, twr);
+            if (validatedStage === false) {
+                self.postMessage({channel: 'badDesign'});
+            } else {
+                return_staging(validatedStage);
             }
         }
+    }
 
     // Ended all stack passes
     autoStop();
@@ -270,9 +199,9 @@ function calculateIgnitionPressure(localPressure, engineCurve, SOI, Mtot, Mdry, 
 /**
  * Test if an engin/tank stack are capable, and format it.
  */
-function trytoMakeStage(Parts, SOI, Mtot, Mdry, DvTarget, twr) {
+function trytoMakeStage(StageData, SOI, Mtot, Mdry, DvTarget, twr) {
 
-    engineCurve = Parts.engine.curve;
+    let engineCurve = StageData.stage.curve;
 
     // We have ignition parameters. This Engine + FuelStar can flight ?
     let ignitionPressure = getIgnitionPressure(SOI, engineCurve, Mtot, Mdry, DvTarget);
@@ -284,11 +213,10 @@ function trytoMakeStage(Parts, SOI, Mtot, Mdry, DvTarget, twr) {
         ||
         (twr.max !== undefined && twrIgnition > twr.max + (twr.spread / 100))
     ) {
-        // Bad design
         return false;
     }
     else {
-        return make_stage_item(ignitionPressure, Parts);
+        return make_stage_item(ignitionPressure, StageData);
     }
 }
 
@@ -308,45 +236,41 @@ function getDecoupler(size) {
 /**
  * Properly format stage
  */
-function make_stage_item(start_stage_atm, Parts) {
+function make_stage_item(start_stage_atm, StageData) {
 
-    let engine = Parts.engine;
-    let command = Parts.command;
-    let decoupler = Parts.decoupler;
-    let fuelStack = Parts.fuelStack;
+    //console.log(StageData);
+    let stage = StageData.stage;
+    let engine = stage.parts.engine;
+    let command = StageData.command;
+    let decoupler = StageData.decoupler;
+    let fuelStack = stage.parts.fuelStack;
 
     if (fuelStack == null) {
         fuelStack = {};
-        fuelStack.info = {};
-        fuelStack.info.mass = {};
-        fuelStack.info.mass.full = 0;
-        fuelStack.info.mass.empty = 0;
-        fuelStack.info.cost = 0;
-        fuelStack.info.nb = 0;
+        fuelStack.parts = [];
     }
 
-    let curveData = getCaractForAtm(engine.curve, start_stage_atm);
+    let curveData = getCaractForAtm(stage.curve, start_stage_atm);
     let ISP = curveData.ISP;
     let Thrust = curveData.Thrust;
 
     // Make stage caracterics
-    let MstageFull = round(Global_data.cu.mass + decoupler.mass.full + command.mass + engine.mass.full + fuelStack.info.mass.full, 4);
-    let MstageDry = round(Global_data.cu.mass + decoupler.mass.empty + command.mass + engine.mass.empty + fuelStack.info.mass.empty, 4);
-    let EngineFuelMass = engine.mass.full - engine.mass.empty;
-    let stageFuelMass = fuelStack.info.mass.full - fuelStack.info.mass.empty + EngineFuelMass;
+    let MstageFull = round(Global_data.cu.mass + decoupler.mass.full + command.mass + stage.mass.full, 4);
+    let MstageDry = round(Global_data.cu.mass + decoupler.mass.empty + command.mass + stage.mass.empty, 4);
+    let stageFuelMass = stage.mass.full - stage.mass.empty;
     let TwrFull = round(Thrust / MstageFull / Global_data.SOI.Go);
     let TwrDry = round(Thrust / MstageDry / Global_data.SOI.Go);
     let burnDuration = round(stageFuelMass * ISP * Global_data.SOI.Go / Thrust);
     let Dv = round(ISP * Global_data.SOI.Go * Math.log(MstageFull / MstageDry));
-    let cost = engine.cost + decoupler.cost + command.cost + fuelStack.info.cost;
-    let nb = engine.nb + 1 + command.nb + fuelStack.info.nb;
+    let cost = stage.cost + decoupler.cost + command.cost;
+    let nb = stage.nb + 1 + command.nb;
 
     return {
         parts: {
             decoupler: decoupler.name,
             commandModule: command.stack,
-            tanks: fuelStack.parts,
-            engine: engine.name,
+            tanks: fuelStack,
+            engine: engine,
         },
         caracts: {
             twr: {
@@ -364,7 +288,7 @@ function make_stage_item(start_stage_atm, Parts) {
         },
         size: {
             top: decoupler.size,
-            bottom: engine.stackable.bottom
+            bottom: stage.stackable.bottom
         },
     };
 

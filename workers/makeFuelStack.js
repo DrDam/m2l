@@ -8,6 +8,7 @@ let startTime = new Date();
 let maxTanks = 0;
 let Parts = {};
 let Global_status = 'wait';
+let nb = 0;
 self.addEventListener('message', function (e) {
     let inputs = e.data;
 
@@ -67,6 +68,11 @@ function generateTanksStacks(tanks, adapters, maxParts) {
 
             // select part
             let current = parts[i];
+
+            //@TODO : manage radials ...
+            if(current.is_radial) {
+                continue;
+            }
 
             // It's stack first part.
             if (topSize === undefined) {
@@ -166,21 +172,18 @@ function generateTanksStacks(tanks, adapters, maxParts) {
             localStack.info.ressources = ['none'];
         }
         let key_ressource = localStack.info.ressources.sort().join('--');
-        let key_top = localStack.info.stackable.top;
         let key_bottom = localStack.info.stackable.bottom;
 
         if (stacksList[key_ressource] == undefined)
             stacksList[key_ressource] = {}
 
-        if (stacksList[key_ressource][key_top] == undefined)
-            stacksList[key_ressource][key_top] = {}
+        if (stacksList[key_ressource][key_bottom] == undefined)
+            stacksList[key_ressource][key_bottom] = []
 
-        if (stacksList[key_ressource][key_top][key_bottom] == undefined)
-            stacksList[key_ressource][key_top][key_bottom] = []
 
-        for (let stacksListKey in stacksList[key_ressource][key_top][key_bottom]) {
+        for (let stacksListKey in stacksList[key_ressource][key_bottom]) {
 
-            let testStack = stacksList[key_ressource][key_top][key_bottom][stacksListKey];
+            let testStack = stacksList[key_ressource][key_bottom][stacksListKey];
 
             // If masses are identicals.
             if (testStack.info.mass.full === localStack.info.mass.full
@@ -190,12 +193,14 @@ function generateTanksStacks(tanks, adapters, maxParts) {
                     return stacksList;
                 }
                 else {
-                    stacksList[key_ressource][key_top][key_bottom].splice(stacksListKey, 1);
+                    stacksList[key_ressource][key_bottom].splice(stacksListKey, 1);
+                    nb--;
                 }
             }
         }
-        stacksList[key_ressource][key_top][key_bottom].push(localStack);
-        self.postMessage({ channel: 'nb', nb: countStack(stacksList)});
+        stacksList[key_ressource][key_bottom].push(localStack);
+        nb++;
+        self.postMessage({ channel: 'nb', nb: nb});
         return stacksList;
     }
 
@@ -206,17 +211,14 @@ function generateTanksStacks(tanks, adapters, maxParts) {
     let adaptersStack = clone(stacksList.none);
     delete stacksList.none;
 
-    for(let topSize in adaptersStack) {
-        for (let bottomSize in adaptersStack[topSize]) {
+        for (let bottomSize in adaptersStack) {
             for(let fuelType in stacksList) {
                 if (stacksList[fuelType] !== undefined &&
-                    stacksList[fuelType][topSize] !== undefined &&
-                    stacksList[fuelType][topSize][bottomSize] !== undefined)
+                    stacksList[fuelType][bottomSize] !== undefined)
                 {
-                    stacksList[fuelType][topSize][bottomSize] = stacksList[fuelType][topSize][bottomSize].concat(adaptersStack[topSize][bottomSize]);
+                    stacksList[fuelType][bottomSize] = stacksList[fuelType][bottomSize].concat(adaptersStack[bottomSize]);
                 }
             }
-        }
     }
 
     self.postMessage({ channel: 'nb', nb: countStack(stacksList)});
@@ -229,9 +231,7 @@ function countStack(stacksList) {
     let nb = 0;
     for(let i in stacksList) {
         for (let j in stacksList[i]) {
-            for (let k in stacksList[i][j]){
-                nb += stacksList[i][j][k].length;
-            }
+            nb += stacksList[i][j].length;
         }
     }
     return nb;
@@ -240,12 +240,11 @@ function countStack(stacksList) {
 function sortStacks(stacks) {
 
     for(let fuelType in stacks) {
-        for (let topSize in stacks[fuelType]) {
-            for (let bottomSize in stacks[fuelType][topSize]) {
-                stacks[fuelType][topSize][bottomSize] = sortByMass(stacks[fuelType][topSize][bottomSize]);
-            }
+        for (let bottomSize in stacks[fuelType]) {
+            stacks[fuelType][bottomSize] = sortByMass(stacks[fuelType][bottomSize]);
         }
     }
+
     return stacks;
 }
 
