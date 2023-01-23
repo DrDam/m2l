@@ -131,6 +131,14 @@ function run() {
                 continue loopEngine;
             }
 
+            if (Global_data.rocket.max !== undefined) {
+                // If Mass are to low so TWR > TWRmax in GroundSOI
+                let minMass = getMinMassInSOI(stage, Global_data.rocket.twr, Global_data.SOI);
+                if (StageMFull < minMass) {
+                    continue;
+                }
+            }
+
             // Add stage to stack.
             StageData.stage = stage;
 
