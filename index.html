@@ -19,7 +19,7 @@
     <header>
         <div class="title">
             <h1>Make Me a Launcher</h1>
-            <p>v0.3.1</p>
+            <p>v0.3.2</p>
         </div>
         <div class="about">
                 <a href="plan.txt" target="_blank">Development plan</a><br />
@@ -88,6 +88,13 @@
                             due the trajectory. So we can optimize the TWR limitation with altitude.">(?)</span>
                         </li>
                         -->
+                        <li>
+                            <label for="Tspread">Performance deviation :</label>
+                            <input id="Tspread" name="Tspread" type="text" value="3" size="3" />%
+                            <span data-tooltip="Authorize solution to have X% of performance deviation.
+                                                Example : if the TWR min is to 1 and spread at 3, stage with 0.97 of TWR will be accepted.
+                                                Or if the TWR max is to 10 and spread at 3, stage with 10.3 of TWR will be accepted">(?)</span>
+                        </li>
                     </ul>
                 </div>
             </fieldset>

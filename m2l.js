@@ -287,8 +287,7 @@ var master;
             rocket.twr = {
                 min: parseFloat(elems.Tmin.value),
                 max: (elems.Tmax.value != '') ? parseFloat(elems.Tmax.value) : undefined,
-          //      step: parseFloat(elems.Tstep.value),
-                spread: 3,
+                spread: parseFloat(elems.Tspread.value),
             };
             var debug_status = elems.debug.checked;
             var nbWorkers = parseInt(elems.nbworker.value);
@@ -439,6 +438,14 @@ var master;
             console.log('starting Stage stack generation');
             stageWorker.postMessage({ channel: "run" });
 
+            console.log('finishing Stage stack generation');
+            console.log('finishing ' + new Date());
+            console.groupEnd();
+
+            // Launch workers !
+             searchRockets();
+
+
             // Prevent default
             return false;
         }
@@ -456,6 +463,7 @@ var master;
             console.log('finishing ' + new Date());
             console.groupEnd();
             $('#message').html("Let's see Kerbal ingeneer working together");
+
             console.log('Search Rockets '  + new Date());
 
             master = new Worker("workers/master.js");

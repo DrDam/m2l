@@ -1,5 +1,11 @@
 #############
 # Changelog #
 #############
+
+v0.3.2
+- Generate FuelStack & EngineStack by worker
+- Optimize filtering by early check of TWRmin
+
 v0.1
 - Project restart from s2l
+
