@@ -283,8 +283,7 @@ var master;
             rocket.twr = {
                 min: parseFloat(elems.Tmin.value),
                 max: (elems.Tmax.value != '') ? parseFloat(elems.Tmax.value) : undefined,
-          //      step: parseFloat(elems.Tstep.value),
-                spread: 3,
+                spread: parseFloat(elems.Tspread.value),
             };
             var debug_status = elems.debug.checked;
             var nbWorkers = parseInt(elems.nbworker.value);
