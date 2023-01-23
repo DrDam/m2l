@@ -197,8 +197,6 @@ function WorkerEventListener (e) {
         //  Manage design.
         let result = e.data.output;
 
-
-
         //console.log(result);
         if(result.info.dv >= Global_data.rocket.dv.target ) {
             returnRocket(result.stages);
@@ -295,7 +293,7 @@ function generateStageStack(sub_worker_id) {
     // Get new element from the stack.
     let Stack = RocketsStack.shift();
 
-    DEBUG.send(sub_worker_id + ' # pick one, ' + RocketsStack.length + " waiting");
+    // console.log(sub_worker_id + ' # pick one, ' + RocketsStack.length + " waiting");
 
     // If stack are empty
     if (Stack === undefined) {

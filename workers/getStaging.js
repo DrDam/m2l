@@ -53,7 +53,7 @@ self.addEventListener('message', function (e) {
     if (inputs.channel === 'run') {
         cleanData();
         Global_data = inputs.data;
-      //  console.log(Global_data);
+        // console.log(Global_data);
         startTime = new Date();
         DEBUG.send(worker_id + ' # run');
         run();
@@ -75,13 +75,7 @@ self.addEventListener('message', function (e) {
  * Start processing.
  */
 function run() {
-
-    // Mission
-    let SOI = Global_data.SOI;
-    let rocket_dv_target = Global_data.rocket.dv.target;
-
     // Rocket data
-    let twr = Global_data.rocket.twr;
     let rocket_cu = Global_data.cu;
 
     // Add a decoupler
@@ -101,10 +95,15 @@ function run() {
     // @TODO : when adding a "provide fuel for return"
     let command = {mass: 0, stack: [], nb: 0, cost: 0};
 
+    let StageData = {};
+    StageData.decoupler = decoupler;
+    StageData.command = command;
+
     /**
-     * How I meet your Engine ?
+     * How I meet your Stage ?
      */
 
+    // If no stages for this size.
     if(Parts.stages[rocket_cu.size] === undefined) {
         return;
     }
@@ -112,7 +111,9 @@ function run() {
     loopEngine:
     for (let enginekey in Parts.stages[rocket_cu.size]) {
 
+        // console.log(Parts.stages[rocket_cu.size][enginekey].length);
         for (let stageKey in Parts.stages[rocket_cu.size][enginekey]) {
+
             // Intercept Stop
             if (Global_status === 'stop') {
                 return null;
@@ -120,23 +121,21 @@ function run() {
 
             let stage = Parts.stages[rocket_cu.size][enginekey][stageKey];
 
-            let StageData = {};
-            StageData.stage = stage;
-            StageData.decoupler = decoupler;
-            StageData.command = command;
-
             let StageMDry = decoupler.mass.full + command.mass + rocket_cu.mass + stage.mass.empty;
             let MEngineFuel = stage.mass.full - stage.mass.empty
             let StageMFull = StageMDry + MEngineFuel;
 
-            // If stage + CU are to high for engine, return.
-            let maxMass = getMaxMassInVacuum(stage, twr, SOI);
+            // If "stage + CU" mass is now too high for engine, change engine.
+            let maxMass = getMaxMassInVacuum(stage, Global_data.rocket.twr, Global_data.SOI);
             if (StageMFull > maxMass) {
                 continue loopEngine;
             }
 
-            // Process without fuel Tank
-            let validatedStage = trytoMakeStage(StageData, SOI, StageMFull, StageMDry, rocket_dv_target, twr);
+            // Add stage to stack.
+            StageData.stage = stage;
+
+            // Process without fuel Tank.
+            let validatedStage = trytoMakeStage(StageData, Global_data.SOI, StageMFull, StageMDry, Global_data.rocket.dv.target, Global_data.rocket.twr);
             if (validatedStage === false) {
                 self.postMessage({channel: 'badDesign'});
             } else {
@@ -318,7 +317,7 @@ function return_staging(stage) {
     data.stages.push(stage);
     data.info.dv = round(data.info.dv + stage.caracts.stageDv);
     data.info.bottomSize = stage.size.bottom;
-    data.info.massFull = Global_data.cu.mass + stage.caracts.mass.full;
+    data.info.massFull = round(Global_data.cu.mass + stage.caracts.mass.full);
 
     // Push data to Master.
     self.postMessage({ channel: 'result', output: data, id: worker_id});
