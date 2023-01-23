@@ -126,94 +126,95 @@ function run() {
      *   2.4 : Calculate real Dv & TWR with this TankStack and check TWR +- AcceptedPerformanceSpread %
      *   2.5 : if all Ok => format Stack & return to master
      */
-
-    for (let engineKey in Parts.engines) {
-
-        // Intercept Stop
-        if (Global_status === 'stop') {
-            return null;
-        }
-
-        let engine = Parts.engines[engineKey];
-        //DEBUG.send(worker_id + ' # test Engine ' + engine.name);
-        let StageMDry = decoupler.mass.full + command.mass + rocket_cu.mass + engine.mass.empty;
-        let MEngineFuel = engine.mass.full - engine.mass.empty
-        let StageMFull = StageMDry + MEngineFuel;
-
-        let maxMass = getMaxMassInVacuum(engine, twr, SOI);
-        if(StageMFull > maxMass) {
-            continue;
-        }
-
-        let StageParts = {};
-        StageParts.engine = engine;
-        StageParts.decoupler = decoupler;
-        StageParts.command = command;
-
-        if (MEngineFuel > 0) {
-
-            // Process without fuel Tank
-            let stage = trytoMakeStage(StageParts, SOI, StageMFull, StageMDry, rocket_dv_target, twr);
-            if (stage === false) {
-                self.postMessage({ channel: 'badDesign' });
-            }
-            else {
-                return_staging(stage);
-            }
-        }
-
-        let fuel = engine.conso.sort().join('--')
-
-        // No tanks stack for this ressource and sizes
-        if (Parts.fuelable[fuel] == undefined ||
-            Parts.fuelable[fuel][rocket_cu.size] == undefined ||
-            (!engine.is_radial && Parts.fuelable[fuel][rocket_cu.size][engine.stackable.top] == undefined)
-        )
-            {
-                // Next engine
-                continue;
-            }
-
-        let FuelableStack = [];
-        // If engine is radial, disable filter in engineTopSize
-        if (engine.is_radial) {
-            for (let sizebottom in Parts.fuelable[fuel][rocket_cu.size]){
-                FuelableStack = FuelableStack.concat(Parts.fuelable[fuel][rocket_cu.size][sizebottom]);
-            }
-        }
-        else {
-            FuelableStack = Parts.fuelable[fuel][rocket_cu.size][engine.stackable.top]
-        }
-
-        for (let tankKey in FuelableStack) {
+    loopEngine:
+        for (let engineKey in Parts.engines) {
 
             // Intercept Stop
             if (Global_status === 'stop') {
                 return null;
             }
 
-            let tankStack = FuelableStack[tankKey];
+            let engine = Parts.engines[engineKey];
+            //DEBUG.send(worker_id + ' # test Engine ' + engine.name);
+            let StageMDry = decoupler.mass.full + command.mass + rocket_cu.mass + engine.mass.empty;
+            let MEngineFuel = engine.mass.full - engine.mass.empty
+            let StageMFull = StageMDry + MEngineFuel;
 
-            let MtDry = StageMDry + tankStack.info.mass.empty;
-            let MtFull = StageMFull + tankStack.info.mass.full;
-
-            if(MtFull > maxMass) {
+            let maxMass = getMaxMassInVacuum(engine, twr, SOI);
+            if(StageMFull > maxMass) {
                 continue;
             }
 
-            StageParts.fuelStack = tankStack;
-            // Process stack
-            let stage = trytoMakeStage(StageParts, SOI, MtFull, MtDry, rocket_dv_target, twr);
-            if (stage === false) {
-                self.postMessage({ channel: 'badDesign' });
-                continue;
+            let StageParts = {};
+            StageParts.engine = engine;
+            StageParts.decoupler = decoupler;
+            StageParts.command = command;
+
+            if (MEngineFuel > 0) {
+
+                // Process without fuel Tank
+                let stage = trytoMakeStage(StageParts, SOI, StageMFull, StageMDry, rocket_dv_target, twr);
+                if (stage === false) {
+                    self.postMessage({ channel: 'badDesign' });
+                }
+                else {
+                    return_staging(stage);
+                }
+            }
+
+            let fuel = engine.conso.sort().join('--')
+
+            // No tanks stack for this ressource and sizes
+            if (Parts.fuelable[fuel] == undefined ||
+                Parts.fuelable[fuel][rocket_cu.size] == undefined ||
+                (!engine.is_radial && Parts.fuelable[fuel][rocket_cu.size][engine.stackable.top] == undefined)
+            )
+                {
+                    // Next engine
+                    continue;
+                }
+
+            let FuelableStack = [];
+            // If engine is radial, disable filter in engineTopSize
+            if (engine.is_radial) {
+                for (let sizebottom in Parts.fuelable[fuel][rocket_cu.size]){
+                    FuelableStack = FuelableStack.concat(Parts.fuelable[fuel][rocket_cu.size][sizebottom]);
+                }
             }
             else {
-                return_staging(stage);
+                FuelableStack = Parts.fuelable[fuel][rocket_cu.size][engine.stackable.top]
             }
 
+            for (let tankKey in FuelableStack) {
+
+                // Intercept Stop
+                if (Global_status === 'stop') {
+                    return null;
+                }
+
+                let tankStack = FuelableStack[tankKey];
+
+                let MtDry = StageMDry + tankStack.info.mass.empty;
+                let MtFull = StageMFull + tankStack.info.mass.full;
+
+                // Fuel tanks are sort by mass, if it's too heavy, next are too.
+                if(MtFull > maxMass) {
+                    continue loopEngine;
+                }
+
+                StageParts.fuelStack = tankStack;
+                // Process stack
+                let stage = trytoMakeStage(StageParts, SOI, MtFull, MtDry, rocket_dv_target, twr);
+                if (stage === false) {
+                    self.postMessage({ channel: 'badDesign' });
+                    continue;
+                }
+                else {
+                    return_staging(stage);
+                }
+
+            }
         }
-    }
 
     // Ended all stack passes
     autoStop();

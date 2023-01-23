@@ -374,7 +374,7 @@ var master;
             engineWorker.postMessage({ channel: "run" });
 
             // Generate Fuel Tank Stacks
-            let fuelTankWorker = new Worker("workers/MakeFuelStack.js");
+            let fuelTankWorker = new Worker("workers/makeFuelStack.js");
             fuelTankWorker.postMessage({
                 channel: 'create',
                 parts: SelectedParts,
@@ -515,6 +515,12 @@ var master;
                 var tanks = stage.parts.tanks;
                 for (var j in tanks) {
                     var tank = tanks[j];
+                    if(tank.name === undefined) {
+                        continue;
+                    }
+                    if(tank.nb === undefined) {
+                        tank.nb = 1;
+                    }
                     stageData.tanks.push({ tank_name: tank.name, tank_nb : tank.nb});
                 }
                 stageData.command = [];

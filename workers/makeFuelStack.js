@@ -36,9 +36,11 @@ self.addEventListener('message', function (e) {
 
 function run() {
 
-    let enginesStack = generateTanksStacks(Parts.fuelTanks, Parts.adapters, maxTanks);
+    let stacks = generateTanksStacks(Parts.fuelTanks, Parts.adapters, maxTanks);
 
-    self.postMessage({ channel: 'results', results: enginesStack});
+    stacks = sortStacks(stacks);
+
+    self.postMessage({ channel: 'results', results: stacks});
 
 }
 
@@ -233,4 +235,24 @@ function countStack(stacksList) {
         }
     }
     return nb;
+}
+
+function sortStacks(stacks) {
+
+    for(let fuelType in stacks) {
+        for (let topSize in stacks[fuelType]) {
+            for (let bottomSize in stacks[fuelType][topSize]) {
+                stacks[fuelType][topSize][bottomSize] = sortByMass(stacks[fuelType][topSize][bottomSize]);
+            }
+        }
+    }
+    return stacks;
+}
+
+function sortByMass(array) {
+    return array.sort(function(a, b)
+    {
+        var x = a.info.mass.full; var y = b.info.mass.full;
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
 }
