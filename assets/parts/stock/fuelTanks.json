@@ -12,7 +12,8 @@
         "stackable": {
             "top": "0",
             "bottom": "1"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -31,7 +32,8 @@
         "stackable": {
             "top": false,
             "bottom": false
-        },
+        }, 
+        "only_booster": false,
         "is_radial": true,
         "ressources": [
             "LiquidFuel",
@@ -51,7 +53,8 @@
         "stackable": {
             "top": false,
             "bottom": false
-        },
+        }, 
+        "only_booster": false,
         "is_radial": true,
         "ressources": [
             "LiquidFuel",
@@ -71,7 +74,8 @@
         "stackable": {
             "top": "1",
             "bottom": "1"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -91,7 +95,8 @@
         "stackable": {
             "top": "2",
             "bottom": "2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "MonoPropellant"
@@ -110,7 +115,8 @@
         "stackable": {
             "top": "0",
             "bottom": "0"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "MonoPropellant"
@@ -129,7 +135,8 @@
         "stackable": {
             "top": "1",
             "bottom": "1"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "MonoPropellant"
@@ -148,7 +155,8 @@
         "stackable": {
             "top": false,
             "bottom": false
-        },
+        }, 
+        "only_booster": false,
         "is_radial": true,
         "ressources": [
             "MonoPropellant"
@@ -167,7 +175,8 @@
         "stackable": {
             "top": false,
             "bottom": false
-        },
+        }, 
+        "only_booster": false,
         "is_radial": true,
         "ressources": [
             "MonoPropellant"
@@ -186,7 +195,8 @@
         "stackable": {
             "top": "2",
             "bottom": "2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -206,7 +216,8 @@
         "stackable": {
             "top": "2",
             "bottom": "2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -226,7 +237,8 @@
         "stackable": {
             "top": "2",
             "bottom": "2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -246,7 +258,8 @@
         "stackable": {
             "top": "2",
             "bottom": "2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -266,7 +279,8 @@
         "stackable": {
             "top": "3",
             "bottom": "3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -286,7 +300,8 @@
         "stackable": {
             "top": "3",
             "bottom": "3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -306,7 +321,8 @@
         "stackable": {
             "top": "3",
             "bottom": "3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -326,7 +342,8 @@
         "stackable": {
             "top": "mk2",
             "bottom": "mk3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -346,7 +363,8 @@
         "stackable": {
             "top": "2",
             "bottom": "mk3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -366,7 +384,8 @@
         "stackable": {
             "top": "2",
             "bottom": "mk3"
-        },
+        }, 
+        "only_booster": true,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -386,7 +405,8 @@
         "stackable": {
             "top": "1",
             "bottom": "2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -406,7 +426,8 @@
         "stackable": {
             "top": "1",
             "bottom": "2"
-        },
+        }, 
+        "only_booster": true,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -426,7 +447,8 @@
         "stackable": {
             "top": "mk3",
             "bottom": "3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -446,7 +468,8 @@
         "stackable": {
             "top": "0",
             "bottom": "0"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -466,7 +489,8 @@
         "stackable": {
             "top": "1",
             "bottom": "1"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -486,7 +510,8 @@
         "stackable": {
             "top": "1",
             "bottom": "1"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -506,7 +531,8 @@
         "stackable": {
             "top": "1",
             "bottom": "1"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -526,7 +552,8 @@
         "stackable": {
             "top": "1",
             "bottom": "1"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -546,7 +573,8 @@
         "stackable": {
             "top": "0",
             "bottom": "0"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -565,7 +593,8 @@
         "stackable": {
             "top": "1",
             "bottom": "mk2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -585,7 +614,8 @@
         "stackable": {
             "top": "1",
             "bottom": "mk2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -605,7 +635,8 @@
         "stackable": {
             "top": "mk2",
             "bottom": "mk2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -625,7 +656,8 @@
         "stackable": {
             "top": "mk2",
             "bottom": "mk2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -644,7 +676,8 @@
         "stackable": {
             "top": "mk2",
             "bottom": "mk2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -664,7 +697,8 @@
         "stackable": {
             "top": "mk2",
             "bottom": "mk2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -683,7 +717,8 @@
         "stackable": {
             "top": "mk2",
             "bottom": "mk2"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "MonoPropellant"
@@ -702,7 +737,8 @@
         "stackable": {
             "top": "3",
             "bottom": "3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -722,7 +758,8 @@
         "stackable": {
             "top": "3",
             "bottom": "3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -742,7 +779,8 @@
         "stackable": {
             "top": "3",
             "bottom": "3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -762,7 +800,8 @@
         "stackable": {
             "top": "3",
             "bottom": "3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -781,7 +820,8 @@
         "stackable": {
             "top": "3",
             "bottom": "3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -800,7 +840,8 @@
         "stackable": {
             "top": "3",
             "bottom": "3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -819,7 +860,8 @@
         "stackable": {
             "top": "3",
             "bottom": "3"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "MonoPropellant"
@@ -838,7 +880,8 @@
         "stackable": {
             "top": "0",
             "bottom": "0"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "XenonGas"
@@ -857,7 +900,8 @@
         "stackable": {
             "top": "0",
             "bottom": "0"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "XenonGas"
@@ -876,7 +920,8 @@
         "stackable": {
             "top": false,
             "bottom": false
-        },
+        }, 
+        "only_booster": false,
         "is_radial": true,
         "ressources": [
             "XenonGas"
@@ -895,7 +940,8 @@
         "stackable": {
             "top": "1",
             "bottom": "1"
-        },
+        }, 
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"

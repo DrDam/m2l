@@ -412,7 +412,7 @@ var master;
             console.groupEnd();
 
             // Launch workers !
-             searchRockets();
+            searchRockets();
 
             // Prevent default
             return false;
