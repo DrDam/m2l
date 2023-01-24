@@ -1,6 +1,6 @@
-######################
-# Developpement Plan #
-######################
+####################
+# Development Plan #
+####################
 
 Current Step :
 v0.1 : Reforge S2L
@@ -9,13 +9,13 @@ v0.1 : Reforge S2L
 -- selection of the engines of each stage (1 per upper stage, possible multi in first Stage)
 -- selection of fuel tanks
 - List all configuration in a comparative table
-- Add booster propostion in first stage
+- Add booster solution in first stage
 - Add basis of atmospheric modeling
 - Use stock & Making History parts
 
 further step :
 - Add launcher capacity calculate from orbit specifications ( Ap / Pe )
 - Add DLC's Engine plate capacity
-- Add "guidance solution" and "desorbiting fuel" for last stage
+- Add "guidance solution" and "des-orbiting fuel" for last stage
 - Add some tracking (parameters / duration .. )
 - Add StageWithBooster generation

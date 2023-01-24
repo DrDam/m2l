@@ -2,6 +2,9 @@
 # Changelog #
 #############
 
+V0.4.2
+- Add TWR reduction in trajectories
+
 V0.4.1
 - re-adding MakingHistory parts (except Kerbodyne_Engine_Cluster_Adapter_Tank)
 
@@ -17,7 +20,7 @@ V0.3.3
 
 v0.3.2
 - Generate FuelStack & EngineStack by worker
-- Optimize filtering by early check of TWRmin
+- Optimize filtering by early check of TWR min
 
 v0.1
 - Project restart from s2l
