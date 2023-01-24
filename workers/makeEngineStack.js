@@ -76,7 +76,7 @@ function makeEngineStacks(engines, couplers, maxRadials) {
                 RadialEngine.mass.full = nb_radial * engine.mass.full;
                 RadialEngine.mass.empty = nb_radial * engine.mass.empty;
                 RadialEngine.cost = nb_radial * engine.cost;
-                RadialEngine.name = nb_radial + 'x' + engine.name;
+                RadialEngine.name = engine.name + ' x ' + nb_radial;
 
                 for (let radial_curve_id in RadialEngine.curve) {
                     RadialEngine.curve[radial_curve_id].Thrust = nb_radial * engine.curve[radial_curve_id].Thrust;
@@ -103,7 +103,7 @@ function makeEngineStacks(engines, couplers, maxRadials) {
                 new_engine.mass.full = round(coupler.mass.full + nb_engines * engine.mass.full, 4);
                 new_engine.mass.empty = round(coupler.mass.empty + nb_engines * engine.mass.empty, 4);
                 new_engine.cost = round(coupler.cost + nb_engines * engine.cost, 4);
-                new_engine.name = coupler.name + ' + ' + nb_engines + 'x' + engine.name;
+                new_engine.name = coupler.name + ' + ' + engine.name + ' x ' + nb_engines;
                 for (let curve_id in new_engine.curve) {
                     new_engine.curve[curve_id].Thrust = nb_engines * engine.curve[curve_id].Thrust;
                 }

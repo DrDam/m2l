@@ -19,4 +19,3 @@ further step :
 - Add "guidance solution" and "desorbiting fuel" for last stage
 - Add some tracking (parameters / duration .. )
 - Add StageWithBooster generation
-- Actualy only kerbin

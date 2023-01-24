@@ -59,12 +59,12 @@ var master;
             if (item.Name === 'Kerbin') {
                 data.selected = 'selected';
             }
-            $('#g0').append($('<option>', data));
+            $('#soi').append($('<option>', data));
         });
         // Set Kerbin LowOrbitDv for default Dv Target
-        $('#DvTarget').val(SOI[0].LowOrbitDv);
+        $('#DvTarget').val(SOI['kerbin'].LowOrbitDv);
         // if SOI change, update Dv Target
-        $('#g0').change(function () {
+        $('#soi').change(function () {
             let val = $(this).find(":selected").val();
             $('#DvTarget').val(SOI[val].LowOrbitDv);
         })
@@ -297,10 +297,11 @@ var master;
             simu.debug.status = debug_status;
             simu.debug.startTime = startTime.getTime();
 
-            let soi = parseInt(elems.g0.value);
-
+            let soi = elems.soi.value;
+            let trajectory = 'basic';
             computationData = {
                 SOI: SOI[soi],
+                trajectory: trajectories[soi][trajectory],
                 rocket: rocket,
                 cu: CU,
                 simu: simu,
@@ -406,8 +407,6 @@ var master;
 
         function makeStages() {
 
-            console.log('starting Stage stack generation');
-            console.log('finishing Stage stack generation');
             console.log('finishing ' + new Date());
             console.groupEnd();
 
@@ -563,3 +562,36 @@ var master;
 
     });
 })(jQuery);
+
+// Load parts
+console.log("Load Parts");
+for (let partTypesKey in partTypes) {
+
+    Parts[partTypes[partTypesKey]] = [];
+
+    for (let providersKey in providers) {
+
+        fetch('../assets/parts/'+providers[providersKey]+'/'+partTypes[partTypesKey]+'.json')
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                }
+                else {
+                    return Promise.reject(response.status)
+                }
+            })
+            .then((json) => {
+                Parts[partTypes[partTypesKey]] = Parts[partTypes[partTypesKey]].concat(json);
+                console.log("-- Load " + partTypes[partTypesKey] + " from " + providers[providersKey]);
+            })
+            .catch(error => {
+                if(error === 404) {
+                    console.log("-- No part files for "+ partTypes[partTypesKey] + " from " + providers[providersKey]);
+                }
+                else {
+                    console.log("-- error on " + partTypes[partTypesKey] + " from " + providers[providersKey], error);
+                }
+            });
+    }
+}
+
