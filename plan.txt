@@ -11,10 +11,10 @@ v0.1 : Reforge S2L
 - List all configuration in a comparative table
 - Add booster propostion in first stage
 - Add basis of atmospheric modeling
+- Use stock & Making History parts
 
 further step :
 - Add launcher capacity calculate from orbit specifications ( Ap / Pe )
-- Re-add parts for making History
 - Add DLC's Engine plate capacity
 - Add "guidance solution" and "desorbiting fuel" for last stage
 - Add some tracking (parameters / duration .. )

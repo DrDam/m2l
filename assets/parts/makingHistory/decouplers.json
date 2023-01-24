@@ -10,11 +10,10 @@
             "full": 0.09
         },
         "stackable": {
-            "top": "2",
-            "bottom": "2"
+            "top": "1p5",
+            "bottom": "1p5"
         },
-        "is_radial": false,
-        "isOmniDecoupler": false
+        "is_radial": false
     },
     {
         "id": "Decoupler_4",
@@ -30,58 +29,6 @@
             "top": "4",
             "bottom": "4"
         },
-        "is_radial": false,
-        "isOmniDecoupler": false
-    },
-    {
-        "id": "Separator_1p5",
-        "name": "TS-18 Stack Separator",
-        "tech": "advConstruction",
-        "cost": 715,
-        "provider": "makingHistory",
-        "mass": {
-            "empty": 0.12,
-            "full": 0.12
-        },
-        "stackable": {
-            "top": "2",
-            "bottom": "2"
-        },
-        "is_radial": false,
-        "isOmniDecoupler": true
-    },
-    {
-        "id": "Separator_4",
-        "name": "TS-50 Stack Separator",
-        "tech": "highPerformanceFuelSystems",
-        "cost": 975,
-        "provider": "makingHistory",
-        "mass": {
-            "empty": 0.85,
-            "full": 0.85
-        },
-        "stackable": {
-            "top": "4",
-            "bottom": "4"
-        },
-        "is_radial": false,
-        "isOmniDecoupler": true
-    },
-    {
-        "id": "Size1p5_Strut_Decoupler",
-        "name": "Size 1.5 Decoupler",
-        "tech": "advConstruction",
-        "cost": 475,
-        "provider": "makingHistory",
-        "mass": {
-            "empty": 0.09,
-            "full": 0.09
-        },
-        "stackable": {
-            "top": "2",
-            "bottom": "2"
-        },
-        "is_radial": false,
-        "isOmniDecoupler": false
+        "is_radial": false
     }
 ]

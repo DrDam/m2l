@@ -68,6 +68,11 @@ function generateTanksStacks(tanks, adapters, maxParts) {
             // select part
             let current = parts[i];
 
+            // make Engine cluster adapter tank away for now
+            if(current.stackable.bottom_number !== undefined) {
+                continue;
+            }
+
             // It's stack first part.
             if (topSize === undefined) {
                 stack = {};
@@ -135,6 +140,10 @@ function generateTanksStacks(tanks, adapters, maxParts) {
 
             // push stack
             localStack.stackable.bottom = current.stackable.bottom;
+
+            if(current.stackable.bottom_number !== undefined) {
+                localStack.stackable.bottom_number = current.stackable.bottom_number;
+            }
 
             stacksListIds.push(localStack.id);
             localStack.id.push(current.id);

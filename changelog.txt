@@ -2,6 +2,9 @@
 # Changelog #
 #############
 
+V0.4.1
+- re-adding MakingHistory parts (except Kerbodyne_Engine_Cluster_Adapter_Tank)
+
 V0.4
 - Update atmospheric model using :
 -- SOI atmospheric data (from wiki)
