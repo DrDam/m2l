@@ -232,7 +232,7 @@ function run() {
 /**
  * Try to find the "most probable atmospheric pressure" on stage Ignition
  */
-function getIgnitionPressure(engineCurve, Mtot, Mdry, DvTarget) {
+function getIgnitionConditions(engineCurve, Mtot, Mdry, DvTarget) {
 
     if (Global_data.SOI.groundPressure === 0) {
         return 0;
@@ -251,12 +251,16 @@ function getIgnitionPressure(engineCurve, Mtot, Mdry, DvTarget) {
         let trajectoryState = getTrajectoryState(DvTarget - DvIgnition, Global_data.trajectory);
 
         // Estimate local pressure
-        return getLocalPressureFromAlt(trajectoryState.alt, Global_data.SOI.atmosphere);
+        return {
+            pressure : getLocalPressureFromAlt(trajectoryState.alt, Global_data.SOI.atmosphere),
+            twrReduction: trajectoryState.twrReduction
+        }
+
     }
 }
 
 /**
- * Try to estimate a more "probable" atmospheric pressure one engine ignition.
+ * Try to estimate a more "probable" atmospheric pressure & twr reduction.
  */
 function calculateIgnitionPressure(localPressure, engineCurve, Mtot, Mdry, dvTarget) {
 
@@ -284,21 +288,21 @@ function trytoMakeStage(Parts, Mtot, Mdry, DvTarget, twr) {
     let engineCurve = Parts.engine.curve;
 
     // We have ignition parameters. This Engine + FuelStar can flight ?
-    let ignitionPressure = getIgnitionPressure(engineCurve, Mtot, Mdry, DvTarget);
+    let ignitionConditions = getIgnitionConditions(engineCurve, Mtot, Mdry, DvTarget);
 
-    let curveDataIgnition = getCaractForAtm(engineCurve, ignitionPressure);
+    let curveDataIgnition = getCaractForAtm(engineCurve, ignitionConditions.pressure);
     let twrIgnition = curveDataIgnition.Thrust / Global_data.SOI.Go / Mtot;
 
     // Check TWR
-    if (twrIgnition < twr.min - (twr.spread / 100)
+    if (twrIgnition < reduceTwr(twr.min, ignitionConditions.twrReduction) - (twr.spread / 100)
         ||
-        (twr.max !== undefined && twrIgnition > twr.max + (twr.spread / 100))
+        (twr.max !== undefined && twrIgnition > reduceTwr(twr.max, ignitionConditions.twrReduction) + (twr.spread / 100))
     ) {
         // Bad design
         return false;
     }
     else {
-        return make_stage_item(ignitionPressure, Parts);
+        return make_stage_item(ignitionConditions.pressure, Parts);
     }
 }
 
