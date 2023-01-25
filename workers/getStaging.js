@@ -234,11 +234,13 @@ function run() {
  */
 function getIgnitionConditions(engineCurve, Mtot, Mdry, DvTarget) {
 
-    if (Global_data.SOI.groundPressure === 0) {
+    let groundPressure = Global_data.SOI.atmosphere[0].p;
+
+    if (groundPressure === 0) {
         return 0;
     }
     else {
-        let ignitionPressure = Global_data.SOI.groundPressure;
+        let ignitionPressure = groundPressure;
         for (let i = 0; i <= 5; i++) {
             ignitionPressure = calculateIgnitionPressure(ignitionPressure, engineCurve, Mtot, Mdry, DvTarget);
         }
@@ -415,3 +417,13 @@ function return_staging(stage) {
     // Push data to Master.
     self.postMessage({ channel: 'result', output: data, id: worker_id});
 }
+
+/***********/
+/* Helpers */
+/***********/
+
+function getMaxMassInVacuum(engine, twr, SOI){
+    let curve = getCaractForAtm(engine.curve, 0);
+    return curve.Thrust / SOI.Go / ( twr.min - (twr.spread / 100));
+}
+

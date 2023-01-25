@@ -62,11 +62,11 @@ var master;
             $('#soi').append($('<option>', data));
         });
         // Set Kerbin LowOrbitDv for default Dv Target
-        $('#DvTarget').val(SOI['kerbin'].LowOrbitDv);
+        $('#DvTarget').val(SOI['kerbin'].BasicMissionDv);
         // if SOI change, update Dv Target
         $('#soi').change(function () {
             let val = $(this).find(":selected").val();
-            $('#DvTarget').val(SOI[val].LowOrbitDv);
+            $('#DvTarget').val(SOI[val].BasicMissionDv);
         })
 
         // Populate "advanced" part selector
