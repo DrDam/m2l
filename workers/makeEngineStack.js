@@ -87,35 +87,50 @@ function makeEngineStacks(engines, couplers, maxRadials) {
                 RadialEngine = undefined;
             }
         } else {
+
             // Try to put engine on a coupler
             for (let coupler_id in couplers) {
                 let coupler = couplers[coupler_id];
 
-                // only If Engine mount on coupler
-                if (engine.stackable.top !== coupler.stackable.bottom) {
-                    continue;
+                // If coupler has ressources.
+                if(coupler.ressources !== undefined) {
+                    // if ressources are not sames as engine, change coupler
+                    if(coupler.ressources.sort().join('_') !== engine.conso.sort().join('_')) {
+                        continue
+                    }
                 }
 
-                // Create new Engine
-                let nb_engines = coupler.stackable.bottom_number;
-                let new_engine = clone(engine);
-                new_engine.id = coupler.id + '_' + nb_engines + '_' + engine.id;
-                new_engine.mass.full = round(coupler.mass.full + nb_engines * engine.mass.full, 4);
-                new_engine.mass.empty = round(coupler.mass.empty + nb_engines * engine.mass.empty, 4);
-                new_engine.cost = round(coupler.cost + nb_engines * engine.cost, 4);
-                new_engine.name = coupler.name + ' + ' + engine.name + ' x ' + nb_engines;
-                for (let curve_id in new_engine.curve) {
-                    new_engine.curve[curve_id].Thrust = nb_engines * engine.curve[curve_id].Thrust;
-                }
-                new_engine.stackable.bottom = false;
+                // Test all stackable options
+                for(let bottomStack in coupler.stackable.bottom ) {
 
-                new_engine.provider[coupler.provider] = coupler.provider;
-                new_engine.nb = nb_engines + 1;
-                new_engine.parts = [{ id: engine.id, name: engine.name, nb: nb_engines }];
-                new_engine.parts.push({ id: coupler.id, name: coupler.name, nb: 1 });
-                // push new Engine
-                stacks.push(clone(new_engine));
-                self.postMessage({ channel: 'nb', nb: stacks.length});
+                    let bottomStackSolution = coupler.stackable.bottom[bottomStack];
+
+                    // only If Engine mount on coupler
+                    if (engine.stackable.top !== bottomStackSolution.size) {
+                        continue;
+                    }
+
+                    // Create new Engine
+                    let nb_engines = bottomStackSolution.bottom_number;
+                    let new_engine = clone(engine);
+                    new_engine.id = coupler.id + '_' + nb_engines + '_' + engine.id;
+                    new_engine.mass.full = round(coupler.mass.full + nb_engines * engine.mass.full, 4);
+                    new_engine.mass.empty = round(coupler.mass.empty + nb_engines * engine.mass.empty, 4);
+                    new_engine.cost = round(coupler.cost + nb_engines * engine.cost, 4);
+                    new_engine.name = coupler.name + ' + ' + engine.name + ' x ' + nb_engines;
+                    for (let curve_id in new_engine.curve) {
+                        new_engine.curve[curve_id].Thrust = nb_engines * engine.curve[curve_id].Thrust;
+                    }
+                    new_engine.stackable.bottom = false;
+
+                    new_engine.provider[coupler.provider] = coupler.provider;
+                    new_engine.nb = nb_engines + 1;
+                    new_engine.parts = [{ id: engine.id, name: engine.name, nb: nb_engines }];
+                    new_engine.parts.push({ id: coupler.id, name: coupler.name, nb: 1 });
+                    // push new Engine
+                    stacks.push(clone(new_engine));
+                    self.postMessage({ channel: 'nb', nb: stacks.length});
+                }
             }
         }
     }
