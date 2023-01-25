@@ -241,9 +241,9 @@ function trytoMakeStage(Parts, Mtot, Mdry, DvTarget, twr) {
     let twrIgnition = curveDataIgnition.Thrust / Global_data.SOI.Go / Mtot;
 
     // Check TWR
-    if (twrIgnition < reduceTwr(twr.min, ignitionConditions.twrReduction) - (twr.spread / 100)
+    if (twrIgnition < reduceTwr(twr.min, ignitionConditions.twrReduction) * (1 - (twr.spread / 100))
         ||
-        (twr.max !== undefined && twrIgnition > reduceTwr(twr.max, ignitionConditions.twrReduction) + (twr.spread / 100))
+        (twr.max !== undefined && twrIgnition > reduceTwr(twr.max, ignitionConditions.twrReduction) * (1 + (twr.spread / 100)))
     ) {
         // Bad design
         return false;

@@ -139,6 +139,7 @@ function makeEngineStacks(engines, couplers, maxRadials) {
                         new_engine.curve[curve_id].Thrust = nb_engines * engine.curve[curve_id].Thrust;
                     }
 
+                    new_engine.stackable.top = coupler.stackable.top;
                     // Mark stack as not stackable.
                     new_engine.stackable.bottom = false;
 
