@@ -10,8 +10,8 @@
             "full": 5
         },
         "stackable": {
-            "top": "4",
-            "bottom": "4"
+            "top": "2",
+            "bottom": "2"
         },
         "conso": [
             "LiquidFuel",
@@ -84,8 +84,8 @@
             "full": 2
         },
         "stackable": {
-            "top": "2",
-            "bottom": "2"
+            "top": "1p5",
+            "bottom": "1p5"
         },
         "is_radial": false,
         "conso": [
@@ -121,8 +121,8 @@
             "full": 1
         },
         "stackable": {
-            "top": "4",
-            "bottom": "4"
+            "top": "2",
+            "bottom": "2"
         },
         "is_radial": false,
         "conso": [

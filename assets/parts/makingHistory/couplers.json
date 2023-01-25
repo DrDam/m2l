@@ -12,7 +12,9 @@
         "stackable": {
             "top": "4",
             "bottom": [
-                {"size" :  "2","bottom_number" : 5},
+                {"size" :  "1","bottom_number" : 5},
+                {"size" :  "1p5","bottom_number" : 5},
+                {"size" :  "2","bottom_number" : 1},
                 {"size" :  "3","bottom_number" : 1},
                 {"size" :  "4","bottom_number" : 1}
             ]
