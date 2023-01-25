@@ -1,6 +1,12 @@
 #############
 # Changelog #
 #############
+V0.4.3
+- Add comments in code
+- Update makingHistory engine size
+- code issues
+- manage coupler mult_size
+- add favicon
 
 V0.4.2
 - Add TWR reduction in trajectories
