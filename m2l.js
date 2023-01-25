@@ -228,13 +228,13 @@ var master;
             // Filter parts
             var part_mode = elems.part_mode.value;
             SelectedParts = {};
-            if (part_mode == 'part_collection_simple') {
+            if (part_mode === 'part_collection_simple') {
                 collection_name = elems.parts_collection.value;
-                if (collection_name != 'all') {
+                if (collection_name !== 'all') {
                     for (var part_group in Parts) {
                         SelectedParts[part_group] = [];
                         for (var part_id in Parts[part_group]) {
-                            if (getKeys(Parts[part_group][part_id].provider)[0] == collection_name) {
+                            if (Parts[part_group][part_id].provider === collection_name) {
                                 SelectedParts[part_group].push(clone(Parts[part_group][part_id]));
                             }
                         }
@@ -245,7 +245,6 @@ var master;
                 }
             }
             else {
-                collection_name = 'custom';
                 $.each(elems.partList, function (i, item) {
                     if ($(item).prop('checked')) {
                         var box = $(this).val().split('--');
