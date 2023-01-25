@@ -95,7 +95,7 @@ function makeEngineStacks(engines, couplers, maxRadials) {
                 // If coupler has ressources.
                 if(coupler.ressources !== undefined) {
                     // if ressources are not sames as engine, change coupler
-                    if(coupler.ressources.sort().join('_') !== engine.conso.sort().join('_')) {
+                    if(!compareSimpleArray(coupler.ressources, engine.conso)) {
                         continue
                     }
                 }

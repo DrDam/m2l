@@ -109,9 +109,7 @@ function generateTanksStacks(tanks, adapters, maxParts) {
                 }
                 else {
                     // Check if part are correct fuel
-                    let currentContent = current.ressources;
-                    let neededRessources = stack.ressources;
-                    if (!currentContent.equals(neededRessources)) {
+                    if (!compareSimpleArray(current.ressources, stack.ressources)) {
                         continue;
                     }
                 }
@@ -172,7 +170,7 @@ function generateTanksStacks(tanks, adapters, maxParts) {
 
         for (let stacksListIdsKey in stacksListIds) {
 
-            if(local_stack_id.sort().join('---') === stacksListIds[stacksListIdsKey].sort().join('---')) {
+            if(compareSimpleArray(local_stack_id, stacksListIds[stacksListIdsKey])) {
 
                 return true;
             }
@@ -184,20 +182,20 @@ function generateTanksStacks(tanks, adapters, maxParts) {
     // Final testing and sorting of stacks
     let CleanSubOptimals = function(localStack, stacksList) {
 
-        if (localStack.ressources == undefined) {
+        if (localStack.ressources === undefined) {
             localStack.ressources = ['none'];
         }
         let key_ressource = localStack.ressources.sort().join('--');
         let key_top = localStack.stackable.top;
         let key_bottom = localStack.stackable.bottom;
 
-        if (stacksList[key_ressource] == undefined)
+        if (stacksList[key_ressource] === undefined)
             stacksList[key_ressource] = {}
 
-        if (stacksList[key_ressource][key_top] == undefined)
+        if (stacksList[key_ressource][key_top] === undefined)
             stacksList[key_ressource][key_top] = {}
 
-        if (stacksList[key_ressource][key_top][key_bottom] == undefined)
+        if (stacksList[key_ressource][key_top][key_bottom] === undefined)
             stacksList[key_ressource][key_top][key_bottom] = []
 
         for (let stacksListKey in stacksList[key_ressource][key_top][key_bottom]) {
