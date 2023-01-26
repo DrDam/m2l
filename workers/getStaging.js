@@ -1,5 +1,7 @@
 importScripts('../lib/models.js','../lib/lib.js');
 
+"use strict";
+
 /******************/
 /* Init Variables */
 /******************/
@@ -330,6 +332,7 @@ function make_stage_item(start_stage_atm, stackParts) {
         fuelStack.mass.empty = 0;
         fuelStack.info.cost = 0;
         fuelStack.nb = 0;
+        fuelStack.stackable = engine.stackable;
     }
 
     // Get Engine parameters.

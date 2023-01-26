@@ -1,22 +1,22 @@
 
+"use strict";
+
 // Global Variables
-var computationData = {};
-var PartToCalculation = {};
+let computationData = {};
+const PartToCalculation = {};
 PartToCalculation.decouplers = [];
 PartToCalculation.engines = [];
 PartToCalculation.fuelable = [];
-var collection = {};
-var SelectedParts = {};
+const collection = {};
+let SelectedParts = {};
 
 // Initialize variables
-var config_count = 0;
-var valid_count = 0;
-var result_id = 0;
-var GeneratedStackCollection = 'all';
-var GeneratedStackSize = 0;
+let config_count = 0;
+let valid_count = 0;
+let result_id = 0;
 
 // Init worker variable
-var master;
+let master;
 
 // Main Wrapper
 (function ($) {
@@ -30,7 +30,7 @@ var master;
 
         // Populate CU size select
         $.each(Sizes, function (i, item) {
-            var data = {
+            let data = {
                 value: item.id,
                 text: item.label
             };
@@ -43,7 +43,7 @@ var master;
         // Populate "simple" part selector
         $('#parts').append($('<option>', { value: 'all', text: 'all', selected: 'selected' }));
         $.each(providers, function (i, item) {
-            var data = {
+            let data = {
                 value: item,
                 text: item
             };
@@ -52,7 +52,7 @@ var master;
 
         // Populate "SOI"
         $.each(SOI, function (i, item) {
-            var data = {
+            let data = {
                 value: i,
                 text: item.Name
             };
@@ -70,27 +70,25 @@ var master;
         })
 
         // Populate "advanced" part selector
-        var domParent = '#advanced_part_list';
+        let domParent = '#advanced_part_list';
         // wait data gathering.
         setTimeout(() => {
-            $.get('../tpl/partList.mst', function (data) {
-                var partListTpl = data;
-
+            $.get('../tpl/partList.mst', function (partListTpl) {
                 // Generate Advanced part selection
-                for (var category in Parts) {
-                    part_category = [];
-                    for (var part_item in Parts[category]) {
-                        var part = Parts[category][part_item];
+                for (let category in Parts) {
+                    let part_category = [];
+                    for (let part_item in Parts[category]) {
+                        let part = Parts[category][part_item];
                         part_category.push({ name: part.name, id: part.id, provider: part.provider });
                     }
 
-                    var html = Mustache.render(partListTpl, { category: category, parts: part_category });
+                    let html = Mustache.render(partListTpl, { category: category, parts: part_category });
                     $(domParent).append(html);
                 }
 
                 // Add interactions on advanced part selection
                 $('.part-category').click(function () {
-                    var ref = $(this).attr('data-ref');
+                    let ref = $(this).attr('data-ref');
                     $('ul[data-ref=' + ref + ']').toggle();
                     if ($(this).hasClass('closed')) {
                         $(this).removeClass('closed');
@@ -117,7 +115,7 @@ var master;
 
         // Disable "Dangerous features
         $('.warning_field_set:checkbox').change(function () {
-            var check = $(this).prop('checked');
+            let check = $(this).prop('checked');
 
             if(check === false) {
                 $(this).parents('fieldset').find(".fieldset_content").addClass('fieldset_disabled');
@@ -149,10 +147,8 @@ var master;
             // Kill Calculation
             master.terminate();
             console.log('END Calculations at ' + new Date());
-            $('#stop').prop('disabled', true);
-            $('#start').prop('disabled', false);
-            $('#start').addClass('btn-danger').removeClass('btn-secondary');
-            $('#stop').addClass('btn-secondary').removeClass('btn-success');
+            $('#stop').prop('disabled', true).addClass('btn-secondary').removeClass('btn-success');
+            $('#start').prop('disabled', false).addClass('btn-danger').removeClass('btn-secondary');
         });
 
         /*******************************/
@@ -160,19 +156,19 @@ var master;
         /*****************************/
 
         // Table initialisation
-        var resultTable = null;
+        let resultTable = null;
         result_id = 0;
 
         // Prepare stage templating
-        var stageTPL = null;
+        let stageTPL = null;
         $.get('tpl/stages.mst', function (data) {
             stageTPL = data;
         }, 'text');
-        var cuTPL = null;
+        let cuTPL = null;
         $.get('tpl/cu.mst', function (data) {
             cuTPL = data;
         }, 'text');
-        var cuHTML = null;
+        let cuHTML = null;
 
         /********************************/
         /********************************/
@@ -192,13 +188,11 @@ var master;
             result_id = 0;
 
             // Set Start Time
-            var startTime = new Date();
+            let startTime = new Date();
 
             // Manage Start / Stop buttons
-            $('#start').prop('disabled', true);
-            $('#stop').prop('disabled', false);
-            $('#start').addClass('btn-secondary').removeClass('btn-danger');
-            $('#stop').addClass('btn-success').removeClass('btn-secondary');
+            $('#start').prop('disabled', true).addClass('btn-secondary').removeClass('btn-danger');
+            $('#stop').prop('disabled', false).addClass('btn-success').removeClass('btn-secondary');
 
             $('#results').show();
 
@@ -222,18 +216,18 @@ var master;
             resultTable.clear().draw();
 
             // Get form values
-            var elems = event.currentTarget.elements;
-            var collection_name = '';
+            let elems = event.currentTarget.elements;
+            let collection_name = '';
 
             // Filter parts
-            var part_mode = elems.part_mode.value;
+            let part_mode = elems.part_mode.value;
             SelectedParts = {};
             if (part_mode === 'part_collection_simple') {
                 collection_name = elems.parts_collection.value;
                 if (collection_name !== 'all') {
-                    for (var part_group in Parts) {
+                    for (let part_group in Parts) {
                         SelectedParts[part_group] = [];
-                        for (var part_id in Parts[part_group]) {
+                        for (let part_id in Parts[part_group]) {
                             if (Parts[part_group][part_id].provider === collection_name) {
                                 SelectedParts[part_group].push(clone(Parts[part_group][part_id]));
                             }
@@ -247,17 +241,17 @@ var master;
             else {
                 $.each(elems.partList, function (i, item) {
                     if ($(item).prop('checked')) {
-                        var box = $(this).val().split('--');
+                        let box = $(this).val().split('--');
                         if (!collection[box[0]]) {
                             collection[box[0]] = {};
                         }
                         collection[box[0]][box[1]] = box[1];
                     }
                 });
-                for (var part_category in Parts) {
+                for (let part_category in Parts) {
                     SelectedParts[part_category] = [];
-                    for (var key in Parts[part_category]) {
-                        var part = Parts[part_category][key];
+                    for (let key in Parts[part_category]) {
+                        let part = Parts[part_category][key];
                         if (collection[part_category] && collection[part_category][part.id]) {
                             SelectedParts[part_category].push(clone(Parts[part_category][key]));
                         }
@@ -269,11 +263,11 @@ var master;
             /* Init calculation variables */
             /******************************/
 
-            var CU = {};
+            let CU = {};
             CU.mass = parseFloat(elems.Mu.value);
             CU.size = elems.sizeCU.value;
 
-            var rocket = {};
+            let rocket = {};
             rocket.dv = {
                 target: parseFloat(elems.DvTarget.value),
             };
@@ -284,10 +278,10 @@ var master;
                 max: (elems.Tmax.value != '') ? parseFloat(elems.Tmax.value) : undefined,
                 spread: parseFloat(elems.Tspread.value),
             };
-            var debug_status = elems.debug.checked;
-            var nbWorkers = parseInt(elems.nbworker.value);
+            let debug_status = elems.debug.checked;
+            let nbWorkers = parseInt(elems.nbworker.value);
 
-            var simu = {};
+            let simu = {};
             simu.nbWorker = nbWorkers;
           //  simu.step = parseInt(elems.Step.value);
             simu.maxTanks = parseInt(elems.nbTanks.value);
@@ -350,8 +344,8 @@ var master;
                 radials: computationData.simu.maxRadial,
             });
             engineWorker.addEventListener('message', function (e) {
-                var result = e.data;
-                var channel = result.channel;
+                let result = e.data;
+                let channel = result.channel;
                 if (channel === 'nb') {
                     let nb = result.nb;
                     $('#message .nb_engines').html(nb);
@@ -381,8 +375,8 @@ var master;
                 maxTanks: computationData.simu.maxTanks,
             });
             fuelTankWorker.addEventListener('message', function (e) {
-                var result = e.data;
-                var channel = result.channel;
+                let result = e.data;
+                let channel = result.channel;
                 if (channel === 'nb') {
                     let nb = result.nb;
                     $('#message .nb_fuel').html(nb);
@@ -427,9 +421,9 @@ var master;
             console.log('Search Rockets '  + new Date());
 
             master = new Worker("workers/master.js");
-            var master_id = "master";
+            let master_id = "master";
 
-            var master_data = clone(computationData);
+            let master_data = clone(computationData);
             master.postMessage({
                 channel: 'create',
                 parts: PartToCalculation,
@@ -438,18 +432,18 @@ var master;
             });
 
             master.addEventListener('message', function (e) {
-                var result = e.data;
-                var channel = result.channel;
+                let result = e.data;
+                let channel = result.channel;
                 if (channel === 'result') {
                     //console.log(e.data.output);
-                    var dataToTable = e.data.rocket;
+                    let dataToTable = e.data.rocket;
                     dataToTable.cu = computationData.cu;
                     dataToTable.cuHTML = cuHTML;
                     valid_count++;
                     updateDom(dataToTable);
                 }
                 if (channel === 'wait') {
-                    var master_id = result.id;
+                    let master_id = result.id;
                     // If Master has end all is processing, kill it
                     DEBUG.send(master_id + ' # Send wait');
                     master.postMessage({ channel: 'stop' });
@@ -458,14 +452,12 @@ var master;
                     updateCounter();
                 }
                 if (channel === 'killMe') {
-                    var id_to_kill = result.id;
+                    let id_to_kill = result.id;
                     DEBUG.send(id_to_kill + ' # END');
                     master = undefined;
                     console.log('END Calculations at ' + new Date());
-                    $('#stop').prop('disabled', true);
-                    $('#start').prop('disabled', false);
-                    $('#start').addClass('btn-danger').removeClass('btn-secondary');
-                    $('#stop').addClass('btn-secondary').removeClass('btn-success');
+                    $('#stop').prop('disabled', true).addClass('btn-secondary').removeClass('btn-success');
+                    $('#start').prop('disabled', false).addClass('btn-danger').removeClass('btn-secondary');
                 }
             });
             master.postMessage({ channel: "run", data: master_data });
@@ -475,13 +467,13 @@ var master;
         // Add a row in table
         function updateDom(data) {
             result_id++;
-            var mass = round(data.totalMass + data.cu.mass);
-            var nbStages = data.nbStages;
-            var dv = round(data.totalDv, 2);
-            var Cu_part = round(round(data.cu.mass / mass, 4) * 100, 2);
-            var count = data.nb;
-            var cost = data.cost;
-            var StagesHTML = '<div class="stagesDetails">';
+            let mass = round(data.totalMass + data.cu.mass);
+            let nbStages = data.nbStages;
+            let dv = round(data.totalDv, 2);
+            let Cu_part = round(round(data.cu.mass / mass, 4) * 100, 2);
+            let count = data.nb;
+            let cost = data.cost;
+            let StagesHTML = '<div class="stagesDetails">';
             StagesHTML += data.cuHTML;
             StagesHTML += printStages(data.stages, mass, dv, result_id);
             StagesHTML += "</div>";
@@ -492,10 +484,10 @@ var master;
 
         // Render stage to table
         function printStages(stages, fullMass, fullDv, result_id) {
-            var output = '';
-            for (var i in stages) {
-                var stage = stages[i];
-                var stageData = {};
+            let output = '';
+            for (let i in stages) {
+                let stage = stages[i];
+                let stageData = {};
                 stageData.resultId = result_id;
                 stageData.stage_id = parseInt(i) + 1;
                 stageData.stageDv = round(stage.caracts.stageDv);
@@ -510,9 +502,9 @@ var master;
                 stageData.engine = stage.parts.engine;
                 //console.log( stage.parts.tanks);
                 stageData.tanks = [];
-                var tanks = stage.parts.tanks;
-                for (var j in tanks) {
-                    var tank = tanks[j];
+                let tanks = stage.parts.tanks;
+                for (let j in tanks) {
+                    let tank = tanks[j];
                     if(tank.name === undefined) {
                         continue;
                     }
@@ -522,12 +514,12 @@ var master;
                     stageData.tanks.push({ tank_name: tank.name, tank_nb : tank.nb});
                 }
                 stageData.command = [];
-                var command = stage.parts.commandModule;
-                for (var k in command) {
-                    var part = command[k];
+                let command = stage.parts.commandModule;
+                for (let k in command) {
+                    let part = command[k];
                     stageData.command.push({ part_name: part.name });
                 }
-                var rendered = Mustache.render(stageTPL, stageData);
+                let rendered = Mustache.render(stageTPL, stageData);
                 output += rendered;
             }
 
@@ -536,18 +528,18 @@ var master;
 
         // Render CU stage
         function makeCuHtml(cu, sizes) {
-            var output = '';
+            let output = '';
 
-            var cuData = {};
+            let cuData = {};
             cuData.mass = cu.mass;
             cuData.size = '';
-            for (var i in sizes) {
+            for (let i in sizes) {
                 if (sizes[i].id === cu.size) {
                     cuData.size = sizes[i].label;
                 }
             }
 
-            var rendered = Mustache.render(cuTPL, cuData);
+            let rendered = Mustache.render(cuTPL, cuData);
             output += rendered;
 
             return output;
@@ -555,7 +547,7 @@ var master;
 
         function updateCounter() {
             config_count++;
-            var message = valid_count + " valid configrations among " + config_count + " tested.";
+            let message = valid_count + " valid configrations among " + config_count + " tested.";
             $('#message').html(message);
         }
 

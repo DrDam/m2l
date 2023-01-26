@@ -1,4 +1,7 @@
 importScripts('../lib/lib.js');
+
+"use strict";
+
 if (typeof Worker === 'undefined') {
     // Load subworker only if browser not support natively
     importScripts("../lib/subworkers.js");

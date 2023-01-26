@@ -1,5 +1,7 @@
 importScripts('../lib/lib.js');
 
+"use strict";
+
 /******************/
 /* Init Variables */
 /******************/
