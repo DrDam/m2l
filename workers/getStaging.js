@@ -237,7 +237,7 @@ function trytoMakeStage(Parts, Mtot, Mdry, DvTarget, twr) {
 
     // Try to find the correct stage ignition condition.
     let ignitionConditions = getIgnitionConditions(engineCurve, Mtot, Mdry, DvTarget);
-
+    console.log(ignitionConditions);
     // Get Twr on ignition.
     let curveDataIgnition = getCaractForAtm(engineCurve, ignitionConditions.pressure);
     let twrIgnition = curveDataIgnition.Thrust / Global_data.SOI.Go / Mtot;
@@ -251,6 +251,7 @@ function trytoMakeStage(Parts, Mtot, Mdry, DvTarget, twr) {
         return false;
     }
     else {
+
         // Format Stage.
         return make_stage_item(ignitionConditions.pressure, Parts);
     }
@@ -277,15 +278,18 @@ function getIgnitionConditions(engineCurve, Mtot, Mdry, DvTarget) {
 
         // With the ignition pressure, get Engine data, and find the Dv produced.
         let curveDataIgnition = getCaractForAtm(engineCurve, ignitionPressure);
-        let DvIgnition = curveDataIgnition.ISP * Global_data.SOI.Go * Math.log(Mtot / Mdry);
+        let DvIgnition = round(curveDataIgnition.ISP * Global_data.SOI.Go * Math.log(Mtot / Mdry));
 
         // Get Trajectory state on Engine ignition.
         let trajectoryState = getTrajectoryState(DvTarget - DvIgnition, Global_data.trajectory);
 
         // Return local pressure & twr Reduction.
         return {
+            alt: trajectoryState.alt,
             pressure : getLocalPressureFromAlt(trajectoryState.alt, Global_data.SOI.atmosphere),
-            twrReduction: trajectoryState.twrReduction
+            twrReduction: trajectoryState.twrReduction,
+            dvIgnition: DvIgnition,
+            dvFromGround: DvTarget - DvIgnition,
         }
     }
 }
@@ -299,7 +303,7 @@ function calculateIgnitionPressure(localPressure, engineCurve, Mtot, Mdry, dvTar
     let curveDataOnGround = getCaractForAtm(engineCurve, localPressure);
 
     // Get Dv in this local pressure
-    let Dv0 = curveDataOnGround.ISP * Global_data.SOI.Go * Math.log(Mtot / Mdry);
+    let Dv0 = round(curveDataOnGround.ISP * Global_data.SOI.Go * Math.log(Mtot / Mdry));
 
     // Estimate local altitude
     let trajectoryState = getTrajectoryState(dvTarget - Dv0, Global_data.trajectory);
