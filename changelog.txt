@@ -1,6 +1,11 @@
 #############
 # Changelog #
 #############
+
+v0.4.4
+- javascript su**s
+- try stabilize models
+
 V0.4.3
 - Add comments in code
 - Update makingHistory engine size
