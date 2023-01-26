@@ -9,7 +9,7 @@ PartToCalculation.engines = [];
 PartToCalculation.fuelable = [];
 const collection = {};
 let SelectedParts = {};
-
+let waitDraw = false;
 // Initialize variables
 let config_count = 0;
 let valid_count = 0;
@@ -479,8 +479,14 @@ let master;
             StagesHTML += printStages(data.stages, mass, dv, result_id);
             StagesHTML += "</div>";
 
-            resultTable.row.add([result_id, nbStages, mass, Cu_part, dv, count, cost, StagesHTML]).draw();
-            updateCounter();
+            resultTable.row.add([result_id, nbStages, mass, Cu_part, dv, count, cost, StagesHTML]);
+
+            // Delay table update
+            if (waitDraw === false) {
+                setTimeout( function() {resultTable.draw(); waitDraw=false}, 500);
+                waitDraw = true;
+                updateCounter();
+            }
         }
 
         // Render stage to table

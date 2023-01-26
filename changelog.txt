@@ -2,6 +2,9 @@
 # Changelog #
 #############
 
+v0.4.5
+- delay table update => Make all the stuff faster !!!!
+
 v0.4.4
 - javascript su**s
 - try stabilize models
