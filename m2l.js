@@ -140,6 +140,7 @@ let master;
         // See Details of a stage
         $('#results table').on('click', 'tbody td', function () {
             $(this).parent().find("td:last-child").toggleClass("show");
+            $('#results table tbody td.show').click(false);
         });
 
         // Binding Stop button

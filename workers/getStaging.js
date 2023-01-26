@@ -55,7 +55,6 @@ self.addEventListener('message', function (e) {
     if (inputs.channel === 'run') {
         cleanData();
         Global_data = inputs.data;
-      //  console.log(Global_data);
         startTime = new Date();
         DEBUG.send(worker_id + ' # run');
         run();
@@ -78,12 +77,7 @@ self.addEventListener('message', function (e) {
  */
 function run() {
 
-    // Mission
-    let SOI = Global_data.SOI;
-    let rocket_dv_target = Global_data.rocket.dv.target;
-
     // Rocket data
-    let twr = Global_data.rocket.twr;
     let rocket_cu = Global_data.cu;
 
     // Add a decoupler
@@ -134,7 +128,7 @@ function run() {
             let StageMFull = StageMDry + MEngineFuel;
 
             // Test if Engine+Cu are not too heavy.
-            let maxMass = getMaxMassInVacuum(engine, twr, SOI);
+            let maxMass = getMaxMassInVacuum(engine);
             if(StageMFull > maxMass) {
                 continue loopEngine;
             }
@@ -148,7 +142,7 @@ function run() {
             if (MEngineFuel > 0) {
 
                 // Try a stage without fuelStack
-                let stage = trytoMakeStage(StageParts, StageMFull, StageMDry, rocket_dv_target, twr);
+                let stage = trytoMakeStage(StageParts, StageMFull, StageMDry);
                 if (stage === false) {
                     self.postMessage({ channel: 'badDesign' });
                 }
@@ -209,7 +203,7 @@ function run() {
                     StageParts.fuelStack = tankStack;
 
                     // Try a stage with this fuelStack
-                    let stage = trytoMakeStage(StageParts, MtFull, MtDry, rocket_dv_target, twr);
+                    let stage = trytoMakeStage(StageParts, MtFull, MtDry);
                     if (stage === false) {
                         self.postMessage({ channel: 'badDesign' });
                         continue;
@@ -231,65 +225,66 @@ function run() {
 /**
  * Test if an engin/tank stack are capable, and format it.
  */
-function trytoMakeStage(Parts, Mtot, Mdry, DvTarget, twr) {
+function trytoMakeStage(StageParts, Mtot, Mdry) {
 
-    let engineCurve = Parts.engine.curve;
+    let engineCurve = StageParts.engine.curve;
 
     // Try to find the correct stage ignition condition.
-    let ignitionConditions = getIgnitionConditions(engineCurve, Mtot, Mdry, DvTarget);
-    console.log(ignitionConditions);
+    let ignitionConditions = getIgnitionConditions(engineCurve, Mtot, Mdry);
+
     // Get Twr on ignition.
     let curveDataIgnition = getCaractForAtm(engineCurve, ignitionConditions.pressure);
-    let twrIgnition = curveDataIgnition.Thrust / Global_data.SOI.Go / Mtot;
+    let twrIgnition = round(curveDataIgnition.Thrust / Global_data.SOI.Go / Mtot, 4);
 
     // Check TWR
-    if (twrIgnition < reduceTwr(twr.min, ignitionConditions.twrReduction) * (1 - (twr.spread / 100))
+    if (twrIgnition < reduceTwr(Global_data.rocket.twr.min, ignitionConditions.twrReduction) * (1 - (Global_data.rocket.twr.spread / 100))
         ||
-        (twr.max !== undefined && twrIgnition > reduceTwr(twr.max, ignitionConditions.twrReduction) * (1 + (twr.spread / 100)))
+        (Global_data.rocket.twr.max !== undefined && twrIgnition > reduceTwr(Global_data.rocket.twr.max, ignitionConditions.twrReduction) * (1 + (Global_data.rocket.twr.spread / 100)))
     ) {
         // Bad design
         return false;
     }
     else {
-
         // Format Stage.
-        return make_stage_item(ignitionConditions.pressure, Parts);
+        return make_stage_item(ignitionConditions.pressure, StageParts);
     }
 }
 
 /**
  * Try to find the "most probable atmospheric pressure" on stage Ignition
  */
-function getIgnitionConditions(engineCurve, Mtot, Mdry, DvTarget) {
+function getIgnitionConditions(engineCurve, Mtot, Mdry) {
 
     // Start with the ground pressure of SOI
     let groundPressure = Global_data.SOI.atmosphere[0].p;
     // If no pressure on ground, don't try to find one...
     if (groundPressure === 0) {
-        return 0;
+        return {
+            pressure : 0,
+            twrReduction: 0,
+        };
     }
     else {
         // First try with ground pressure.
         let ignitionPressure = groundPressure;
         for (let i = 0; i <= 5; i++) {
             // Try to correct Ignition pressure.
-            ignitionPressure = calculateIgnitionPressure(ignitionPressure, engineCurve, Mtot, Mdry, DvTarget);
+          //  console.log(ignitionPressure);
+            ignitionPressure = calculateIgnitionPressure(ignitionPressure, engineCurve, Mtot, Mdry);
         }
 
         // With the ignition pressure, get Engine data, and find the Dv produced.
         let curveDataIgnition = getCaractForAtm(engineCurve, ignitionPressure);
-        let DvIgnition = round(curveDataIgnition.ISP * Global_data.SOI.Go * Math.log(Mtot / Mdry));
+        let DvPossibleAtIgnition = round(curveDataIgnition.ISP * Global_data.SOI.Go * Math.log(Mtot / Mdry));
 
         // Get Trajectory state on Engine ignition.
-        let trajectoryState = getTrajectoryState(DvTarget - DvIgnition, Global_data.trajectory);
+        let trajectoryState = getTrajectoryState(Global_data.rocket.dv.target - DvPossibleAtIgnition, Global_data.trajectory);
 
+        let localPressure = getLocalPressureFromAlt(trajectoryState.alt, Global_data.SOI.atmosphere);
         // Return local pressure & twr Reduction.
         return {
-            alt: trajectoryState.alt,
-            pressure : getLocalPressureFromAlt(trajectoryState.alt, Global_data.SOI.atmosphere),
+            pressure : (localPressure <= 0) ? 0 : localPressure,
             twrReduction: trajectoryState.twrReduction,
-            dvIgnition: DvIgnition,
-            dvFromGround: DvTarget - DvIgnition,
         }
     }
 }
@@ -297,7 +292,11 @@ function getIgnitionConditions(engineCurve, Mtot, Mdry, DvTarget) {
 /**
  * Try to estimate a more "probable" atmospheric pressure & twr reduction.
  */
-function calculateIgnitionPressure(localPressure, engineCurve, Mtot, Mdry, dvTarget) {
+function calculateIgnitionPressure(localPressure, engineCurve, Mtot, Mdry) {
+
+    if(localPressure < 0) {
+        localPressure = 0;
+    }
 
     // Get ISP from local pressure
     let curveDataOnGround = getCaractForAtm(engineCurve, localPressure);
@@ -306,13 +305,13 @@ function calculateIgnitionPressure(localPressure, engineCurve, Mtot, Mdry, dvTar
     let Dv0 = round(curveDataOnGround.ISP * Global_data.SOI.Go * Math.log(Mtot / Mdry));
 
     // Estimate local altitude
-    let trajectoryState = getTrajectoryState(dvTarget - Dv0, Global_data.trajectory);
+    let trajectoryState = getTrajectoryState(Global_data.rocket.dv.target - Dv0, Global_data.trajectory);
 
     // Estimate local pressure
     let atmPressureIgnition = getLocalPressureFromAlt(trajectoryState.alt, Global_data.SOI.atmosphere);
 
     // Return mean between the two (better model asymptote).
-    return (atmPressureIgnition + localPressure) /2
+    return round((atmPressureIgnition + localPressure) /2);
 }
 
 
@@ -357,8 +356,10 @@ function make_stage_item(start_stage_atm, stackParts) {
     let nb = engine.nb + 1 + command.nb + fuelStack.nb;
     let bottomSize = (engine.is_radial) ? fuelStack.stackable.bottom : engine.stackable.bottom;
 
+
+
     // Return formated data.
-    return {
+    let stage = {
         parts: {
             decoupler: decoupler.name,
             commandModule: command.stack,
@@ -384,6 +385,8 @@ function make_stage_item(start_stage_atm, stackParts) {
             bottom: bottomSize
         },
     };
+
+    return stage;
 
 }
 
@@ -440,8 +443,10 @@ function getDecoupler(size) {
 /**
  * Return TWR to get MaxMass acceptable in vacuum of SOI.
  */
-function getMaxMassInVacuum(engine, twr, SOI){
+function getMaxMassInVacuum(engine){
+    let out_trajectory = getTrajectoryState(100000000, Global_data.trajectory);
     let curve = getCaractForAtm(engine.curve, 0);
-    return curve.Thrust / SOI.Go / ( twr.min - (twr.spread / 100));
+    let corrected_twr = reduceTwr(Global_data.rocket.twr.min, out_trajectory.twrReduction) * (1 - (Global_data.rocket.twr.spread / 100));
+    return curve.Thrust / Global_data.SOI.Go / corrected_twr;
 }
 

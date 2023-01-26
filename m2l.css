@@ -158,7 +158,6 @@ ul.part-list-items > li {
   height: auto !important;
   padding: 5px 10px !important;
   border-top: 1px solid black;
-  pointer-events:none;
 }
 
 
