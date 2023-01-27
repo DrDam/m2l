@@ -135,14 +135,6 @@ function run() {
                 continue loopEngine;
             }
 
-            if (Global_data.rocket.max !== undefined) {
-                // Not any mass in stage to respect max DV on ground (worst thrust).
-                let minMass = getMinMassInSOI(stage, Global_data.rocket.twr, Global_data.SOI, Global_data.trajectory);
-                if (StageMFull < minMass) {
-                    continue;
-                }
-            }
-
             // Add stage to stack.
             StageData.stage = stage;
 
