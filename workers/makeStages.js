@@ -1,6 +1,6 @@
 importScripts('../lib/models.js','../lib/lib.js');
 
-'use strict';
+"use strict";
 
 /******************/
 /* Init Variables */
