@@ -9,6 +9,8 @@
             "empty": 0.2,
             "full": 0.2
         },
+        "only_booster": false,
+        "is_radial": false,
         "stackable": {
             "top": "2",
             "bottom": "3"
@@ -24,6 +26,8 @@
             "empty": 0.04,
             "full": 0.04
         },
+        "only_booster": false,
+        "is_radial": false,
         "stackable": {
             "top": "0",
             "bottom": "1"
@@ -39,6 +43,8 @@
             "empty": 0.05,
             "full": 0.05
         },
+        "only_booster": false,
+        "is_radial": false,
         "stackable": {
             "top": "0",
             "bottom": "1"
@@ -54,6 +60,8 @@
             "empty": 0.08,
             "full": 0.08
         },
+        "only_booster": false,
+        "is_radial": false,
         "stackable": {
             "top": "1",
             "bottom": "2"

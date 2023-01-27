@@ -1,4 +1,4 @@
-importScripts('../lib/lib.js');
+importScripts('../lib/models.js','../lib/lib.js');
 /******************/
 /* Init Variables */
 /******************/
@@ -22,6 +22,7 @@ self.addEventListener('message', function (e) {
         Parts = inputs.parts;
         twr = inputs.twr;
         SOI = inputs.soi;
+        trajectory = inputs.trajectory,
         DEBUG.send('Generate Stages # created');
     }
 
@@ -63,7 +64,7 @@ function makeStage() {
         let engine = Parts.engines[engineKey];
 
         // If engine mass is too heavy.
-        let maxMass = getMaxMassInVacuum(engine, twr, SOI)
+        let maxMass = getMaxMassInVacuum(engine, twr, SOI, trajectory)
         if(maxMass < engine.mass.full) {
             continue;
         }
@@ -103,7 +104,7 @@ function makeStage() {
                 return null;
             }
 
-            let Mt = engine.mass.full + FuelableStack[tankKey].info.mass.full
+            let Mt = engine.mass.full + FuelableStack[tankKey].mass.full
 
             // If engine + fuel are too heavy.
             if(maxMass < Mt) {
@@ -140,19 +141,19 @@ function processStage(engine, fuelStack) {
     if(fuelStack !== undefined) {
 
         // manage stackable
-        topsize = fuelStack.info.stackable.top;
-        stage.stackable.top = fuelStack.info.stackable.top;
+        topsize = fuelStack.stackable.top;
+        stage.stackable.top = fuelStack.stackable.top;
 
         if(engine.is_radial) {
-            stage.stackable.bottom  = fuelStack.info.stackable.bottom;
+            stage.stackable.bottom  = fuelStack.stackable.bottom;
         }
 
         stage.parts.fuelStack = fuelStack.parts;
         stage.cost = round(stage.cost + fuelStack.info.cost);
-        stage.nb = round(stage.nb + fuelStack.info.nb);
+        stage.nb = round(stage.nb + fuelStack.nb);
 
-        stage.mass.full = round(stage.mass.full + fuelStack.info.mass.full);
-        stage.mass.empty = round(stage.mass.empty + fuelStack.info.mass.empty);
+        stage.mass.full = round(stage.mass.full + fuelStack.mass.full);
+        stage.mass.empty = round(stage.mass.empty + fuelStack.mass.empty);
         //      stage.provider = stage.provider.concat(stageParts.fuelStack.info.provider);
         //      stage.techs = stage.techs.concat(stageParts.fuelStack.info.techs);
 

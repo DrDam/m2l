@@ -13,6 +13,7 @@
             "top": "0",
             "bottom": "1"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -32,6 +33,7 @@
             "top": false,
             "bottom": false
         },
+        "only_booster": false,
         "is_radial": true,
         "ressources": [
             "LiquidFuel",
@@ -52,6 +54,7 @@
             "top": false,
             "bottom": false
         },
+        "only_booster": false,
         "is_radial": true,
         "ressources": [
             "LiquidFuel",
@@ -72,6 +75,7 @@
             "top": "1",
             "bottom": "1"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -92,6 +96,7 @@
             "top": "2",
             "bottom": "2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "MonoPropellant"
@@ -111,6 +116,7 @@
             "top": "0",
             "bottom": "0"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "MonoPropellant"
@@ -130,6 +136,7 @@
             "top": "1",
             "bottom": "1"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "MonoPropellant"
@@ -149,6 +156,7 @@
             "top": false,
             "bottom": false
         },
+        "only_booster": false,
         "is_radial": true,
         "ressources": [
             "MonoPropellant"
@@ -168,6 +176,7 @@
             "top": false,
             "bottom": false
         },
+        "only_booster": false,
         "is_radial": true,
         "ressources": [
             "MonoPropellant"
@@ -187,6 +196,7 @@
             "top": "2",
             "bottom": "2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -207,6 +217,7 @@
             "top": "2",
             "bottom": "2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -227,6 +238,7 @@
             "top": "2",
             "bottom": "2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -247,6 +259,7 @@
             "top": "2",
             "bottom": "2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -267,6 +280,7 @@
             "top": "3",
             "bottom": "3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -287,6 +301,7 @@
             "top": "3",
             "bottom": "3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -307,6 +322,7 @@
             "top": "3",
             "bottom": "3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -327,6 +343,7 @@
             "top": "mk2",
             "bottom": "mk3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -347,6 +364,7 @@
             "top": "2",
             "bottom": "mk3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -367,6 +385,7 @@
             "top": "2",
             "bottom": "mk3"
         },
+        "only_booster": true,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -387,6 +406,7 @@
             "top": "1",
             "bottom": "2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -407,6 +427,7 @@
             "top": "1",
             "bottom": "2"
         },
+        "only_booster": true,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -427,6 +448,7 @@
             "top": "mk3",
             "bottom": "3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -447,6 +469,7 @@
             "top": "0",
             "bottom": "0"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -467,6 +490,7 @@
             "top": "1",
             "bottom": "1"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -487,6 +511,7 @@
             "top": "1",
             "bottom": "1"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -507,6 +532,7 @@
             "top": "1",
             "bottom": "1"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -527,6 +553,7 @@
             "top": "1",
             "bottom": "1"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -547,6 +574,7 @@
             "top": "0",
             "bottom": "0"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -566,6 +594,7 @@
             "top": "1",
             "bottom": "mk2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -586,6 +615,7 @@
             "top": "1",
             "bottom": "mk2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -606,6 +636,7 @@
             "top": "mk2",
             "bottom": "mk2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -626,6 +657,7 @@
             "top": "mk2",
             "bottom": "mk2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -645,6 +677,7 @@
             "top": "mk2",
             "bottom": "mk2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -665,6 +698,7 @@
             "top": "mk2",
             "bottom": "mk2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -684,6 +718,7 @@
             "top": "mk2",
             "bottom": "mk2"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "MonoPropellant"
@@ -703,6 +738,7 @@
             "top": "3",
             "bottom": "3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -723,6 +759,7 @@
             "top": "3",
             "bottom": "3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -743,6 +780,7 @@
             "top": "3",
             "bottom": "3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel",
@@ -763,6 +801,7 @@
             "top": "3",
             "bottom": "3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -782,6 +821,7 @@
             "top": "3",
             "bottom": "3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -801,6 +841,7 @@
             "top": "3",
             "bottom": "3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"
@@ -820,6 +861,7 @@
             "top": "3",
             "bottom": "3"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "MonoPropellant"
@@ -839,6 +881,7 @@
             "top": "0",
             "bottom": "0"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "XenonGas"
@@ -858,6 +901,7 @@
             "top": "0",
             "bottom": "0"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "XenonGas"
@@ -877,6 +921,7 @@
             "top": false,
             "bottom": false
         },
+        "only_booster": false,
         "is_radial": true,
         "ressources": [
             "XenonGas"
@@ -896,6 +941,7 @@
             "top": "1",
             "bottom": "1"
         },
+        "only_booster": false,
         "is_radial": false,
         "ressources": [
             "LiquidFuel"

@@ -1,4 +1,7 @@
 importScripts('../lib/lib.js');
+
+"use strict";
+
 /******************/
 /* Init Variables */
 /******************/
@@ -69,8 +72,8 @@ function generateTanksStacks(tanks, adapters, maxParts) {
             // select part
             let current = parts[i];
 
-            //@TODO : manage radials ...
-            if(current.is_radial) {
+            // make Engine cluster adapter tank away for now
+            if(current.stackable.bottom_number !== undefined) {
                 continue;
             }
 
@@ -80,16 +83,20 @@ function generateTanksStacks(tanks, adapters, maxParts) {
                 stack.id = [];
                 stack.parts = [];
                 stack.info = {};
-                stack.info.mass = {};
-                stack.info.mass.empty = 0;
-                stack.info.mass.full = 0;
+                stack.mass = {};
+                stack.mass.empty = 0;
+                stack.mass.full = 0;
                 stack.info.cost = 0;
-                stack.info.stackable = {};
-                stack.info.stackable.top = current.stackable.top;
-                stack.info.stackable.bottm = undefined;
-                stack.info.provider = {};
-                stack.info.provider[current.provider] = current.provider;
-                stack.info.nb = 0;
+                stack.stackable = {};
+                stack.stackable.top = current.stackable.top;
+                stack.stackable.bottm = undefined;
+                stack.info.provider = [];
+                stack.info.provider.push(current.provider);
+                stack.info.tech = [];
+                stack.info.tech.push(current.tech);
+                stack.nb = 0;
+                stack.only_booster = false;
+                stack.only_radial = false;
             }
             else {
                 // Check part size
@@ -101,14 +108,12 @@ function generateTanksStacks(tanks, adapters, maxParts) {
             // Manage fuelType
             if (current.ressources !== undefined) {
                 // First Stack part with fuel
-                if (stack.info.ressources === undefined) {
-                    stack.info.ressources = current.ressources;
+                if (stack.ressources === undefined) {
+                    stack.ressources = current.ressources;
                 }
                 else {
                     // Check if part are correct fuel
-                    let currentContent = current.ressources;
-                    let neededRessources = stack.info.ressources;
-                    if (!currentContent.equals(neededRessources)) {
+                    if (!compareSimpleArray(current.ressources, stack.ressources)) {
                         continue;
                     }
                 }
@@ -122,22 +127,35 @@ function generateTanksStacks(tanks, adapters, maxParts) {
             // add Part to stack
             let localStack = clone(stack);
             localStack.parts.push({ id: current.id, name: current.name, provider: current.provider });
+            localStack.nb++;
 
             // add mass & provider to stack
-            localStack.info.mass.full = round( localStack.info.mass.full + current.mass.full,4);
-            localStack.info.mass.empty = round( localStack.info.mass.empty + current.mass.empty,4);
-            localStack.info.provider[current.provider] = current.provider;
+            localStack.mass.full = round( localStack.mass.full + current.mass.full,4);
+            localStack.mass.empty = round( localStack.mass.empty + current.mass.empty,4);
+            localStack.info.provider.push(current.provider);
+            localStack.info.provider = localStack.info.provider.filter(onlyUnique);
+            localStack.info.tech.push(current.tech);
+            localStack.info.tech = localStack.info.tech.filter(onlyUnique);
             localStack.info.cost = round( localStack.info.cost + current.cost);
+            localStack.only_booster = (localStack.only_booster === true || current.only_booster === true);
+            localStack.only_radial = !(localStack.only_radial === false || current.is_radial === false);
 
             // push stack
-            localStack.info.stackable.bottom = current.stackable.bottom;
-            localStack.info.nb = localStack.parts.length;
+            localStack.stackable.bottom = current.stackable.bottom;
+
+            if(current.stackable.bottom_number !== undefined) {
+                localStack.stackable.bottom_number = current.stackable.bottom_number;
+            }
 
             stacksListIds.push(localStack.id);
             localStack.id.push(current.id);
 
-            // Manage suboptimals  LT_400+LT_400 = LT_800
-            stacksList = CleanSubOptimals(localStack, stacksList);
+            // If stack is only_radial, don't keep it
+            if(localStack.only_radial !== true) {
+
+                // Manage suboptimals  LT_400+LT_400 = LT_800
+                stacksList = CleanSubOptimals(localStack, stacksList);
+            }
 
             if (localStack.parts.length < maxParts) {
                 generateStacks(current.stackable.bottom, localStack);
@@ -151,12 +169,12 @@ function generateTanksStacks(tanks, adapters, maxParts) {
             return false;
         }
 
-        local_stack_id = clone(stack_id);
+        let local_stack_id = clone(stack_id);
         local_stack_id.push(current_id);
 
         for (let stacksListIdsKey in stacksListIds) {
 
-            if(local_stack_id.sort().join('---') === stacksListIds[stacksListIdsKey].sort().join('---')) {
+            if(compareSimpleArray(local_stack_id, stacksListIds[stacksListIdsKey])) {
 
                 return true;
             }
@@ -168,28 +186,29 @@ function generateTanksStacks(tanks, adapters, maxParts) {
     // Final testing and sorting of stacks
     let CleanSubOptimals = function(localStack, stacksList) {
 
-        if (localStack.info.ressources == undefined) {
-            localStack.info.ressources = ['none'];
+        if (localStack.ressources === undefined) {
+            localStack.ressources = ['none'];
         }
-        let key_ressource = localStack.info.ressources.sort().join('--');
-        let key_bottom = localStack.info.stackable.bottom;
+        let key_ressource = localStack.ressources.sort().join('--');
+        let key_bottom = localStack.stackable.bottom;
 
-        if (stacksList[key_ressource] == undefined)
+        if (stacksList[key_ressource] === undefined)
             stacksList[key_ressource] = {}
 
-        if (stacksList[key_ressource][key_bottom] == undefined)
+        if (stacksList[key_ressource][key_bottom] === undefined)
             stacksList[key_ressource][key_bottom] = []
-
 
         for (let stacksListKey in stacksList[key_ressource][key_bottom]) {
 
             let testStack = stacksList[key_ressource][key_bottom][stacksListKey];
 
             // If masses are identicals.
-            if (testStack.info.mass.full === localStack.info.mass.full
-                && testStack.info.mass.empty === localStack.info.mass.empty ) {
-                // Keep the one with the less parts.
-                if (localStack.info.nb >= testStack.nb) {
+            if (testStack.mass.full === localStack.mass.full
+                && testStack.mass.empty === localStack.mass.empty
+                && testStack.is_radial === localStack.is_radial
+                && testStack.only_booster === localStack.only_booster) {
+                // Keep the one with lesser parts.
+                if (localStack.nb >= testStack.nb) {
                     return stacksList;
                 }
                 else {
@@ -206,6 +225,8 @@ function generateTanksStacks(tanks, adapters, maxParts) {
 
     // Generate all stacks !
     generateStacks();
+
+    // console.log(stacksList);
 
     // merge Ressources None in other categories
     let adaptersStack = clone(stacksList.none);
@@ -251,7 +272,7 @@ function sortStacks(stacks) {
 function sortByMass(array) {
     return array.sort(function(a, b)
     {
-        var x = a.info.mass.full; var y = b.info.mass.full;
+        var x = a.mass.full; var y = b.mass.full;
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 }

@@ -1,5 +1,7 @@
 importScripts('../lib/models.js','../lib/lib.js');
 
+"use strict";
+
 /******************/
 /* Init Variables */
 /******************/
@@ -11,9 +13,9 @@ let Parts = {};
 let Global_status = 'run';
 let worker_id;
 
-/*********************/
-/* Utility functions */
-/*********************/
+/************************************/
+/* Utility communication functions */
+/**********************************/
 
 /**
  * Refresh Temporary Results Stack & event listener
@@ -53,7 +55,9 @@ self.addEventListener('message', function (e) {
     if (inputs.channel === 'run') {
         cleanData();
         Global_data = inputs.data;
+
         // console.log(Global_data);
+
         startTime = new Date();
         DEBUG.send(worker_id + ' # run');
         run();
@@ -126,14 +130,14 @@ function run() {
             let StageMFull = StageMDry + MEngineFuel;
 
             // If "stage + CU" mass is now too high for engine in vacuum (better thrust).
-            let maxMass = getMaxMassInVacuum(stage, Global_data.rocket.twr, Global_data.SOI);
+            let maxMass = getMaxMassInVacuum(stage, Global_data.rocket.twr, Global_data.SOI, Global_data.trajectory);
             if (StageMFull > maxMass) {
                 continue loopEngine;
             }
 
             if (Global_data.rocket.max !== undefined) {
                 // Not any mass in stage to respect max DV on ground (worst thrust).
-                let minMass = getMinMassInSOI(stage, Global_data.rocket.twr, Global_data.SOI);
+                let minMass = getMinMassInSOI(stage, Global_data.rocket.twr, Global_data.SOI, Global_data.trajectory);
                 if (StageMFull < minMass) {
                     continue;
                 }
@@ -143,7 +147,7 @@ function run() {
             StageData.stage = stage;
 
             // Process without fuel Tank.
-            let validatedStage = trytoMakeStage(StageData, Global_data.SOI, StageMFull, StageMDry, Global_data.rocket.dv.target, Global_data.rocket.twr);
+            let validatedStage = trytoMakeStage(StageData, StageMFull, StageMDry);
             if (validatedStage === false) {
                 self.postMessage({channel: 'badDesign'});
             } else {
@@ -163,62 +167,84 @@ function run() {
 /**
  * Try to find the "most probable atmospheric pressure" on stage Ignition
  */
-function getIgnitionPressure(SOI, engineCurve, Mtot, Mdry, DvTarget) {
+function getIgnitionConditions(engineCurve, Mtot, Mdry) {
 
-    if (SOI.groundPressure === 0) {
-        return 0;
+    // Start with the ground pressure of SOI
+    let groundPressure = Global_data.SOI.atmosphere[0].p;
+    // If no pressure on ground, don't try to find one...
+    if (groundPressure === 0) {
+        return {
+            pressure : 0,
+            twrReduction: 0,
+        };
     }
     else {
-        let ignitionPressure = SOI.groundPressure;
+        // First try with ground pressure.
+        let ignitionPressure = groundPressure;
         for (let i = 0; i <= 5; i++) {
-            ignitionPressure = calculateIgnitionPressure(ignitionPressure, engineCurve, SOI, Mtot, Mdry, DvTarget);
+            // Try to correct Ignition pressure.
+            //  console.log(ignitionPressure);
+            ignitionPressure = calculateIgnitionPressure(ignitionPressure, engineCurve, Mtot, Mdry);
         }
 
-        // Calculate Dv produice in engine ignition
+        // With the ignition pressure, get Engine data, and find the Dv produced.
         let curveDataIgnition = getCaractForAtm(engineCurve, ignitionPressure);
-        let DvIgnition = curveDataIgnition.ISP * SOI.Go * Math.log(Mtot / Mdry);
+        let DvPossibleAtIgnition = round(curveDataIgnition.ISP * Global_data.SOI.Go * Math.log(Mtot / Mdry));
 
-        // Estimate Atm condition on ignition of engine => DvAll - DvIgnition => atm0
-        if (DvTarget - DvIgnition > SOI.LowOrbitDv) {
-            return 0;
-        } else {
-            return AtmPressurEstimator(DvTarget - DvIgnition, SOI);
+        // Get Trajectory state on Engine ignition.
+        let trajectoryState = getTrajectoryState(Global_data.rocket.dv.target - DvPossibleAtIgnition, Global_data.trajectory);
 
+        let localPressure = getLocalPressureFromAlt(trajectoryState.alt, Global_data.SOI.atmosphere);
+        // Return local pressure & twr Reduction.
+        return {
+            pressure : (localPressure <= 0) ? 0 : localPressure,
+            twrReduction: trajectoryState.twrReduction,
         }
     }
 }
 
 /**
- * Try to estimate a more "probable" atmospheric pressure one engine ignition.
+ * Try to estimate a more "probable" atmospheric pressure & twr reduction.
  */
-function calculateIgnitionPressure(localPressure, engineCurve, SOI, Mtot, Mdry, dvTarget) {
+function calculateIgnitionPressure(localPressure, engineCurve, Mtot, Mdry) {
+
+    if(localPressure < 0) {
+        localPressure = 0;
+    }
+
     // Get ISP from local pressure
     let curveDataOnGround = getCaractForAtm(engineCurve, localPressure);
-    // Get Theorical Dv in this local pressure
-    let Dv0 = curveDataOnGround.ISP * SOI.Go * Math.log(Mtot / Mdry);
-    // Estimate local pressure on ignition
-    let atmPressureIgnition = AtmPressurEstimator(dvTarget - Dv0, SOI);
 
-    // Return mean between the two
-    return (atmPressureIgnition + localPressure) /2
+    // Get Dv in this local pressure
+    let Dv0 = round(curveDataOnGround.ISP * Global_data.SOI.Go * Math.log(Mtot / Mdry));
+
+    // Estimate local altitude
+    let trajectoryState = getTrajectoryState(Global_data.rocket.dv.target - Dv0, Global_data.trajectory);
+
+    // Estimate local pressure
+    let atmPressureIgnition = getLocalPressureFromAlt(trajectoryState.alt, Global_data.SOI.atmosphere);
+
+    // Return mean between the two (better model asymptote).
+    return round((atmPressureIgnition + localPressure) /2);
 }
-
 /**
  * Test if an engin/tank stack are capable, and format it.
  */
-function trytoMakeStage(StageData, SOI, Mtot, Mdry, DvTarget, twr) {
+function trytoMakeStage(StageData, Mtot, Mdry, DvTarget, twr) {
 
     let engineCurve = StageData.stage.curve;
 
     // We have ignition parameters. This Engine + FuelStar can flight ?
-    let ignitionPressure = getIgnitionPressure(SOI, engineCurve, Mtot, Mdry, DvTarget);
-    let curveDataIgnition = getCaractForAtm(engineCurve, ignitionPressure);
-    let twrIgnition = curveDataIgnition.Thrust / SOI.Go / Mtot;
+    let ignitionConditions = getIgnitionConditions(engineCurve, Mtot, Mdry, Global_data.rocket.dv.target);
+
+    let curveDataIgnition = getCaractForAtm(engineCurve, ignitionConditions.pressure);
+
+    let twrIgnition = curveDataIgnition.Thrust / Global_data.SOI.Go / Mtot;
 
     // Check TWR
-    if (twrIgnition < twr.min - (twr.spread / 100)
+    if (twrIgnition < reduceTwr(Global_data.rocket.twr.min, ignitionConditions.twrReduction) * (1 - (Global_data.rocket.twr.spread / 100))
         ||
-        (twr.max !== undefined && twrIgnition > twr.max + (twr.spread / 100))
+        (Global_data.rocket.twr.max !== undefined && twrIgnition > reduceTwr(Global_data.rocket.twr.max, ignitionConditions.twrReduction) * (1 + (Global_data.rocket.twr.spread / 100)))
     ) {
         return false;
     }
@@ -228,18 +254,6 @@ function trytoMakeStage(StageData, SOI, Mtot, Mdry, DvTarget, twr) {
 }
 
 
-/**
- * Get a decoupler.
- */
-function getDecoupler(size) {
-    for (let i in Parts.decouplers) {
-        let decoupler = Parts.decouplers[i];
-        if (decoupler.size === size) {
-            return decoupler;
-        }
-    }
-    return null;
-}
 /**
  * Properly format stage
  */
@@ -257,7 +271,7 @@ function make_stage_item(start_stage_atm, StageData) {
         fuelStack.parts = [];
     }
 
-    let curveData = getCaractForAtm(stage.curve, start_stage_atm);
+    let curveData = getCaractForAtm(stage.curve, start_stage_atm.pressure);
     let ISP = curveData.ISP;
     let Thrust = curveData.Thrust;
 
@@ -329,4 +343,21 @@ function return_staging(stage) {
 
     // Push data to Master.
     self.postMessage({ channel: 'result', output: data, id: worker_id});
+}
+
+/************/
+/* Helpers */
+/**********/
+
+/**
+ * Get a decoupler.
+ */
+function getDecoupler(size) {
+    for (let i in Parts.decouplers) {
+        let decoupler = Parts.decouplers[i];
+        if (decoupler.size === size) {
+            return decoupler;
+        }
+    }
+    return null;
 }

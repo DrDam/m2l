@@ -11,8 +11,9 @@
         },
         "stackable": {
             "top": "2",
-            "bottom": "1",
-            "bottom_number": 2
+            "bottom": [
+                {"size" :  "1","bottom_number" : 2}
+            ]
         }
     },
     {
@@ -27,8 +28,9 @@
         },
         "stackable": {
             "top": "2",
-            "bottom": "1",
-            "bottom_number": 4
+            "bottom": [
+                {"size" :  "1","bottom_number" : 4}
+            ]
         }
     },
     {
@@ -43,8 +45,9 @@
         },
         "stackable": {
             "top": "2",
-            "bottom": "1",
-            "bottom_number": 3
+            "bottom":[
+                {"size" :  "1","bottom_number" : 3}
+            ]
         }
     },
     {
@@ -59,8 +62,9 @@
         },
         "stackable": {
             "top": "1",
-            "bottom": "1",
-            "bottom_number": 2
+            "bottom": [
+                {"size" :  "1","bottom_number" : 2}
+            ]
         }
     },
     {
@@ -75,8 +79,9 @@
         },
         "stackable": {
             "top": "1",
-            "bottom": "1",
-            "bottom_number": 4
+            "bottom": [
+                {"size" :  "1","bottom_number" : 4}
+            ]
         }
     },
     {
@@ -91,8 +96,9 @@
         },
         "stackable": {
             "top": "1",
-            "bottom": "1",
-            "bottom_number": 3
+            "bottom": [
+                {"size" :  "1","bottom_number" : 3}
+            ]
         }
     }
 ]

@@ -14,9 +14,10 @@
             "bottom": false
         },
         "is_radial": true,
-        "ressources": {
-            "MonoPropellant": "7.5"
-        }
+        "only_booster": false,
+        "ressources": [
+            "MonoPropellant"
+        ]
     },
     {
         "id": "Size1p5_Monoprop",
@@ -33,9 +34,10 @@
             "bottom": "1p5"
         },
         "is_radial": false,
-        "ressources": {
-            "MonoPropellant": "400"
-        }
+        "only_booster": false,
+        "ressources": [
+            "MonoPropellant"
+        ]
     },
     {
         "id": "Size1p5_Size0_Adapter_01",
@@ -52,10 +54,11 @@
             "bottom": "1p5"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "72",
-            "Oxidizer": "88"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size1p5_Size1_Adapter_01",
@@ -68,14 +71,15 @@
             "full": 3.375
         },
         "stackable": {
-            "top": "2",
+            "top": "1p5",
             "bottom": "2"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "270",
-            "Oxidizer": "330"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size1p5_Size1_Adapter_02",
@@ -88,14 +92,15 @@
             "full": 0.9
         },
         "stackable": {
-            "top": "2",
+            "top": "1p5",
             "bottom": "2"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "72",
-            "Oxidizer": "88"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size1p5_Size2_Adapter_01",
@@ -108,14 +113,15 @@
             "full": 6.75
         },
         "stackable": {
-            "top": "2",
+            "top": "1p5",
             "bottom": "2"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "540",
-            "Oxidizer": "660"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size1p5_Tank_01",
@@ -128,14 +134,15 @@
             "full": 1.2375
         },
         "stackable": {
-            "top": "2",
-            "bottom": "2"
+            "top": "1p5",
+            "bottom": "1p5"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "99",
-            "Oxidizer": "121"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size1p5_Tank_02",
@@ -148,14 +155,15 @@
             "full": 2.475
         },
         "stackable": {
-            "top": "2",
-            "bottom": "2"
+            "top": "1p5",
+            "bottom": "1p5"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "198",
-            "Oxidizer": "242"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size1p5_Tank_03",
@@ -168,14 +176,15 @@
             "full": 5.0625
         },
         "stackable": {
-            "top": "2",
-            "bottom": "2"
+            "top": "1p5",
+            "bottom": "1p5"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "405",
-            "Oxidizer": "495"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size1p5_Tank_04",
@@ -188,14 +197,15 @@
             "full": 10.125
         },
         "stackable": {
-            "top": "2",
-            "bottom": "2"
+            "top": "1p5",
+            "bottom": "1p5"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "810",
-            "Oxidizer": "990"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size1p5_Tank_05",
@@ -212,11 +222,11 @@
             "bottom": "2"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "540",
-            "Oxidizer": "660",
-            "SolidFuel": "4"
-        }
+        "only_booster": true,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size3_Size4_Adapter_01",
@@ -233,10 +243,11 @@
             "bottom": "4"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "2880",
-            "Oxidizer": "3520"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size4_EngineAdapter_01",
@@ -250,13 +261,15 @@
         },
         "stackable": {
             "top": "4",
-            "bottom": "2"
+            "bottom": "2",
+            "bottom_number": 4
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "4050",
-            "Oxidizer": "4950"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size4_Tank_01",
@@ -273,10 +286,11 @@
             "bottom": "4"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "2880",
-            "Oxidizer": "3520"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size4_Tank_02",
@@ -293,10 +307,11 @@
             "bottom": "4"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "5760",
-            "Oxidizer": "7040"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size4_Tank_03",
@@ -313,10 +328,11 @@
             "bottom": "4"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "11520",
-            "Oxidizer": "14080"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     },
     {
         "id": "Size4_Tank_04",
@@ -333,9 +349,10 @@
             "bottom": "4"
         },
         "is_radial": false,
-        "ressources": {
-            "LiquidFuel": "23040",
-            "Oxidizer": "28160"
-        }
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
     }
 ]

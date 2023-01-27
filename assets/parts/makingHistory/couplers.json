@@ -1,0 +1,29 @@
+[
+    {
+        "id": "Size4_EngineAdapter_01",
+        "name": "Kerbodyne Engine Cluster Adapter Tank",
+        "tech": "highPerformanceFuelSystems",
+        "cost": 9000,
+        "provider": "makingHistory",
+        "mass": {
+            "empty": 5.625,
+            "full": 50.625
+        },
+        "stackable": {
+            "top": "4",
+            "bottom": [
+                {"size" :  "1","bottom_number" : 5},
+                {"size" :  "1p5","bottom_number" : 5},
+                {"size" :  "2","bottom_number" : 1},
+                {"size" :  "3","bottom_number" : 1},
+                {"size" :  "4","bottom_number" : 1}
+            ]
+        },
+        "is_radial": false,
+        "only_booster": false,
+        "ressources": [
+            "LiquidFuel",
+            "Oxidizer"
+        ]
+    }
+]

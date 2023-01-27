@@ -2,9 +2,39 @@
 # Changelog #
 #############
 
+v0.4.5
+- delay table update => Make all the stuff faster !!!!
+
+v0.4.4
+- javascript su**s
+- try stabilize models
+
+V0.4.3
+- Add comments in code
+- Update makingHistory engine size
+- code issues
+- manage coupler mult_size
+- add favicon
+
+V0.4.2
+- Add TWR reduction in trajectories
+
+V0.4.1
+- re-adding MakingHistory parts (except Kerbodyne_Engine_Cluster_Adapter_Tank)
+
+V0.4
+- Update atmospheric model using :
+-- SOI atmospheric data (from wiki)
+-- Trajectories database
+
+V0.3.3
+- Manage radial fuel tanks
+- Correctly manage slanted parts
+- Change fuelTanks data structure
+
 v0.3.2
 - Generate FuelStack & EngineStack by worker
-- Optimize filtering by early check of TWRmin
+- Optimize filtering by early check of TWR min
 
 v0.1
 - Project restart from s2l
