@@ -249,7 +249,7 @@ function trytoMakeStage(StageData, Mtot, Mdry, DvTarget, twr) {
         return false;
     }
     else {
-        return make_stage_item(ignitionPressure, StageData);
+        return make_stage_item(ignitionConditions, StageData);
     }
 }
 
