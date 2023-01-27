@@ -1,4 +1,7 @@
 importScripts('../lib/models.js','../lib/lib.js');
+
+'use strict';
+
 /******************/
 /* Init Variables */
 /******************/
@@ -8,6 +11,7 @@ let startTime = new Date();
 let Parts = {};
 let Global_status = 'wait';
 let stagesStack = {};
+let trajectory = {};
 let twr = {};
 let SOI = {};
 let nb = 0;
